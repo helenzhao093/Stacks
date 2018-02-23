@@ -45,14 +45,15 @@ def generate_csv(output_fname, dataset, num_classes, num_features):
 
     assert len(column_fmt) == len(dataset[0]), "Format of columns does not match number of columns"
 
-    header = generate_header(num_classes, num_features)
+    generated_header = generate_header(num_classes, num_features)
 
-    assert len(header) == len(dataset[0]), "Header length does not match number of columns"
+    #assert len(header) == len(dataset[0]), "Header length does not match number of columns"
 
     #dataset = np.vstack((header,dataset)) #add header to beginning of dataset
 
-    np.savetxt(output_fname+'dataset.csv', dataset, fmt=column_fmt, delimiter=',')
+    np.savetxt(output_fname+'dataset.csv', dataset, fmt=column_fmt, delimiter=',', header=generated_header)
 
+"""
 def generate_header(num_classes, num_features):
     header = []
     texts = ['prob', 'actual', 'predicted', 'feature']
@@ -64,6 +65,19 @@ def generate_header(num_classes, num_features):
             for i in range(num_classes):
                 header.append(text+str(i))
     return header
+"""
+
+def generate_header(num_classes, num_features):
+    header = ""
+    texts = ['prob', 'actual', 'predicted', 'feature']
+    for text in texts:
+        if text == 'feature':
+            for i in range(num_features):
+                header += text + str(i) + ','
+        else:
+            for i in range(num_classes):
+                header += text + str(i) + ','
+    return header
 
 def find_file(filename, rootdir):
     import os
@@ -72,7 +86,7 @@ def find_file(filename, rootdir):
             return os.path.join(dirpath, filename)
 
 
-create_csv_file("random_forestproba7_classes.csv", "y_4_classes.csv", "random_forestpredicted_7_classes", "X_4_classes.csv", "7classes")
+create_csv_file("proba_4_classes_k_neighbors.csv", "actual_4_classes.csv", "predicted_4_classes_k_neighbors.csv", "features_4_classes.csv", "k_neighbors_4_classes")
 
 #if __name__ == '__main__':
 #    # Locate data files

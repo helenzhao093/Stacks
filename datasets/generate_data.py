@@ -37,8 +37,8 @@ for name, classifier in zip(classifier_names, classifiers):
         predicted = classifier.predict(X)
         probabilities = classifier.predict_proba(X)
         num_classes = len(probabilities[0])
-        np.savetxt("predicted_" + str(num_classes) + "_classes_" + name, predicted, fmt='%i', delimiter=',')
-        np.savetxt("proba_" + str(num_classes) + "_classes_" + name, probabilities, fmt='%5f', delimiter=',')
+        np.savetxt("predicted_" + str(num_classes) + "_classes_" + name + ".csv", predicted, fmt='%i', delimiter=',')
+        np.savetxt("proba_" + str(num_classes) + "_classes_" + name + ".csv", probabilities, fmt='%5f', delimiter=',')
 
 for name, classifier in zip(classifier_names, classifiers):
     for X, y in zip(features_ml, classes_ml):
@@ -50,8 +50,8 @@ for name, classifier in zip(classifier_names, classifiers):
         probabilities = np.array(probabilities).transpose()
         print(len(probabilities[0]))
         num_classes = len(probabilities[0])
-        np.savetxt("predicted_ml_" + str(num_classes) + "_classes_" + name, predicted, fmt='%i', delimiter=',')
-        np.savetxt("proba_ml_" + str(num_classes) + "_classes_" + name, probabilities, fmt='%5f', delimiter=',')
+        np.savetxt("predicted_ml_" + str(num_classes) + "_classes_" + name + ".csv", predicted, fmt='%i', delimiter=',')
+        np.savetxt("proba_ml_" + str(num_classes) + "_classes_" + name + ".csv", probabilities, fmt='%5f', delimiter=',')
 
 digits = datasets.load_digits()
 X_digits, y_digits = digits.data, digits.target
