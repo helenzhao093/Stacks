@@ -6,6 +6,8 @@ getBinNum = function(prob){
 function Histogram(dataModel){
   var positive = 0, negative = 1;
   var margin = { top: 20, right: 20, bottom: 20, left: 20 }
+  var width = 960
+  var height = 500
   this.data = dataModel.data
   this.probColumns = dataModel.probColumns
 
@@ -75,6 +77,7 @@ function Histogram(dataModel){
 
 
   this.constructHistogram = function(){
+
     var svg = d3.select('body').append("svg")
         .selectAll('.svg-histogram')
         .data(this.histogramData)
@@ -85,10 +88,27 @@ function Histogram(dataModel){
       .append("g")
         .attr("transform", "translate(" + margin.left + "," + margin.right + ")")
 
-    var rows = svg.selectAll(".row")
-        .data(this.histogramData)
+    /*var svg = d3.select('body').append("svg")
+        .attr("width", this.width + margin.left + margin.right)
+        .attr("height", this.height + margin.top + margin.bottom)
+      .append("g")
+        .attr("transform", "translate(" + margin.left + "," + margin.right + ")")*/
+
+    var bins = svg.selectAll(".row") // 9 bins per class
+        .data(function(d){ return d })
       .enter().append("g")
-        .attr("class", "bar")
+        .attr("class", "bin")
+
+    var left = bins.selectAll("rect")
+        .data( function(d) {return d[negative]})
+      .enter().append("g")
+        .attr("class", "negative")
+
+    var right = bins.selectAll("rect")
+        .data( function(d) {return d[positive]})
+      .enter().append("g")
+        .attr("class", "positive")
+
   }
 
   this.constructData()
