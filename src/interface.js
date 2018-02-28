@@ -1,6 +1,6 @@
 function Interface(data){
 
-  this.histogramContainer = d3.select(".histograms")
+  //this.histogramContainer = d3.select(".histograms")
 
   var dataModel = new DataModel(data);
   console.log(dataModel)
