@@ -17,3 +17,11 @@ followed by predicted classes, and lastly feature values. The number of columns
 for actual, predicted classes, and probability are the same. For a dataset with
 n classes, for the i-th class, the i + xn (where x is 0,1,2) columns relate to
 the ith class. 0 in the (i + 1n)-th column indicates its not a predicted class.
+
+### Week 2:
+1) Model
+I wrote a Model function that stores meta data on the user input dataset.
+Information that were saved included the number of classes, class names, the probabilities, actual class, and predicted class columns names. The column names
+are needed to process the data and count the number of TP, FP, FN, TNs. More
+meta data will be stored in the Model object as I start working on writing
+functions to process the data.
