@@ -207,6 +207,8 @@ function Histogram(dataModel){
         .attr("x", function(d){ return xScale(d.previous_sum)})
         .attr("y", function (d) {return yScale(d.bin)})
         .attr("fill", function (d) { return color(d.className)})
+        //.attr("style", "fill:url(pattern-stripe)")
+        .attr("mask", "url(#mask-stripe)")
 
     var tp = bins.selectAll("g")  // will store d.count and d.className
         .data( function(d) {return d.tp})
@@ -238,13 +240,13 @@ function Histogram(dataModel){
         .attr("y", function (d) {return yScale(d.bin)})
         .attr("fill", function (d) { return color(d.className)})
 
-    svg.append("g")
-        .attr("class", "y-axis")
-      .append("line")
-        .attr("x1", xScale(0))
-        .attr("x2", xScale(0))
-        .attr("y2", height);
-
+      svg.append("g")
+          .attr("class", "y-axis")
+        .append("line")
+          .attr("x1", xScale(0))
+          .attr("x2", xScale(0))
+          .attr("y2", height)
+          .attr("stroke", function(d) { return color(d.className)})
 
         //.append("text")
         //.text(function(d) {return d})
