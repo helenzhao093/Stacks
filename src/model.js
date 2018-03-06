@@ -27,8 +27,6 @@ function DataModel(data){
   console.log(this.probColumns)
 
   this.classNames = (function (){
-
-
     var classNames = []
     for (i = 0; i < that.numClasses; i++){
       classNames.push("class" + i)

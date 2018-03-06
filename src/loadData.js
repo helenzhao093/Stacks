@@ -1,6 +1,7 @@
 $(document).ready(function(){
 
   // load the dataset
+
   loadDataset = function(){
     d3.csv("datasets/multiclass/k_neighbors_4_classesdataset.csv", type, function(error, data) {
       console.log(data)

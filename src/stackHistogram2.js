@@ -17,9 +17,10 @@ function Histogram(dataModel){
   //this.max.Left =
 
   this.constructData = function(){
-    console.log(this)
+    //console.log(this)
     var positive = 0, negative = 1;
     var histogramData = this.histogramData
+
     histogramData = dataModel.classNames.map(function(className){
       return [0,1,2,3,4,5,6,7,8,9].map(function(binNum) {
         return [0,1].map(function(d){
@@ -29,6 +30,30 @@ function Histogram(dataModel){
         })
       })
     })
+
+    /*histogramData = dataModel.classNames.map(functon(className){
+      return
+      [0,1,2,3,4,5,6,7,8,9].map(function(binNum){
+        return {
+          TP: {},
+          TN: {},
+          FP: {},
+          FN: {},
+        }
+      })
+    })
+
+    for (classNum = 0; classNum < dataModel.numClasses; classNum++){
+      for (binNum = 0; binNum < 10; binNum++){
+        histogramData[classNum][binNum]["TP"]["classData"] = { [dataModel.classNames[classNum]]  }
+        histogramData[classNum][binNum]["FP"][dataModel.classNames[classNum]] = 0
+      }
+      for (classNum2 = 0; classNum2 < dataModel.numClasses; classNum2++){
+        if (classNum2 != classNum){
+          histogramData[classNum][binNum]["FP"]["className"] = dataModel.classNames[classNum]
+        }
+      }
+    }*/
 
     dataModel.data.forEach(function(example){
       var actual = []
@@ -78,15 +103,79 @@ function Histogram(dataModel){
 
   this.constructHistogram = function(){
 
-    var svg = d3.select('body').append("svg")
-        .selectAll('.svg-histogram')
-        .data(this.histogramData)
+    fakedata =
+    [
+      {
+        className: "class0",
+        data: [
+          { bin: "bin1",
+          tp: [{ bin: "bin1", className: "class0", count: 0, previous_sum: 7}],
+          fp: [{ bin: "bin1", className: "class1", count: 3, previous_sum: 7} , { className: "class2", count: 4, previous_sum: 7}],
+          tn: [{ bin: "bin1", className: "class0", count: 0, previous_sum: 7 }],
+          fn: [{ bin: "bin1", className: "class1", count: 3, previous_sum: 7} , { className: "class2", count: 4, previous_sum: 7}]
+          },
+          {
+          bin: "bin2",
+          tp: [{ bin: "bin2", className: "class0", count: 0, previous_sum: 7}],
+          fp: [{ bin: "bin2", className: "class1", count: 3, previous_sum: 7} , { className: "class2", count: 4, previous_sum: 7}],
+          tn: [{ bin: "bin2", className: "class0", count: 0, previous_sum: 7}],
+          fn: [{ bin: "bin2", className: "class1", count: 3, previous_sum: 7} , { className: "class2", count: 4, previous_sum: 7}]
+          },
+          {
+          bin: "bin3",
+          tp: [{ bin: "bin3", className: "class0", count: 0, previous_sum: 7}],
+          fp: [{ bin: "bin3", className: "class1", count: 3, previous_sum: 7} , { className: "class2", count: 4, previous_sum: 7}],
+          tn: [{ bin: "bin3", className: "class0", count: 0, previous_sum: 7}],
+          fn: [{ bin: "bin3", className: "class1", count: 3, previous_sum: 7} , { className: "class2", count: 4, previous_sum: 7}]
+          }
+        ]
+      },
+      {
+        className: "class1",
+        data: [
+          { bin: "bin1",
+          tp: [{ bin: "bin1", className: "class1", count: 0, previous_sum: 7 }],
+          fp: [{ bin: "bin1", className: "class0", count: 3, previous_sum: 0} , { bin: "bin1", className: "class2", count: 4, previous_sum: 3}],
+          tn: [{ bin: "bin1", className: "class0", count: 0, previous_sum: 8}],
+          fn: [{ bin: "bin1", className: "class1", count: 2, previous_sum: 0} , { bin: "bin1", className: "class2", count: 6, previous_sum: 8}]
+          },
+          {
+          bin: "bin2",
+          tp: [{ bin: "bin2", className: "class1", count: 0, previous_sum: 7 }],
+          fp: [{ bin: "bin2", className: "class0", count: 3, previous_sum: 7} , { bin: "bin2", className: "class2", count: 4, previous_sum: 7}],
+          tn: [{ bin: "bin2", className: "class0", count: 0, previous_sum: 7 }],
+          fn: [{ bin: "bin2", className: "class1", count: 3, previous_sum: 7} , { bin: "bin2", className: "class2", count: 4, previous_sum: 7}]
+          },
+          {
+          bin: "bin3",
+          tp: [{ bin: "bin3", className: "class1", count: 0, previous_sum: 7}],
+          fp: [{ bin: "bin3", className: "class0", count: 3, previous_sum: 7} , { bin: "bin3", className: "class2", count: 4, previous_sum: 7}],
+          tn: [{ bin: "bin3", className: "class0", count: 0, previous_sum: 7}],
+          fn: [{ bin: "bin3", className: "class1", count: 3, previous_sum: 7} , { bin: "bin3", className: "class2", count: 4, previous_sum: 7}]
+          }
+        ]
+      }
+    ]
+
+    console.log(fakedata)
+
+    var xScale = d3.scaleLinear()
+        .domain([-10, 10]).nice()
+        .rangeRound([0, 500])
+
+    var yScale = d3.scaleBand()
+        .domain(["bin1", "bin2", "bin3"])
+        .rangeRound([0, 500]).padding(0.1)
+
+    var svg = d3.select(".histograms")
+        .selectAll(".svg-histogram")
+        .data(fakedata)
         .enter().append("svg")
         .attr("class", "svg-histogram")
-        .attr("width", width + margin.left + margin.right)
-        .attr("height", height + margin.top + margin.bottom)
+        .attr("width", 500)
+        .attr("height", 500)
       .append("g")
-        .attr("transform", "translate(" + margin.left + "," + margin.right + ")")
+        .attr("transform", "translate(" + 20 + "," + 20 + ")")
 
     /*var svg = d3.select('body').append("svg")
         .attr("width", this.width + margin.left + margin.right)
@@ -95,25 +184,54 @@ function Histogram(dataModel){
         .attr("transform", "translate(" + margin.left + "," + margin.right + ")")*/
 
     var bins = svg.selectAll(".row") // 9 bins per class
-        .data(function(d){ return d })
+        .data(function(d){ return d.data })
       .enter().append("g")
         .attr("class", "bin")
 
-    var left = bins.selectAll("rect")
-        .data( function(d) {return d[negative]})
-      .enter().append("g")
-        .attr("class", "negative")
+    var fp = bins.selectAll("g")
+        .data( function(d) {return d.fp})
+      .enter().append("rect")
+        .attr("class", "fp")
+        .attr("height", function(d) { return yScale.bandwidth()})
+        .attr("width", function (d) { return xScale(d.count)})
+        .attr("x", function(d){ return xScale(d.previous_sum)})
+        .attr("y", function (d) {return yScale(d.bin)})
 
-    var right = bins.selectAll("rect")
-        .data( function(d) {return d[positive]})
-      .enter().append("g")
-        .attr("class", "positive")
+    var tp = bins.selectAll("g")  // will store d.count and d.className
+        .data( function(d) {return d.tp})
+      .enter().append("rect")
+        .attr("class", "tp")
+        .attr("height", function(d) { return yScale.bandwidth()})
+        .attr("width", function (d) { return xScale(d.count)})
+        .attr("x", function(d){ return xScale(d.previous_sum)})
+        .attr("y", function (d) {return yScale(d.bin)})
 
+    var fn = bins.selectAll("g")
+        .data( function(d) {return d.fn})
+      .enter().append("rect")
+        .attr("class", "fn")
+        .attr("height", function(d) { return yScale.bandwidth()})
+        .attr("width", function (d) { return xScale(d.count)})
+        .attr("x", function(d){ return xScale(-d.previous_sum)})
+        .attr("y", function (d) {return yScale(d.bin)})
+
+    var tn = bins.selectAll("g")  // will store d.count and d.className
+        .data( function(d) {return d.tn})
+      .enter().append("rect")
+        .attr("class", "tn")
+        .attr("height", function(d) { return yScale.bandwidth()})
+        .attr("width", function(d) { return xScale(d.count)})
+        .attr("x", function(d){ return xScale(-d.previous_sum)})
+        .attr("y", function (d) {return yScale(d.bin)})
+
+
+        //.append("text")
+        //.text(function(d) {return d})
   }
 
-  this.constructData()
-  console.log(this.histogramData)
-  this.max.negative = this.findMax(negative)
-  this.max.positive = this.findMax(positive)
+  //this.constructData()
+  //console.log(this.histogramData)
+  //this.max.negative = this.findMax(negative)
+  //this.max.positive = this.findMax(positive)
   this.constructHistogram()
 }
