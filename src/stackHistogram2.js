@@ -116,16 +116,16 @@ function Histogram(dataModel){
           },
           {
           bin: "bin2",
-          tp: [{ bin: "bin2", className: "class0", count: 0, previous_sum: 5}],
+          tp: [{ bin: "bin2", className: "class0", count: 10, previous_sum: 5}],
           fp: [{ bin: "bin2", className: "class1", count: 1, previous_sum: 0} , { bin: "bin2", className: "class2", count: 4, previous_sum: 1}],
-          tn: [{ bin: "bin2", className: "class0", count: 0, previous_sum: 7}],
+          tn: [{ bin: "bin2", className: "class0", count: 8, previous_sum: 7}],
           fn: [{ bin: "bin2", className: "class1", count: 5, previous_sum: 0} , { bin: "bin2", className: "class2", count: 2, previous_sum: 5}]
           },
           {
           bin: "bin3",
-          tp: [{ bin: "bin3", className: "class0", count: 0, previous_sum: 5}],
+          tp: [{ bin: "bin3", className: "class0", count: 5, previous_sum: 5}],
           fp: [{ bin: "bin3", className: "class1", count: 1, previous_sum: 0} , { bin: "bin3", className: "class2", count: 4, previous_sum: 1}],
-          tn: [{ bin: "bin3", className: "class0", count: 0, previous_sum: 7}],
+          tn: [{ bin: "bin3", className: "class0", count: 4, previous_sum: 7}],
           fn: [{ bin: "bin3", className: "class1", count: 3, previous_sum: 0} , { bin: "bin3", className: "class2", count: 4, previous_sum: 3}]
           }
         ]
@@ -160,7 +160,11 @@ function Histogram(dataModel){
     console.log(fakedata)
 
     var xScale = d3.scaleLinear()
-        .domain([-15, 15])
+        .domain([-20, 20]).nice()
+        .rangeRound([0, width])
+
+    var xScaleCount = d3.scaleLinear()
+        .domain([0, 40])
         .rangeRound([0, width])
 
     var yScale = d3.scaleBand()
@@ -199,7 +203,7 @@ function Histogram(dataModel){
       .enter().append("rect")
         .attr("class", "fp")
         .attr("height", function(d) { return yScale.bandwidth()})
-        .attr("width", function (d) { return xScale(d.count)})
+        .attr("width", function (d) { return xScaleCount(d.count)})
         .attr("x", function(d){ return xScale(d.previous_sum)})
         .attr("y", function (d) {return yScale(d.bin)})
         .attr("fill", function (d) { return color(d.className)})
@@ -209,7 +213,7 @@ function Histogram(dataModel){
       .enter().append("rect")
         .attr("class", "tp")
         .attr("height", function(d) { return yScale.bandwidth()})
-        .attr("width", function (d) { return xScale(d.count)})
+        .attr("width", function (d) { return xScaleCount(d.count) })
         .attr("x", function(d){ return xScale(d.previous_sum)})
         .attr("y", function (d) {return yScale(d.bin)})
         .attr("fill", function (d) { return color(d.className)})
@@ -219,7 +223,7 @@ function Histogram(dataModel){
       .enter().append("rect")
         .attr("class", "fn")
         .attr("height", function(d) { return yScale.bandwidth()})
-        .attr("width", function (d) { return xScale(d.count)})
+        .attr("width", function (d) { return xScaleCount(d.count)})
         .attr("x", function(d){ return xScale(- (d.count + d.previous_sum))})
         .attr("y", function (d) {return yScale(d.bin)})
         .attr("fill", function (d) { return color(d.className)})
@@ -229,10 +233,17 @@ function Histogram(dataModel){
       .enter().append("rect")
         .attr("class", "tn")
         .attr("height", function(d) { return yScale.bandwidth()})
-        .attr("width", function(d) { return xScale(d.count)})
+        .attr("width", function(d) { return xScaleCount(d.count)})
         .attr("x", function(d){ return xScale(-(d.count+ d.previous_sum))})
         .attr("y", function (d) {return yScale(d.bin)})
         .attr("fill", function (d) { return color(d.className)})
+
+    svg.append("g")
+        .attr("class", "y-axis")
+      .append("line")
+        .attr("x1", xScale(0))
+        .attr("x2", xScale(0))
+        .attr("y2", height);
 
 
         //.append("text")
