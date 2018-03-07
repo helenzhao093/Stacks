@@ -16,9 +16,8 @@ function Histogram(dataModel){
   this.bins = [0,1,2,3,4,5,6,7,8,9]
   //this.max.Left =
 
-  this.constructData = function(){
+  this.initiateData = function(){
     //console.log(this)
-    var positive = 0, negative = 1;
     var histogramData = this.histogramData
     var bins = this.bins
 
@@ -31,14 +30,14 @@ function Histogram(dataModel){
         histogram.data.push({bin: binNum, tp:[], fp:[], tn:[], fn: []})
       })
       dataModel.classNames.forEach(function(name){
-        if (name != histogram.className){
+
           histogram.data.forEach(function(data)
             data.fn.push({bin: data.bin, className: name, count: 0})
           )
           histogram.data.forEach(function(data)
             data.fp.push({bin: data.bin, className: name, count: 0})
           )
-        }
+
         if (name == histogram.className){
           histogram.data.forEach(function(data)
             data.tn.push({bin: data.bin, className: name, count: 0})
@@ -49,51 +48,17 @@ function Histogram(dataModel){
         }
       })
     })
-
-
-
-
+    console.log(histogramData[0])
+    console.log(histogramData[0]['data'][0]['tp'][0])
     this.histogramData = histogramData
   }
 
-    /*histogramData = dataModel.classNames.map(function(className){
-      return [0,1,2,3,4,5,6,7,8,9].map(function(binNum) {
-        return [0,1].map(function(d){
-          return dataModel.classNames.map(function(className){
-            return 0;
-          })
-        })
-      })
-    })
+  this.constructData = function(){
+    var histogramData = this.histogramData
 
-    /*histogramData = dataModel.classNames.map(functon(className){
-      return
-      [0,1,2,3,4,5,6,7,8,9].map(function(binNum){
-        return {
-          TP: {},
-          TN: {},
-          FP: {},
-          FN: {},
-        }
-      })
-    })
-
-    for (classNum = 0; classNum < dataModel.numClasses; classNum++){
-      for (binNum = 0; binNum < 10; binNum++){
-        histogramData[classNum][binNum]["TP"]["classData"] = { [dataModel.classNames[classNum]]  }
-        histogramData[classNum][binNum]["FP"][dataModel.classNames[classNum]] = 0
-      }
-      for (classNum2 = 0; classNum2 < dataModel.numClasses; classNum2++){
-        if (classNum2 != classNum){
-          histogramData[classNum][binNum]["FP"]["className"] = dataModel.classNames[classNum]
-        }
-      }
-    }*/
-
-    /*dataModel.data.forEach(function(example){
+    dataModel.data.forEach(function(example){
       var actual = []
-      var predicted =[]
-
+      var predicted = []
       for (classNum = 0; classNum < dataModel.numClasses; classNum++){
         if (example[dataModel.actualClasses[classNum]] == 1) {
           actual.push(classNum)
@@ -107,22 +72,41 @@ function Histogram(dataModel){
         binNum = getBinNum(example[dataModel.probColumns[classNum]])
 
         if (actual.includes(classNum) && predicted.includes(classNum)) { //TP
-          histogramData[classNum][binNum][positive][classNum] += 1
+          histogramData[classNum]['data'][binNum]['tp'][0].count += 1
         }
         else if(actual.includes(classNum) && !predicted.includes(classNum)){ //FN
           predicted.forEach(function(d){
-            histogramData[classNum][binNum][negative][d] += 1
-          });
+            histogramData[classNum]['data'][binNum]['fn'][d].count += 1
+          })
         }
         else if(!actual.includes(classNum) && predicted.includes(classNum)){ //FP
           actual.forEach(function(d){
-            histogramData[classNum][binNum][positive][d] += 1
+            histogramData[classNum]['data'][binNum]['fp'][d].count += 1
           });
         }
         else {
-          histogramData[classNum][binNum][negative][classNum] += 1
+          histogramData[classNum]['data'][binNum]['tn'][0].count += 1
         }
       }
+    })
+    this.histogramData = histogramData
+    console.log(this.histogramData)
+  }
+
+  this.calculate_previous_sum = function(){
+    var histogramData = this.histogramData
+
+    histogramData.forEach(function(histogram){
+      histogram.data.forEach(function(bin){
+        bin['fn'][0].previous_sum = 0
+        bin['fp'][0].previous_sum = 0
+        for (i = 1; i < dataModel.numClasses; i++){
+          bin['fn'][i].previous_sum = bin['fn'][i-1].previous_sum + bin['fn'][i-1].count
+          bin['fp'][i].previous_sum = bin['fp'][i-1].previous_sum + bin['fp'][i-1].count
+        }
+        bin['tn'][0].previous_sum = bin['fn'][dataModel.numClasses-1].previous_sum + bin['fn'][dataModel.numClasses-1].count
+        bin['tp'][0].previous_sum = bin['fp'][dataModel.numClasses-1].previous_sum + bin['fp'][dataModel.numClasses-1].count
+      })
     })
     this.histogramData = histogramData
   }
@@ -133,12 +117,13 @@ function Histogram(dataModel){
         return d3.sum(bin[classification])
       }))
     })
-  )}*/
+  )}
 
 
   this.constructHistogram = function(){
-
-    fakedata =
+    var histogramData = this.histogramData
+    var bins = this.bins
+    /*fakedata =
     [
       {
         className: "class0",
@@ -192,31 +177,31 @@ function Histogram(dataModel){
       }
     ]
 
-    console.log(fakedata)
+    console.log(fakedata)*/
 
     var xScale = d3.scaleLinear()
-        .domain([-20, 20]).nice()
+        .domain([-40, 40]).nice()
         .rangeRound([0, width])
 
     var xScaleCount = d3.scaleLinear()
-        .domain([0, 40])
+        .domain([0, 80])
         .rangeRound([0, width])
 
     var yScale = d3.scaleBand()
-        .domain([0, 1, 2])
+        .domain(bins)
         .rangeRound([0, height]).padding(0.1)
 
 
     var color = d3.scaleOrdinal()
         .range(["#d73027","#f46d43","#fdae61","#a6d96a","#66bd63","#1a9850"])
-        .domain("class0", "class1", "class2")
+        .domain("class0", "class1", "class2", "class3")
 
     var strokeWidth = 5
     var textLength = 40
 
     var svg = d3.select(".histograms")
         .selectAll(".svg-histogram")
-        .data(fakedata)
+        .data(histogramData)
         .enter().append("svg")
         .attr("class", "svg-histogram")
         .attr("width", width + margin.left + margin.right)
@@ -262,8 +247,8 @@ function Histogram(dataModel){
       .enter().append("rect")
         .attr("class", "fn")
         .attr("height", function(d) { return yScale.bandwidth() - strokeWidth})
-        .attr("width", function (d) { return xScaleCount(d.count) - strokeWidth})
-        .attr("x", function(d){ return xScale(- (d.count + d.previous_sum)) + strokeWidth/2})
+        .attr("width", function (d) { return (d.count == 0) ? 0 : (xScaleCount(d.count) - strokeWidth)})
+        .attr("x", function(d){ return (d.count == 0) ? 0: (xScale(- (d.count + d.previous_sum)) + strokeWidth/2) })
         .attr("y", function (d) {return yScale(d.bin) + strokeWidth/2})
         .attr("fill", "white")
         .attr("stroke", function (d) { return color(d.className)})
@@ -301,7 +286,9 @@ function Histogram(dataModel){
           .attr("fill", function(d) { return color(d.className)})
   }
 
+  this.initiateData()
   this.constructData()
+  this.calculate_previous_sum()
   console.log(this.histogramData)
   //this.max.negative = this.findMax(negative)
   //this.max.positive = this.findMax(positive)
