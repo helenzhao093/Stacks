@@ -3,8 +3,9 @@ function Interface(data){
   //this.histogramContainer = d3.select(".histograms")
 
   var dataModel = new DataModel(data);
+  var settings = new Settings();
   console.log(dataModel)
-  var histograms = new Histogram(dataModel);
+  var histograms = new Histogram(dataModel, settings);
 }
 
 

@@ -3,8 +3,7 @@ getBinNum = function(prob){
   return (bin == 10) ? 9 : bin
 }
 
-function Histogram(dataModel){
-  var positive = 0, negative = 1;
+function Histogram(dataModel, settings){
   var margin = { top: 20, right: 20, bottom: 20, left: 20 }
   var width = 300 - margin.left - margin.right
   var height = 400 - margin.top - margin.bottom
@@ -48,8 +47,6 @@ function Histogram(dataModel){
         }
       })
     })
-    console.log(histogramData[0])
-    console.log(histogramData[0]['data'][0]['tp'][0])
     this.histogramData = histogramData
   }
 
@@ -72,7 +69,9 @@ function Histogram(dataModel){
         binNum = getBinNum(example[dataModel.probColumns[classNum]])
 
         if (actual.includes(classNum) && predicted.includes(classNum)) { //TP
-          histogramData[classNum]['data'][binNum]['tp'][0].count += 1
+          if (example[dataModel.probColumns[classNum]] < settings.TPThreshold){
+            histogramData[classNum]['data'][binNum]['tp'][0].count += 1
+          }
         }
         else if(actual.includes(classNum) && !predicted.includes(classNum)){ //FN
           predicted.forEach(function(d){
@@ -85,7 +84,9 @@ function Histogram(dataModel){
           });
         }
         else {
-          histogramData[classNum]['data'][binNum]['tn'][0].count += 1
+          if (example[dataModel.probColumns[classNum]] > settings.TNThreshold){
+            histogramData[classNum]['data'][binNum]['tn'][0].count += 1
+          }
         }
       }
     })
@@ -112,9 +113,9 @@ function Histogram(dataModel){
   }
 
   this.findMax = function(classification){
-    return d3.max(this.histogramData.map(function(data){ // for each class
-      return d3.max(data.map(function(bin){ //for each bin
-        return d3.sum(bin[classification])
+    return d3.max(this.histogramData.map(function(histogram){ // max in each class
+      return d3.max(histogram.data.map(function(bin){ //for each bin
+        return bin[classification][0].count + bin[classification][0].previous_sum
       }))
     })
   )}
@@ -122,7 +123,10 @@ function Histogram(dataModel){
 
   this.constructHistogram = function(){
     var histogramData = this.histogramData
-    var bins = this.bins
+    var bins = [9,8,7,6,5,4,3,2,1,0]
+    var maxNeg = this.findMax("tn")
+    var maxPos = this.findMax("tp")
+
     /*fakedata =
     [
       {
@@ -178,13 +182,16 @@ function Histogram(dataModel){
     ]
 
     console.log(fakedata)*/
+    var xDomainScale = Math.max(maxNeg , maxPos)
+    var strokeWidth = 3
+    var textLength = 40
 
     var xScale = d3.scaleLinear()
-        .domain([-40, 40]).nice()
+        .domain([-xDomainScale, xDomainScale]).nice()
         .rangeRound([0, width])
 
     var xScaleCount = d3.scaleLinear()
-        .domain([0, 80])
+        .domain([0, 2*xDomainScale])
         .rangeRound([0, width])
 
     var yScale = d3.scaleBand()
@@ -194,10 +201,7 @@ function Histogram(dataModel){
 
     var color = d3.scaleOrdinal()
         .range(["#d73027","#f46d43","#fdae61","#a6d96a","#66bd63","#1a9850"])
-        .domain("class0", "class1", "class2", "class3")
-
-    var strokeWidth = 5
-    var textLength = 40
+        .domain("class0", "class1", "class2", "class3", "class4", "class5", "class6", "class7" )
 
     var svg = d3.select(".histograms")
         .selectAll(".svg-histogram")
@@ -253,6 +257,7 @@ function Histogram(dataModel){
         .attr("fill", "white")
         .attr("stroke", function (d) { return color(d.className)})
         .attr("stroke-width", strokeWidth)
+        .attr("text", function (d) { return d.count })
         //.attr("stroke-alignment", "inner")
 
     var tn = bins.selectAll("g")  // will store d.count and d.className
@@ -290,7 +295,9 @@ function Histogram(dataModel){
   this.constructData()
   this.calculate_previous_sum()
   console.log(this.histogramData)
-  //this.max.negative = this.findMax(negative)
+  //this.max.negative = this.findMax("tn")
+  //this.max.positve = this.findMax("tp")
+  //console.log(this.max.negative)
   //this.max.positive = this.findMax(positive)
   this.constructHistogram()
 }
