@@ -13,15 +13,50 @@ function Histogram(dataModel){
 
   this.histogramData = []
   this.max = {negative: 0, positive: 0}
-
+  this.bins = [0,1,2,3,4,5,6,7,8,9]
   //this.max.Left =
 
   this.constructData = function(){
     //console.log(this)
     var positive = 0, negative = 1;
     var histogramData = this.histogramData
+    var bins = this.bins
 
-    histogramData = dataModel.classNames.map(function(className){
+    histogramData = dataModel.classNames.map(function(name){
+      return {className: name, data: []}
+    })
+
+    histogramData.forEach(function (histogram){
+      bins.forEach(function(binNum) {
+        histogram.data.push({bin: binNum, tp:[], fp:[], tn:[], fn: []})
+      })
+      dataModel.classNames.forEach(function(name){
+        if (name != histogram.className){
+          histogram.data.forEach(function(data)
+            data.fn.push({bin: data.bin, className: name, count: 0})
+          )
+          histogram.data.forEach(function(data)
+            data.fp.push({bin: data.bin, className: name, count: 0})
+          )
+        }
+        if (name == histogram.className){
+          histogram.data.forEach(function(data)
+            data.tn.push({bin: data.bin, className: name, count: 0})
+          )
+          histogram.data.forEach(function(data)
+            data.tp.push({bin: data.bin, className: name, count: 0})
+          )
+        }
+      })
+    })
+
+
+
+
+    this.histogramData = histogramData
+  }
+
+    /*histogramData = dataModel.classNames.map(function(className){
       return [0,1,2,3,4,5,6,7,8,9].map(function(binNum) {
         return [0,1].map(function(d){
           return dataModel.classNames.map(function(className){
@@ -55,7 +90,7 @@ function Histogram(dataModel){
       }
     }*/
 
-    dataModel.data.forEach(function(example){
+    /*dataModel.data.forEach(function(example){
       var actual = []
       var predicted =[]
 
@@ -98,7 +133,7 @@ function Histogram(dataModel){
         return d3.sum(bin[classification])
       }))
     })
-  )}
+  )}*/
 
 
   this.constructHistogram = function(){
@@ -108,50 +143,50 @@ function Histogram(dataModel){
       {
         className: "class0",
         data: [
-          { bin: "bin1",
-          tp: [{ bin: "bin1", className: "class0", count: 0, previous_sum: 7}],
-          fp: [{ bin: "bin1", className: "class1", count: 3, previous_sum: 0} , { bin: "bin1", className: "class2", count: 4, previous_sum: 3}],
-          tn: [{ bin: "bin1", className: "class0", count: 0, previous_sum: 8 }],
-          fn: [{ bin: "bin1", className: "class1", count: 3, previous_sum: 0} , { bin: "bin1", className: "class2", count: 5, previous_sum: 3}]
+          { bin: 0,
+          tp: [{ bin: 0, className: "class0", count: 0, previous_sum: 7}],
+          fp: [{ bin: 0, className: "class1", count: 3, previous_sum: 0} , { bin: 0, className: "class2", count: 4, previous_sum: 3}],
+          tn: [{ bin: 0, className: "class0", count: 0, previous_sum: 8 }],
+          fn: [{ bin: 0, className: "class1", count: 3, previous_sum: 0} , { bin: 0, className: "class2", count: 5, previous_sum: 3}]
           },
           {
-          bin: "bin2",
-          tp: [{ bin: "bin2", className: "class0", count: 10, previous_sum: 5}],
-          fp: [{ bin: "bin2", className: "class1", count: 1, previous_sum: 0} , { bin: "bin2", className: "class2", count: 4, previous_sum: 1}],
-          tn: [{ bin: "bin2", className: "class0", count: 8, previous_sum: 7}],
-          fn: [{ bin: "bin2", className: "class1", count: 5, previous_sum: 0} , { bin: "bin2", className: "class2", count: 2, previous_sum: 5}]
+          bin: 1,
+          tp: [{ bin: 1, className: "class0", count: 10, previous_sum: 5}],
+          fp: [{ bin: 1, className: "class1", count: 1, previous_sum: 0} , { bin: 1, className: "class2", count: 4, previous_sum: 1}],
+          tn: [{ bin: 1, className: "class0", count: 8, previous_sum: 7}],
+          fn: [{ bin: 1, className: "class1", count: 5, previous_sum: 0} , { bin: 1, className: "class2", count: 2, previous_sum: 5}]
           },
           {
-          bin: "bin3",
-          tp: [{ bin: "bin3", className: "class0", count: 5, previous_sum: 5}],
-          fp: [{ bin: "bin3", className: "class1", count: 1, previous_sum: 0} , { bin: "bin3", className: "class2", count: 4, previous_sum: 1}],
-          tn: [{ bin: "bin3", className: "class0", count: 4, previous_sum: 7}],
-          fn: [{ bin: "bin3", className: "class1", count: 3, previous_sum: 0} , { bin: "bin3", className: "class2", count: 4, previous_sum: 3}]
+          bin: 2,
+          tp: [{ bin: 2, className: "class0", count: 5, previous_sum: 5}],
+          fp: [{ bin: 2, className: "class1", count: 1, previous_sum: 0} , { bin: 2, className: "class2", count: 4, previous_sum: 1}],
+          tn: [{ bin: 2, className: "class0", count: 4, previous_sum: 7}],
+          fn: [{ bin: 2, className: "class1", count: 3, previous_sum: 0} , { bin: 2, className: "class2", count: 4, previous_sum: 3}]
           }
         ]
       },
       {
         className: "class1",
         data: [
-          { bin: "bin1",
-          tp: [{ bin: "bin1", className: "class1", count: 6, previous_sum: 7 }],
-          fp: [{ bin: "bin1", className: "class0", count: 3, previous_sum: 0} , { bin: "bin1", className: "class2", count: 4, previous_sum: 3}],
-          tn: [{ bin: "bin1", className: "class1", count: 5, previous_sum: 8}],
-          fn: [{ bin: "bin1", className: "class0", count: 2, previous_sum: 0} , { bin: "bin1", className: "class2", count: 6, previous_sum: 2}]
+          { bin: 0,
+          tp: [{ bin: 0, className: "class1", count: 6, previous_sum: 7 }],
+          fp: [{ bin: 0, className: "class0", count: 3, previous_sum: 0} , { bin: 0, className: "class2", count: 4, previous_sum: 3}],
+          tn: [{ bin: 0, className: "class1", count: 5, previous_sum: 8}],
+          fn: [{ bin: 0, className: "class0", count: 2, previous_sum: 0} , { bin: 0, className: "class2", count: 6, previous_sum: 2}]
           },
           {
-          bin: "bin2",
-          tp: [{ bin: "bin2", className: "class1", count: 2, previous_sum: 7 }],
-          fp: [{ bin: "bin2", className: "class0", count: 3, previous_sum: 0} , { bin: "bin2", className: "class2", count: 4, previous_sum: 3}],
-          tn: [{ bin: "bin2", className: "class1", count: 4, previous_sum: 7 }],
-          fn: [{ bin: "bin2", className: "class0", count: 3, previous_sum: 0} , { bin: "bin2", className: "class2", count: 4, previous_sum: 3}]
+          bin: 1,
+          tp: [{ bin: 1, className: "class1", count: 2, previous_sum: 7 }],
+          fp: [{ bin: 1, className: "class0", count: 3, previous_sum: 0} , { bin: 1, className: "class2", count: 4, previous_sum: 3}],
+          tn: [{ bin: 1, className: "class1", count: 4, previous_sum: 7 }],
+          fn: [{ bin: 1, className: "class0", count: 3, previous_sum: 0} , { bin: 1, className: "class2", count: 4, previous_sum: 3}]
           },
           {
-          bin: "bin3",
-          tp: [{ bin: "bin3", className: "class1", count: 1, previous_sum: 9}],
-          fp: [{ bin: "bin3", className: "class0", count: 6, previous_sum: 0} , { bin: "bin3", className: "class2", count: 3, previous_sum: 6}],
-          tn: [{ bin: "bin3", className: "class1", count: 1, previous_sum: 8}],
-          fn: [{ bin: "bin3", className: "class0", count: 4, previous_sum: 0} , { bin: "bin3", className: "class2", count: 4, previous_sum: 4}]
+          bin: 2,
+          tp: [{ bin: 2, className: "class1", count: 1, previous_sum: 9}],
+          fp: [{ bin: 2, className: "class0", count: 6, previous_sum: 0} , { bin: 2, className: "class2", count: 3, previous_sum: 6}],
+          tn: [{ bin: 2, className: "class1", count: 1, previous_sum: 8}],
+          fn: [{ bin: 2, className: "class0", count: 4, previous_sum: 0} , { bin: 2, className: "class2", count: 4, previous_sum: 4}]
           }
         ]
       }
@@ -168,7 +203,7 @@ function Histogram(dataModel){
         .rangeRound([0, width])
 
     var yScale = d3.scaleBand()
-        .domain(["bin1", "bin2", "bin3"])
+        .domain([0, 1, 2])
         .rangeRound([0, height]).padding(0.1)
 
 
@@ -176,6 +211,8 @@ function Histogram(dataModel){
         .range(["#d73027","#f46d43","#fdae61","#a6d96a","#66bd63","#1a9850"])
         .domain("class0", "class1", "class2")
 
+    var strokeWidth = 5
+    var textLength = 40
 
     var svg = d3.select(".histograms")
         .selectAll(".svg-histogram")
@@ -207,8 +244,8 @@ function Histogram(dataModel){
         .attr("x", function(d){ return xScale(d.previous_sum)})
         .attr("y", function (d) {return yScale(d.bin)})
         .attr("fill", function (d) { return color(d.className)})
-        //.attr("style", "fill:url(pattern-stripe)")
-        .attr("mask", "url(#mask-stripe)")
+        //.attr("style", "fill=url(#pattern-stripe)")
+        //.attr("mask", "url(#mask-stripe)")
 
     var tp = bins.selectAll("g")  // will store d.count and d.className
         .data( function(d) {return d.tp})
@@ -224,11 +261,14 @@ function Histogram(dataModel){
         .data( function(d) {return d.fn})
       .enter().append("rect")
         .attr("class", "fn")
-        .attr("height", function(d) { return yScale.bandwidth()})
-        .attr("width", function (d) { return xScaleCount(d.count)})
-        .attr("x", function(d){ return xScale(- (d.count + d.previous_sum))})
-        .attr("y", function (d) {return yScale(d.bin)})
-        .attr("fill", function (d) { return color(d.className)})
+        .attr("height", function(d) { return yScale.bandwidth() - strokeWidth})
+        .attr("width", function (d) { return xScaleCount(d.count) - strokeWidth})
+        .attr("x", function(d){ return xScale(- (d.count + d.previous_sum)) + strokeWidth/2})
+        .attr("y", function (d) {return yScale(d.bin) + strokeWidth/2})
+        .attr("fill", "white")
+        .attr("stroke", function (d) { return color(d.className)})
+        .attr("stroke-width", strokeWidth)
+        //.attr("stroke-alignment", "inner")
 
     var tn = bins.selectAll("g")  // will store d.count and d.className
         .data( function(d) {return d.tn})
@@ -247,13 +287,22 @@ function Histogram(dataModel){
           .attr("x2", xScale(0))
           .attr("y2", height)
           .attr("stroke", function(d) { return color(d.className)})
+          .attr("stroke-width", 3)
+          .attr("stroke-opacity", 0.5)
 
-        //.append("text")
-        //.text(function(d) {return d})
+      svg.append("text")
+          .attr("class", "histogram-label")
+          .attr("x", width/2 - textLength/2)
+          .attr("y", height + margin.bottom )
+          .attr("textLength", textLength)
+          .attr("font-family", "Verdana")
+          .attr("font-size", 15)
+          .text(function(d) {return d.className})
+          .attr("fill", function(d) { return color(d.className)})
   }
 
-  //this.constructData()
-  //console.log(this.histogramData)
+  this.constructData()
+  console.log(this.histogramData)
   //this.max.negative = this.findMax(negative)
   //this.max.positive = this.findMax(positive)
   this.constructHistogram()
