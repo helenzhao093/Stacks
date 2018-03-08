@@ -1,7 +1,7 @@
 import numpy as np
 
 # takes filenames of data, creates a csv file of the data
-def create_csv_file(probabilities_csv, actual_class_csv, predicted_class_csv, features_csv, output_fname, multilabel=False):
+def create_csv_file(probabilities_csv, actual_class_csv, predicted_class_csv, features_csv, output_fname, multilabel=True):
     probabilities = np.genfromtxt(probabilities_csv, delimiter=',')
     actual_class = np.genfromtxt(actual_class_csv, delimiter=',')
     predicted_class = np.genfromtxt(predicted_class_csv, delimiter=',')
@@ -9,7 +9,8 @@ def create_csv_file(probabilities_csv, actual_class_csv, predicted_class_csv, fe
     if not multilabel:
         actual_class = vectorize(actual_class, len(probabilities[0]))
         predicted_class = vectorize(predicted_class, len(probabilities[0]))
-
+    
+    print(actual_class)
     assert len(actual_class[0]) == len(probabilities[0]), "Number of classes does not match number of predicted probabilities"
     assert len(predicted_class[0]) == len(probabilities[0]), "Number of classes does not match number of predicted probabilities"
 
@@ -33,7 +34,7 @@ def vectorize(y, num_classes):
 
 
 # takes numpy arrays,  concatenated numpy array
-def concatenate_data(probabilities, actual_class, predicted_class, features, multilabel=False):
+def concatenate_data(probabilities, actual_class, predicted_class, features, multilabel=True):
     #concatanate the arrays
     return np.column_stack((np.column_stack((np.column_stack((probabilities, actual_class)), predicted_class)), features))
 
@@ -86,7 +87,7 @@ def find_file(filename, rootdir):
             return os.path.join(dirpath, filename)
 
 
-create_csv_file("proba_4_classes_k_neighbors.csv", "actual_4_classes.csv", "predicted_4_classes_k_neighbors.csv", "features_4_classes.csv", "k_neighbors_4_classes")
+create_csv_file("proba_ml_4_classes_random_forest.csv", "actual_ml_4_classes.csv", "predicted_ml_4_classes_random_forest.csv", "features_ml_4_classes.csv", "random_forest_ml_4_classes")
 
 #if __name__ == '__main__':
 #    # Locate data files

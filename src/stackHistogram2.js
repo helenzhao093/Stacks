@@ -183,15 +183,17 @@ function Histogram(dataModel, settings){
 
     console.log(fakedata)*/
     var xDomainScale = Math.max(maxNeg , maxPos)
-    var strokeWidth = 3
+    console.log(maxNeg, maxPos)
+    var strokeWidth = 2
     var textLength = 40
+    var yAxisStroke = 2
 
     var xScale = d3.scaleLinear()
-        .domain([-xDomainScale, xDomainScale]).nice()
+        .domain([-30, 30]).nice()
         .rangeRound([0, width])
 
     var xScaleCount = d3.scaleLinear()
-        .domain([0, 2*xDomainScale])
+        .domain([0, 60])
         .rangeRound([0, width])
 
     var yScale = d3.scaleBand()
@@ -230,9 +232,10 @@ function Histogram(dataModel, settings){
         .attr("class", "fp")
         .attr("height", function(d) { return yScale.bandwidth()})
         .attr("width", function (d) { return xScaleCount(d.count)})
-        .attr("x", function(d){ return xScale(d.previous_sum)})
+        .attr("x", function(d){ return xScale(d.previous_sum) + yAxisStroke/2})
         .attr("y", function (d) {return yScale(d.bin)})
         .attr("fill", function (d) { return color(d.className)})
+        .attr("text", function(d){ return d.previous_sum + "," + d.count })
         //.attr("style", "fill=url(#pattern-stripe)")
         //.attr("mask", "url(#mask-stripe)")
 
@@ -242,9 +245,11 @@ function Histogram(dataModel, settings){
         .attr("class", "tp")
         .attr("height", function(d) { return yScale.bandwidth()})
         .attr("width", function (d) { return xScaleCount(d.count) })
-        .attr("x", function(d){ return xScale(d.previous_sum)})
+        .attr("x", function(d){ return xScale(d.previous_sum) + yAxisStroke/2})
+        //.attr("x", function(d){ return xScale(0) + xScaleCount(d.previous_sum) + yAxisStroke/2})
         .attr("y", function (d) {return yScale(d.bin)})
         .attr("fill", function (d) { return color(d.className)})
+        .attr("text", function(d){ return xScale(d.previous_sum) + "," + xScaleCount(d.previous_sum)})
 
     var fn = bins.selectAll("g")
         .data( function(d) {return d.fn})
@@ -252,12 +257,14 @@ function Histogram(dataModel, settings){
         .attr("class", "fn")
         .attr("height", function(d) { return yScale.bandwidth() - strokeWidth})
         .attr("width", function (d) { return (d.count == 0) ? 0 : (xScaleCount(d.count) - strokeWidth)})
-        .attr("x", function(d){ return (d.count == 0) ? 0: (xScale(- (d.count + d.previous_sum)) + strokeWidth/2) })
+        .attr("x", function (d) { return  (d.previous_sum == 0) ? xScale(0) - xScaleCount(d.count) + strokeWidth/2 - yAxisStroke/2 : xScale(0) - xScaleCount(d.previous_sum) - xScaleCount(d.count) + strokeWidth/2 - yAxisStroke/2})
+        //.attr("x", function(d){ return xScale(0) - xScaleCount(d.previous_sum + d.count)})
         .attr("y", function (d) {return yScale(d.bin) + strokeWidth/2})
         .attr("fill", "white")
         .attr("stroke", function (d) { return color(d.className)})
         .attr("stroke-width", strokeWidth)
-        .attr("text", function (d) { return d.count })
+        .attr("text", function(d){ return d.previous_sum + "," + d.count })
+
         //.attr("stroke-alignment", "inner")
 
     var tn = bins.selectAll("g")  // will store d.count and d.className
@@ -266,9 +273,11 @@ function Histogram(dataModel, settings){
         .attr("class", "tn")
         .attr("height", function(d) { return yScale.bandwidth()})
         .attr("width", function(d) { return xScaleCount(d.count)})
-        .attr("x", function(d){ return xScale(-(d.count+ d.previous_sum))})
+        .attr("x", function(d){ return (d.previous_sum == 0) ? xScale(0) - xScaleCount(d.count) - yAxisStroke/2 : xScale(0) - xScaleCount(d.previous_sum) - xScaleCount(d.count) - yAxisStroke/2 } )
         .attr("y", function (d) {return yScale(d.bin)})
         .attr("fill", function (d) { return color(d.className)})
+        .attr("text", function(d){ return d.previous_sum + "," + d.count })
+
 
       svg.append("g")
           .attr("class", "y-axis")
@@ -277,7 +286,7 @@ function Histogram(dataModel, settings){
           .attr("x2", xScale(0))
           .attr("y2", height)
           .attr("stroke", function(d) { return color(d.className)})
-          .attr("stroke-width", 3)
+          .attr("stroke-width", yAxisStroke)
           .attr("stroke-opacity", 0.5)
 
       svg.append("text")

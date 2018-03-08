@@ -2,7 +2,7 @@ $(document).ready(function(){
 
   // load the dataset
   loadDataset = function(){
-    d3.csv("datasets/multiclass/random_forest_4_classesdataset.csv", type, function(error, data) {
+    d3.csv("datasets/multilabel/random_forest_ml_4_classesdataset.csv", type, function(error, data) {
       console.log(data)
       console.log(data[0].prob0);
       interface = new Interface(data)
