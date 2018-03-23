@@ -1,0 +1,69 @@
+html {
+  height: 100%;
+  min-width: 100%;
+  min-height: 100%;
+}
+
+body {
+  font-family: "Helvetica Neue";
+  min-height: 100%;
+  width: 1366px;
+  margin: 0;
+}
+
+.header-pane{
+  width: 100%;
+  height: 50px;
+  overflow: hidden;
+  background: linear-gradient(to right, #333, #333);
+}
+
+.histograms {
+  width: 1366px;
+  height:400px
+}
+
+.table-pane {
+  width: 1000px
+  margin: auto 0
+}
+
+#datatable_length {
+  visibility: hidden;
+}
+
+#datatable_filter {
+  visibility: hidden;
+}
+
+.prob-column{
+  border-right: 4px solid;
+}
+
+.TN {
+  background: rgba(0,0,0,0.5)
+}
+
+.TP {
+  background: rgba(0,128,0,0.5)
+}
+
+.FP {
+  background: rgba(255,0,0,0.5)
+}
+
+.FN {
+  background: rgba(255,255,0,0.5)
+}
+
+.table-pane {
+  width: 1000px;
+  margin:auto
+}
+
+.connect-histograms path {
+    fill: none;
+    stroke: #ccc;
+    stroke-opacity: .5;
+    shape-rendering: crispEdges;
+}

@@ -3,18 +3,34 @@
     <head>
         <meta charset="utf-8">
         <title>Stacks</title>
-        <script src="https://code.jquery.com/jquery-1.9.1.min.js"></script>
+        <script src="https://code.jquery.com/jquery-2.2.4.min.js"></script>
         <style>
           rect.fp{
             mask: url(#mask-stripe)
           }
-          rect.fn{
-            
-          }
         </style>
     </head>
     <body>
-      <div class="histograms"></div>
+      <div class="header-pane">
+      </div>
+      <div class="settings-pane">
+        <div class="row">
+          <input id="tp-threshold" />
+          <input id="tn-threshold" />
+          <input type="checkbox" id="tp" />
+          <input type="checkbox" id="tn" />
+          <input type="checkbox" id="fp" />
+          <input type="checkbox" id="fn" />
+          <button id="filter">Filter</button>
+          <button id="clearFilter">Clear</button>
+        </div>
+      </div>
+      <svg class="histograms">
+        <g class="connect-histograms"></g>
+      </svg>
+      <div class="table-pane">
+        <table id="datatable" class="dt-right dataTable compact hover"></table>
+      </div>
       <svg width="220" height="400">
         <defs>
         <pattern id="pattern-stripe"
@@ -29,9 +45,14 @@
       </defs>
       </svg>
       <script type="text/javascript" src="d3/d3.js"></script>
+      <link rel="stylesheet" type="text/css" href="appStyle.css">
+      <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.16/css/jquery.dataTables.css">
+      <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.16/js/jquery.dataTables.js"></script>
       <script type="text/javascript" src="src/loadData.js"></script>
       <script type="text/javascript" src="src/interface.js"></script>
       <script type="text/javascript" src="src/model.js"></script>
+      <script type="text/javascript" src="src/settings.js"></script>
       <script type="text/javascript" src="src/stackHistogram2.js"></script>
+      <script type="text/javascript" src="src/datatable.js"></script>
     </body>
 </html>

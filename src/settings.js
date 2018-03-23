@@ -1,6 +1,7 @@
 function Settings(){
   this.TNThreshold = 0.1 //if lower than 0.1 then show
-  this.TPThreshold = 1.0 //if lower than 0.5 than show
+  this.TPThreshold = 0.8 //if lower than 0.5 than show
+  this.display = { TP: true, FP: true, FN: true, TN: false }
 }
 
 // Settings Function
