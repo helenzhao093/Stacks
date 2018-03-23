@@ -1,0 +1,161 @@
+html {
+  height: 100%;
+  min-width: 100%;
+  min-height: 100%;
+}
+
+body {
+  font-family: "Helvetica Neue";
+  min-height: 100%;
+  width: 1366px;
+  margin: 0;
+}
+
+#tp-threshold-slider {
+  height: 0.5em;
+  border-color: grey;
+  margin: 0.3em 0.5em;
+}
+
+#tp-threshold-slider .noUi-connect{
+  background: green
+}
+
+#tn-threshold-slider {
+  height: 0.5em;
+  border-color: grey;
+  margin: 0.3em 0.5em;
+}
+
+#tn-threshold-slider .noUi-connect{
+  background: grey
+}
+
+#tp-container {
+  float:left;
+  width: 150px;
+  padding-right: 5px;
+}
+
+#tn-container {
+  float:left;
+  width: 150px;
+  padding-left: 5px;
+}
+
+.switch {
+  float: left;
+  width:80px
+}
+
+.switch label input[type="checkbox"]:checked + .lever.tp {
+  background: rgba(0,128,0,0.5)
+}
+
+.switch label input[type="checkbox"]:checked + .lever.tn {
+  background: rgba(0,0,0,0.5)
+}
+
+.switch label input[type="checkbox"]:checked + .lever.fn {
+  background: rgba(255,255,0,0.5)
+}
+
+.switch label input[type="checkbox"]:checked + .lever.fp {
+  background: rgba(255,0,0,0.5)
+}
+
+.switch label input[type="checkbox"]:checked + .lever::after {
+  background-color: #d1d1d1
+}
+
+.header-pane{
+  width: 100%;
+  height: 50px;
+  overflow: hidden;
+  background: linear-gradient(to right, #333, #333);
+}
+
+.settings-pane {
+  width: 1366px
+}
+
+#settings-form {
+  overflow: :hidden
+  width: 2000px
+}
+
+.histograms {
+  width: 1366px;
+  height:400px
+}
+
+.table-pane {
+  width: 1000px
+  margin: auto 0
+}
+
+#datatable_length {
+  visibility: hidden;
+}
+
+#datatable_filter {
+  visibility: hidden;
+}
+
+.prob-column{
+  border-right: 4px solid;
+}
+
+.TN {
+  background: rgba(0,0,0,0.5)
+}
+
+.TP {
+  background: rgba(0,128,0,0.5)
+}
+
+.FP {
+  background: rgba(255,0,0,0.5)
+}
+
+.FN {
+  background: rgba(255,255,0,0.5)
+}
+
+.table-pane {
+  width: 1000px;
+  margin:auto
+}
+
+td, th {
+  border-radius: 0px
+}
+
+tr:hover {
+  background-color: #ffa;
+}
+
+.connect-histograms path {
+    fill: none;
+    stroke: #ccc;
+    stroke-opacity: .5;
+    shape-rendering: crispEdges;
+}
+
+.noUi-horizontal .noUi-handle-lower .noUi-tooltip {
+  background-color: rgba(255,255,255,0);
+  border-radius: 50%;
+  border-width: 0;
+  padding: 0;
+  font-size: .7em;
+  bottom: 3px;
+}
+
+.noUi-horizontal .noUi-handle {
+  box-shadow: 0 1px 3px 1px rgba(0,0,0,0.4);
+  border-width: 0;
+  background-color: #d3d3d3;
+  border-radius: 50%;
+  width: 1.5em;
+  height: 1.5em;
+}

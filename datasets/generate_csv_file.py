@@ -86,7 +86,7 @@ def find_file(filename, rootdir):
             return os.path.join(dirpath, filename)
 
 
-create_csv_file("proba_4_classes_random_forest.csv", "actual_4_classes.csv", "predicted_4_classes_random_forest.csv", "features_4_classes.csv", "random_forest_4_classes")
+create_csv_file("proba_4_classes_random_forest.csv", "actual_4_classes.csv", "predicted_4_classes_random_forest.csv", "features_4_classes.csv", "1000_random_forest_4_classes")
 
 #if __name__ == '__main__':
 #    # Locate data files

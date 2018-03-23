@@ -3,6 +3,10 @@
     <head>
         <meta charset="utf-8">
         <title>Stacks</title>
+        <link rel="stylesheet" type="text/css" href="css/materialize.min.css">
+        <link rel="stylesheet" type="text/css" href="css/nouislider.min.css">
+        <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.16/css/jquery.dataTables.css">
+        <link rel="stylesheet" type="text/css" href="css/appStyle.css">
         <script src="https://code.jquery.com/jquery-2.2.4.min.js"></script>
         <style>
           rect.fp{
@@ -14,20 +18,54 @@
       <div class="header-pane">
       </div>
       <div class="settings-pane">
-        <div class="row">
-          <input id="tp-threshold" />
-          <input id="tn-threshold" />
-          <input type="checkbox" id="tp" />
-          <input type="checkbox" id="tn" />
-          <input type="checkbox" id="fp" />
-          <input type="checkbox" id="fn" />
-          <button id="filter">Filter</button>
-          <button id="clearFilter">Clear</button>
+        <div id="settings-form">
+          <div id="tp-container">
+            <label id="tp-label">Filter High TPs</label>
+            <div id="tp-threshold-slider" /> </div>
+          </div>
+          <div id="tn-container">
+            <label id="tn-label">Filter Low TNs</label>
+            <div id="tn-threshold-slider" /> </div>
+          </div>
+          <div class="switch">
+            <label>
+              TP
+              <input type="checkbox" id="tp">
+              <span class="lever tp"></span>
+            </label>
+          </div>
+          <div class="switch">
+            <label>
+              TN
+              <input type="checkbox" id="tn">
+              <span class="lever tn"></span>
+            </label>
+          </div>
+          <div class="switch">
+            <label>
+              FP
+              <input type="checkbox" id="fp">
+              <span class="lever fp"></span>
+            </label>
+          </div>
+          <div class="switch">
+            <label>
+              FN
+              <input type="checkbox" id="fn">
+              <span class="lever fn"></span>
+            </label>
+          </div>
         </div>
       </div>
+      <button id="filter">Filter</button>
+      <button id="clearFilter">Clear</button>
+      <div class="histogram-pane">
       <svg class="histograms">
-        <g class="connect-histograms"></g>
+        <g class="connect-histograms">
+          <path class=hover-line></path>
+        </g>
       </svg>
+    </div>
       <div class="table-pane">
         <table id="datatable" class="dt-right dataTable compact hover"></table>
       </div>
@@ -44,15 +82,15 @@
         </mask>
       </defs>
       </svg>
-      <script type="text/javascript" src="d3/d3.js"></script>
-      <link rel="stylesheet" type="text/css" href="appStyle.css">
-      <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.16/css/jquery.dataTables.css">
+      <script type="text/javascript" src="js/d3.min.js"></script>
       <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.16/js/jquery.dataTables.js"></script>
-      <script type="text/javascript" src="src/loadData.js"></script>
-      <script type="text/javascript" src="src/interface.js"></script>
-      <script type="text/javascript" src="src/model.js"></script>
-      <script type="text/javascript" src="src/settings.js"></script>
-      <script type="text/javascript" src="src/stackHistogram2.js"></script>
-      <script type="text/javascript" src="src/datatable.js"></script>
+      <script type="text/javascript" src="js/nouislider.min.js"></script>
+      <script type="text/javascript" src="js/materialize.min.js"></script>
+      <script type="text/javascript" src="js/loadData.js"></script>
+      <script type="text/javascript" src="js/interface.js"></script>
+      <script type="text/javascript" src="js/model.js"></script>
+      <script type="text/javascript" src="js/settings.js"></script>
+      <script type="text/javascript" src="js/stackHistogram2.js"></script>
+      <script type="text/javascript" src="js/datatable.js"></script>
     </body>
 </html>
