@@ -31,17 +31,33 @@ body {
   background: grey
 }
 
-#tp-container {
+
+#probRange-slider {
+  height: 0.5em;
+  border-color: grey;
+  margin: 0.3em 0.5em;
+}
+
+#probRange-slider .noUi-connect{
+  background: blue
+}
+
+#similarity-slider {
+  height: 0.5em;
+  border-color: grey;
+  margin: 0.3em 0.5em;
+}
+
+#similarity-slider .noUi-connect{
+  background: lilac
+}
+
+.slider-container {
   float:left;
   width: 150px;
   padding-right: 5px;
 }
 
-#tn-container {
-  float:left;
-  width: 150px;
-  padding-left: 5px;
-}
 
 .switch {
   float: left;
@@ -131,10 +147,6 @@ td, th {
   border-radius: 0px
 }
 
-tr:hover {
-  background-color: #ffa;
-}
-
 .connect-histograms path {
     fill: none;
     stroke: #ccc;
@@ -151,11 +163,23 @@ tr:hover {
   bottom: 3px;
 }
 
+.noUi-horizontal .noUi-handle-upper .noUi-tooltip {
+  background-color: rgba(255,255,255,0);
+  border-radius: 50%;
+  border-width: 0;
+  padding: 0;
+  font-size: .7em;
+  bottom: 3px;
+}
+
 .noUi-horizontal .noUi-handle {
   box-shadow: 0 1px 3px 1px rgba(0,0,0,0.4);
   border-width: 0;
   background-color: #d3d3d3;
-  border-radius: 50%;
+  /* border-radius: 50%;*/
   width: 1.5em;
   height: 1.5em;
+}
+.noUi-handle::after, .noUi-handle::before {
+  content: none
 }

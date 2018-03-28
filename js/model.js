@@ -34,6 +34,19 @@ function DataModel(data){
     return classNames
   })();
 
+  this.similarity_column = "similarity"
+  this.similarity_max = d3.max(this.data.map(function(d) {
+    return d[that.similarity_column];
+  }));
+
+  this.similarity_min = d3.min(this.data.map(function(d) {
+    return d[that.similarity_column];
+  }));
+
+  console.log(this.similarity_max)
+  console.log(this.similarity_min)
+
+
   //this.actualClasses.map(actual => "class" + actual.substring(6, 7))
 //  console.log(this.classNames)
 
@@ -41,7 +54,6 @@ function DataModel(data){
   function getColumnNames(columnName){
     return that.data.columns.filter(column => column.substring(0, columnName.length) == columnName)
   }
-
 
 
 }

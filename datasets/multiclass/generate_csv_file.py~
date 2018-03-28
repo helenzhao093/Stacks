@@ -47,10 +47,11 @@ def generate_csv(output_fname, dataset, num_classes, num_features):
 
     assert len(column_fmt) == len(dataset[0]), "Format of columns does not match number of columns"
 
-    generated_header = generate_header(num_classes, num_features)
-
-    # assert len(header) == len(dataset[0]), "Header length does not match number of columns"
-    # dataset = np.vstack((generated_header,dataset)) #add header to beginning of dataset
+    header = generate_header(num_classes, num_features)
+    print(header, len(header))
+    print(len(dataset[0]))
+    assert len(header) == len(dataset[0]), "Header length does not match number of columns"
+    dataset = np.vstack((generated_header,dataset)) #add header to beginning of dataset
 
     np.savetxt(output_fname+'dataset.csv', dataset, fmt=column_fmt, delimiter=',', header=generated_header)
 

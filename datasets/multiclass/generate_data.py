@@ -17,7 +17,7 @@ features_ml = []
 classes_ml = []
 
 def generate_multiclass_dataset(num_classes):
-    X, y = make_classification(n_samples=100, n_features=10, n_redundant=0, n_repeated=0, n_classes=num_classes, n_clusters_per_class=2, n_informative=4)
+    X, y = make_classification(n_samples=1000, n_features=10, n_redundant=0, n_repeated=0, n_classes=num_classes, n_clusters_per_class=2, n_informative=4)
     #features.append(X)
     #classes.append(y)
     np.savetxt('features_' + str(num_classes) + "_classes.csv", X, fmt='%5f', delimiter=',')
@@ -25,7 +25,7 @@ def generate_multiclass_dataset(num_classes):
     return X, y
 
 def  generate_multilabel_dataset(num_classes):
-    X_ml, y_ml = make_multilabel_classification(n_samples=100, n_features=10, n_classes=num_classes, n_labels=2, allow_unlabeled=False)
+    X_ml, y_ml = make_multilabel_classification(n_samples=1000, n_features=10, n_classes=num_classes, n_labels=2, allow_unlabeled=False)
     #features_ml.append(X_ml)
     #classes_ml.append(y_ml)
     np.savetxt('features_ml_' + str(num_classes) + "_classes.csv", X_ml, fmt='%5f', delimiter=',')
@@ -55,7 +55,7 @@ def generate_multilabel_predictions(num_classes, classifier, filename):
     np.savetxt("predicted_ml_" + str(num_classes) + "_classes_" + filename + ".csv", predicted, fmt='%i', delimiter=',')
     np.savetxt("proba_ml_" + str(num_classes) + "_classes_" + filename + ".csv", probabilities, fmt='%5f', delimiter=',')
 
-generate_multilabel_predictions(4, classifiers[1], 'random_forest')
+generate_multiclass_predictions(4, classifiers[1], 'random_forest')
 
 #digits = datasets.load_digits()
 #X_digits, y_digits = digits.data, digits.target

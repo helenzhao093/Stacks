@@ -30,10 +30,6 @@ function DataTable(dataModel, appSettings){
   tableData = modifyData(dataModel)
   console.log(tableData)
   // default check boxes
-  $('#tn').prop("checked", appSettings.displayDefault.TN)
-  $('#tp').prop("checked", appSettings.displayDefault.TP)
-  $('#fn').prop("checked", appSettings.displayDefault.FN)
-  $('#fp').prop("checked", appSettings.displayDefault.FP)
 
   var columns = []
   var classColumn = 0
@@ -75,34 +71,35 @@ function DataTable(dataModel, appSettings){
 
   // filtering
   filterDataTable = function(appSettings){
-
+    console.log(appSettings)
     $.fn.dataTable.ext.search.push( //if they are not matchings then remove them
       function(settings, data, dataIndex) {
-        for (i = 3; i < dataModel.numClasses * 4; i = i + 4){
-          if (data[i] == "FN"){
-            if (appSettings.display.FN){
-              return true;
+        for (i = classColumn; i < dataModel.numClasses * 4; i = i + 4){
+          if (inRange(data[i+3], appSettings)){ //probability in range
+            if (data[i] == "FN"){
+              if (appSettings.display.FN){
+                return true;
+              }
             }
-          }
-          else if (data[i] == "FP"){
-            if (appSettings.display.FP){
-              return true;
+            else if (data[i] == "FP"){
+              if (appSettings.display.FP){
+                return true;
+              }
             }
-          }
-          else if (data[i] == "TN"){
-            if (appSettings.display.TN && appSettings.TNThreshold < data[i-1]){
-              return true;
+            else if (data[i] == "TN"){
+              if (appSettings.display.TN && appSettings.TNThreshold < data[i+3]){
+                return true;
+              }
             }
-          }
-          else { //TP
-            if (appSettings.display.TP && appSettings.TPThreshold > data[i-1]){
-              return true;
+            else { //TP
+              if (appSettings.display.TP && appSettings.TPThreshold > data[i+3]){
+                return true;
+              }
             }
-          }
         }
-        return false;
       }
-    )
+      return false;
+    })
   }
 
   //$(document).ready(function(){
@@ -124,12 +121,15 @@ function DataTable(dataModel, appSettings){
   } );
 
   this.applyFilter = function(settings){
+    console.log(settings)
     filterDataTable(settings)
     this.table.draw()
   }
 
-  this.clearFilter = function(){
-    $.fn.dataTable.ext.search.pop()
+  this.clearFilter = function(numFilter){
+    for (i=0; i < numFilter; i++){
+      $.fn.dataTable.ext.search.pop()
+    }
     this.table.draw()
   }
 
