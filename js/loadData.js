@@ -2,9 +2,8 @@ $(document).ready(function(){
 
   // load the dataset
   loadDataset = function(){
-    //d3.csv("datasets/multilabel/random_forest_ml_4_classesdataset.csv", type, function(error, data) {
-    d3.csv("datasets/multiclass/cosine_similarity_1000_random_forest_4_classes_dataset.csv", type, function(error, data) {
-      console.log(data)
+    d3.csv("datasets/multiclass/euclid_similarity_100_random_forest_4_classes_dataset.csv", type, function(error, data) {
+    //d3.csv("datasets/multiclass/cosine_similarity_1000_random_forest_4_classes_dataset.csv", type, function(error, data) {
       console.log(data)
       interface = new Interface(data)
     })

@@ -2,6 +2,7 @@
 var getBinNum = function(prob, settings){
   var bin = Math.floor((prob - settings.probabilityRange.lowerBound)/
                         ((settings.probabilityRange.upperBound - settings.probabilityRange.lowerBound)/settings.numBins))
+  //var bin = Math.floor(prob/0.1)
   return (bin == 10) ? 9 : bin
 }
 
@@ -146,6 +147,100 @@ function Histogram(dataModel, settings){
     })
   )}
 
+  ///////////////
+  // SELECT BARS
+  //////////////
+  var numSelected = 0
+  var selectedInfo = []
+  var getInformation = function(element){
+    var thisClass = element.attr('class').split(' ')
+    var classification = thisClass[0] //fp, tp, tn, fn
+    var binNum = 9 - element.parent().attr('class').split(' ')[1] //bin number
+    var actualClass = "";
+    var predictedClass = "";
+    if (classification == 'TP'){
+      actualClass = element.parent().parent().parent().attr('class').split(' ')[1] //svg's class //use whatever the svg class is for probability
+      predictedClass = actualClass
+    }
+    else if (classification == 'FP'){
+      actualClass = thisClass[1]  //text
+      predictedClass = element.parent().parent().parent().attr('class').split(' ')[1] //svg class
+    }
+    else{
+      actualClass = element.parent().parent().parent().attr('class').split(' ')[1] //svg class
+      predictedClass = thisClass[1]
+    }
+
+    var info = {
+      classification: classification,
+      binNum: binNum,
+      actualClass: actualClass.charAt(actualClass.length - 1), //class0 => 0
+      predictedClass: predictedClass.charAt(predictedClass.length - 1)
+    }
+    return info
+  }
+
+  var removeSelection = function(element){
+    numSelected -= 1
+    /*var infoToRemove = getInformation(element)
+    var index = selectedInfo.indexOf(infoToRemove)
+    console.log(index)
+    if (index > -1){
+      selectedInfo.splice(index, 1);
+    }*/
+    selectedInfo = []
+    element.removeClass("highlight")
+    console.log(selectedInfo)
+  }
+
+  var addSelection = function(element){
+    numSelected += 1;
+    if (numSelected == 1){
+      element.addClass("highlight")
+      selectedInfo.push(getInformation(element))
+      console.log(selectedInfo)
+    }
+    else if(numSelected == 2){
+      element.addClass("highlight")
+      selectedInfo.push(getInformation(element))
+      console.log(selectedInfo)
+      // function to make comparisons
+    }
+    else{ //new selections
+      // remove highlights and empty info array
+      var all = $(".FP, .TP, .FN, .TN")
+      all.removeClass("highlight")
+      selectedInfo = []
+
+      // highlight new array, add info, change numSelected
+      element.addClass("highlight")
+      selectedInfo.push(getInformation(element))
+      numSelected = 1;
+      console.log(selectedInfo)
+    }
+  }
+
+  var makeSelection = function(){
+    // increment number of selected stacks
+
+    if ($(this).attr('class').split(' ').length == 3){
+      removeSelection($(this))
+    } //alright selected
+    else{
+      addSelection($(this));
+    }
+
+    if (numSelected == 2){
+      var newWindow = window.open('compare.html')
+      newWindow.histogramData = histogramData
+      newWindow.selectedInfo = selectedInfo
+      newWindow.dataModel = dataModel
+      newWindow.settings = settings
+      //makeComparison(selectedInfo, histogramData, dataModel.data)
+    }
+  }
+
+
   // append svg elements to "draw" the histogram from the data
   var constructHistogram = function(histogramData){
     console.log(settings)
@@ -220,6 +315,7 @@ function Histogram(dataModel, settings){
         .rangeRound([0, settings.histogramWidth])
 
     var yScale = d3.scaleBand()
+        //.domain(settings.bins)
         .domain([0,1,2,3,4,5,6,7,8,9])
         .rangeRound([0, settings.histogramHeight]).padding(0.1)
 
@@ -259,23 +355,24 @@ function Histogram(dataModel, settings){
     var bins = svg.selectAll(".row") // 9 bins per class
         .data(function(d){ return d.data })
       .enter().append("g")
-        .attr("class", function (d){ return "bin bin" + d.bin })
+        .attr("class", function (d){ return "bin " + d.bin })
 
     var fp = bins.selectAll("g")
         .data( function(d) {return d.fp})
       .enter().append("rect")
-        .attr("class", "fp")
+        .attr("class", function(d) {return "FP " + d.className })
         .attr("height", function(d) { return yScale.bandwidth()})
         .attr("width", function (d) { return xScaleCount(d.count)})
         .attr("x", function(d){ return xScale(d.previous_sum) + settings.yAxisStrokeWidth/2})
         .attr("y", function (d) {return yScale(d.bin)})
         .attr("fill", function (d) { return color(d.className)})
-        .attr("text", function(d){ return d.previous_sum + "," + d.count })
+        .attr("text", function(d){ return d.className })
+        //.attr("onclick", "function changerect(evt){ console.log(evt); var svg = evt.target; svg.attr(\"fill\", \"black\")}" )
 
     var tp = bins.selectAll("g")  // will store d.count and d.className
         .data( function(d) {return d.tp})
       .enter().append("rect")
-        .attr("class", "tp")
+        .attr("class", function(d) {return "TP " + d.className })
         .attr("height", function(d) { return yScale.bandwidth()})
         .attr("width", function (d) { return xScaleCount(d.count) })
         .attr("x", function(d){ return xScale(d.previous_sum) + settings.yAxisStrokeWidth/2})
@@ -286,7 +383,7 @@ function Histogram(dataModel, settings){
     var fn = bins.selectAll("g")
         .data( function(d) {return d.fn})
       .enter().append("rect")
-        .attr("class", "fn")
+        .attr("class", function(d) {return "FN " + d.className })
         .attr("height", function(d) { return yScale.bandwidth() - settings.fnStrokeWidth})
         .attr("width", function (d) { return (d.count == 0) ? 0 : (xScaleCount(d.count) - settings.fnStrokeWidth)})
         .attr("x", function (d) {
@@ -304,7 +401,7 @@ function Histogram(dataModel, settings){
     var tn = bins.selectAll("g")  // will store d.count and d.className
         .data( function(d) {return d.tn})
       .enter().append("rect")
-        .attr("class", "tn")
+        .attr("class", "TN")
         .attr("height", function(d) { return yScale.bandwidth()})
         .attr("width", function(d) { return xScaleCount(d.count)})
         .attr("x", function(d){ return (d.previous_sum == 0) ? xScale(0) - xScaleCount(d.count) - settings.yAxisStrokeWidth/2 : xScale(0) - xScaleCount(d.previous_sum) - xScaleCount(d.count) - settings.yAxisStrokeWidth/2 } )
@@ -312,6 +409,9 @@ function Histogram(dataModel, settings){
         .attr("fill", function (d) { return color(d.className)})
         .attr("text", function(d){ return d.previous_sum + "," + d.count })
 
+    fp.on("click", makeSelection)
+    fn.on("click", makeSelection)
+    tp.on("click", makeSelection)
 
       svg.append("g")
           .attr("class", "y-axis")
@@ -370,7 +470,7 @@ function Histogram(dataModel, settings){
     //exit
     bins.exit().remove()
 
-    var fp = bins.selectAll(".fp")
+    var fp = bins.selectAll(".FP")
         .data( function(d) {return d.fp})
 
     console.log(fp)
@@ -387,7 +487,7 @@ function Histogram(dataModel, settings){
     // exit
     fp.exit().remove()
 
-    var tp = bins.selectAll(".tp")  // will store d.count and d.className
+    var tp = bins.selectAll(".TP")  // will store d.count and d.className
         .data( function(d) {return d.tp})
 
     // enter
@@ -401,7 +501,7 @@ function Histogram(dataModel, settings){
     // exit
     tp.exit().remove();
 
-    var fn = bins.selectAll(".fn")
+    var fn = bins.selectAll(".FN")
         .data( function(d) {return d.fn})
 
     fn.enter().append("rect")
@@ -413,7 +513,7 @@ function Histogram(dataModel, settings){
 
     fn.exit().remove();
 
-    var tn = bins.selectAll(".tn")  // will store d.count and d.className
+    var tn = bins.selectAll(".TN")  // will store d.count and d.className
         .data( function(d) {return d.tn})
 
     tn.enter().append("rect")

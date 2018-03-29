@@ -105,6 +105,16 @@ body {
   height:400px
 }
 
+rect.FP{
+  mask: url(#mask-stripe)
+}
+
+.highlight {
+  fill: #FFFF00;
+  stroke: #E6E600;
+  stroke-width: 1;
+}
+
 .table-pane {
   width: 1000px
   margin: auto 0
@@ -122,20 +132,25 @@ body {
   border-right: 4px solid;
 }
 
-.TN {
+td.TN {
   background: rgba(0,0,0,0.5)
 }
 
-.TP {
+td.TP {
   background: rgba(0,128,0,0.5)
 }
 
-.FP {
+td.FP {
   background: rgba(255,0,0,0.5)
 }
 
-.FN {
+td.FN {
   background: rgba(255,255,0,0.5)
+}
+
+.similarity-column{
+  background: #d1d1d1;
+  border-right: 4px solid;
 }
 
 .table-pane {

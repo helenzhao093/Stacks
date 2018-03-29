@@ -32,13 +32,15 @@ function DataTable(dataModel, appSettings){
   // default check boxes
 
   var columns = []
-  var classColumn = 0
-  var actualColumn = 1
-  var predictedColumn = 2
-  var probColumn = 3
+  var classColumn = 1
+  var actualColumn = 2
+  var predictedColumn = 3
+  var probColumn = 4
   var columnPerClass = 4
   var classColumns = dataModel.numClasses * 3 + dataModel.numFeatures
+  var similarityIndex = 0 //dataModel.numClasses * columnPerClass
 
+  columns.push({data: dataModel.similarity_column, title: "similarity"})
   for (i = 0; i < dataModel.numClasses; i++){
     columns.push({data: dataModel.classNames[i], title: dataModel.classNames[i]})
     columns.push({data: dataModel.actualClasses[i], type: "num", title: dataModel.actualClasses[i]})
@@ -54,6 +56,7 @@ function DataTable(dataModel, appSettings){
   console.log(columns)
 
   var columnDef = []
+  columnDef.push({targets:[similarityIndex], className: "similarity-column"})
   for (i = actualColumn; i < dataModel.numClasses * columnPerClass; i = i + columnPerClass){
     columnDef.push({targets:[i], orderData:[i,i+1, i+2]})
   }
@@ -75,7 +78,8 @@ function DataTable(dataModel, appSettings){
     $.fn.dataTable.ext.search.push( //if they are not matchings then remove them
       function(settings, data, dataIndex) {
         for (i = classColumn; i < dataModel.numClasses * 4; i = i + 4){
-          if (inRange(data[i+3], appSettings)){ //probability in range
+          //console.log(data[similarityIndex])
+          if (inRange(data[i+3], appSettings) && inRangeSimilarity(data[similarityIndex], appSettings)){ //probability in range
             if (data[i] == "FN"){
               if (appSettings.display.FN){
                 return true;
@@ -116,8 +120,10 @@ function DataTable(dataModel, appSettings){
     if (data == "TN" || data == "TP" || data == "FP" || data == "FN"){
       currentClass = data
     }
-    //console.log(this.node().className)
-    this.node().className = this.node().className + " " + currentClass
+    //console.log(this.node().className != "similarity-column sorting_1")
+    if (this.node().className != "similarity-column sorting_1"){
+      this.node().className = this.node().className + " " + currentClass
+    }
   } );
 
   this.applyFilter = function(settings){

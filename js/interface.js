@@ -88,6 +88,7 @@ function Interface(data){
     }
   }
 
+
   console.log(dataModel)
   //this.histogramContainer = d3.select(".histograms")
 
@@ -99,6 +100,8 @@ function Interface(data){
     settings.probabilityRange.upperBound = +probRangeSlider.noUiSlider.get()[1];
     histograms.updateData(histograms.constructData(dataModel, settings))
   })*/
+
+
   var numFilter = 0;
 
   $('#filter').on('click', function(e){
