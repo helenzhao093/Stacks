@@ -89,10 +89,11 @@ function Interface(data){
   }
 
 
-  console.log(dataModel)
+  //console.log(dataModel)
   //this.histogramContainer = d3.select(".histograms")
 
-  var histograms = new Histogram(dataModel, settings);
+  var boxPlots = new BoxPlot(dataModel, settings)
+  var histograms = new Histogram(dataModel, settings, boxPlots);
   var datatable = new DataTable(dataModel, settings)
 
 /*  probRangeSlider.noUiSlider.on('update', function(){

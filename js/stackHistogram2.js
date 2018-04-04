@@ -20,7 +20,7 @@ var inRangeSimilarity = function(prob, settings){
   return false;
 }
 
-function Histogram(dataModel, settings){
+function Histogram(dataModel, settings, boxPlots){
   /*var margin = { top: 20, right: 0, bottom: 20, left: 0 }
   var width = 300 - margin.left - margin.right
   var height = 400 - margin.top - margin.bottom
@@ -231,12 +231,12 @@ function Histogram(dataModel, settings){
     }
 
     if (numSelected == 2){
-      var newWindow = window.open('compare.html')
+      /*var newWindow = window.open('compare.html')
       newWindow.histogramData = histogramData
       newWindow.selectedInfo = selectedInfo
       newWindow.dataModel = dataModel
-      newWindow.settings = settings
-      //makeComparison(selectedInfo, histogramData, dataModel.data)
+      newWindow.settings = settings*/
+      boxPlots.makeComparison(selectedInfo, histogramData, dataModel.data)
     }
   }
 

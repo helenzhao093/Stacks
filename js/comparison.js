@@ -1,7 +1,7 @@
-$(document).ready(function(){
-  console.log(dataModel)
-  console.log(selectedInfo)
-  console.log(settings)
+function BoxPlot(dataModel, settings){
+  //console.log(dataModel)
+  //console.log(selectedInfo)
+  //console.log(settings)
   // boxplot descriptions
   var bottomAxisHeight = 40
   var titleHeight = 30
@@ -15,7 +15,7 @@ $(document).ready(function(){
 
   var boxQuartiles = function (d) { // d is an array
     var sorted = d.sort(function(a,b){return a - b})
-    console.log(sorted)
+    //console.log(sorted)
      return [
        d3.quantile(sorted, 0),
        d3.quantile(sorted, 0.25),
@@ -41,7 +41,7 @@ $(document).ready(function(){
         })
       })
     })
-    console.log(data)
+    //console.log(data)
     return data
   }
 
@@ -82,10 +82,15 @@ $(document).ready(function(){
   var legendBoxHeight = 20
   var legendRowHeight = 25
   function constructLegend(info){
+
+    /* remove the previous legend */
+    d3.select(".svg-legend").remove()
+
     var svg = d3.select(".legend")
       .append("svg")
       .attr("width", legendWidth)
       .attr("height", legendHeight)
+      .attr("class", "svg-legend")
 
     for (var i = 0; i < info.length; i++){
       var row = svg.append("g")
@@ -110,6 +115,7 @@ $(document).ready(function(){
   }
 
   function constructAllBoxPlots(allPlotData, selectedInfo){
+    d3.selectAll(".svg-boxplot").remove()
     constructBoxPlots(allPlotData[0], selectedInfo, ".probability-boxplot-pane")
     constructBoxPlots(allPlotData[1], selectedInfo, ".feature-boxplot-pane")
     constructBoxPlots(allPlotData[2], selectedInfo, ".similarity-boxplot-pane")
@@ -118,6 +124,9 @@ $(document).ready(function(){
   function constructBoxPlots(boxPlotData, selectedInfo, divClassName){
     //[ [{}{}] [{}{}] [{}{}] ]
     //var divClassNames = [".probability-boxplot-pane", ".feature-boxplot-pane", ".similarity-boxplot-pane"]
+
+    /* remove all the previous box-plots */
+
       boxPlotData.forEach(function(pairOfData){
         var title = pairOfData[0].name
 
@@ -136,11 +145,12 @@ $(document).ready(function(){
           .rangeRound([0, plotHeight - boxHeight])
 
         // setup svg and group that will contain the box plot
-        console.log(divClassName)
+        //console.log(divClassName, pairOfData)
         var svg = d3.select(divClassName)
           .append("svg")
             .attr("width", totalWidth)
             .attr("height", totalHeight)
+            .attr("class", "svg-boxplot")
           .append("g")
             .attr("transform", "translate(" + margin.left + "," + margin.top + ")")
 
@@ -189,8 +199,8 @@ $(document).ready(function(){
             .attr("width", function(d){
             	//console.log(d.quartile[2] - d.quartile[0])
             	//console.log(xScale(2))
-              console.log(d.quartiles)
-              console.log(Math.abs(d.quartiles[3]) - d.quartiles[1], xScale(d.quartiles[3]) - xScale(d.quartiles[1]))
+              //console.log(d.quartiles)
+              //console.log(Math.abs(d.quartiles[3]) - d.quartiles[1], xScale(d.quartiles[3]) - xScale(d.quartiles[1]))
               return xScale(d.quartiles[3]) - xScale(d.quartiles[1]);
             })
             .attr("height", boxHeight)
@@ -255,25 +265,25 @@ $(document).ready(function(){
       var colorIndex = settings.allClassNames.indexOf("class" + info["actualClass"])
       colors.push(settings.colorRange[colorIndex])
     })
-    console.log(colors)
+    //console.log(colors)
 
     selectedInfo.forEach(function(d, i){
       d.groupNum = i,
       d.color = colors[i]
     });
-    console.log(selectedInfo)
+    //console.log(selectedInfo)
   }
 
-  var makeComparison = function(selectedInfo, histogramData, data){
+  this.makeComparison = function(selectedInfo, histogramData, data){
     var group1 = filterDataForSelected(data, selectedInfo[0])
     var group2 = filterDataForSelected(data, selectedInfo[1])
 
     var boxPlotData = constructAllPlotData([group1,group2], dataModel)
-
+    console.log(boxPlotData)
     modifySelectedInfo(selectedInfo, boxPlotData)
     constructLegend(selectedInfo)
     constructAllBoxPlots(boxPlotData, selectedInfo)
   }
 
-  makeComparison(selectedInfo, histogramData, dataModel.data)
-})
+  //makeComparison(selectedInfo, histogramData, dataModel.data)
+}
