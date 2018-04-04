@@ -8,20 +8,56 @@
         <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.16/css/jquery.dataTables.css">
         <link rel="stylesheet" type="text/css" href="css/appStyle.css">
         <script src="https://code.jquery.com/jquery-2.2.4.min.js"></script>
+        <script>
+          $(function(){
+            $('#probability-tab').load("stackHistogram.html")
+            $('#feature-tab').load("compare.html");
+            $('#distance-tab').load("distanceHistogram.html")
+          })
+
+          function openContent(evt, tabName){
+            var i, tabcontent, tablinks;
+
+            /* set display for tabs to none */
+            tabcontent = document.getElementsByClassName("tabcontent");
+            for (i = 0; i < tabcontent.length; i++){
+              tabcontent[i].style.display = "none";
+            }
+
+            /* remove active class from tablinks buttons */
+            tablinks = document.getElementsByClassName("tablinks");
+            for (i = 0; i < tablinks.length; i++){
+              console.log(tablinks[i])
+              tablinks[i].classList.remove("active");
+            }
+
+            /* show the selected tab */
+            document.getElementById(tabName).style.display = "block";
+
+            /* add active class to the selected tab */
+            evt.currentTarget.classList.add("active")
+          }
+        </script>
     </head>
     <body>
       <div class="header-pane">
       </div>
+      <div class="tab">
+        <button class="tablinks" onclick="openContent(event, 'probability-tab')">Probability</button>
+        <button class="tablinks" onclick="openContent(event, 'distance-tab')">Distance</button>
+        <button class="tablinks" onclick="openContent(event, 'feature-tab')">Features</button>
+      </div>
+
       <div class="settings-pane">
         <div id="settings-form">
           <div class="slider-container" id="similarity-container">
             <label id="similarity-label">Similarity Range</label>
-            <div id="similarity-slider" /> </div>
+            <div id="distance-slider" /> </div>
           </div>
-          <div class="slider-container" id="probRange-container">
+          <!--<div class="slider-container" id="probRange-container">
             <label id="probRange-label">Probability Range </label>
             <div id="probRange-slider" /> </div>
-          </div>
+          </div> -->
           <div class="slider-container" id="tp-container">
             <label id="tp-label">Filter High TPs</label>
             <div id="tp-threshold-slider" /> </div>
@@ -62,34 +98,17 @@
       </div>
       <button id="filter">Filter</button>
       <button id="clearFilter">Clear</button>
-      <div class="histogram-pane">
-      <svg class="histograms">
-        <g class="connect-histograms">
-          <path class=hover-line></path>
-        </g>
-      </svg>
-    </div>
-      <div class="table-pane">
-        <table id="datatable" class="dt-right dataTable compact hover"></table>
-      </div>
-      <svg width="220" height="400">
-        <defs>
-        <pattern id="pattern-stripe"
-          width="4" height="4"
-          patternUnits="userSpaceOnUse"
-          patternTransform="rotate(45)">
-          <rect width="2" height="4" transform="translate(0,0)" fill="white"></rect>
-        </pattern>
-        <mask id="mask-stripe">
-          <rect width="100%" height="100%" fill="url(#pattern-stripe)" />
-        </mask>
-      </defs>
-      </svg>
+
+      <div id="probability-tab" class="tabcontent"></div>
+      <div id="distance-tab" class="tabcontent"></div>
+      <div id="feature-tab" class="tabcontent"></div>
+
       <script type="text/javascript" src="js/d3.min.js"></script>
       <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.16/js/jquery.dataTables.js"></script>
       <script type="text/javascript" src="js/nouislider.min.js"></script>
       <script type="text/javascript" src="js/materialize.min.js"></script>
       <script type="text/javascript" src="js/loadData.js"></script>
+      <script type="text/javascript" src="js/histogramHelpers.js"></script>
       <script type="text/javascript" src="js/interface.js"></script>
       <script type="text/javascript" src="js/model.js"></script>
       <script type="text/javascript" src="js/settings.js"></script>

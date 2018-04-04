@@ -1,39 +1,27 @@
 // convert probability to bin
-var getBinNum = function(prob, settings){
+/*var getBinNum = function(prob, settings){
   var bin = Math.floor((prob - settings.probabilityRange.lowerBound)/
                         ((settings.probabilityRange.upperBound - settings.probabilityRange.lowerBound)/settings.numBins))
   //var bin = Math.floor(prob/0.1)
   return (bin == 10) ? 9 : bin
-}
-
+}*/
+/*
 var inRange = function(prob, settings){
   if (prob > settings.probabilityRange.lowerBound && prob < settings.probabilityRange.upperBound){
     return true;
   }
   return false;
-}
+}*/
 
-var inRangeSimilarity = function(prob, settings){
+/*var inRangeSimilarity = function(prob, settings){
   if (prob > settings.similarityRange.lowerBound && prob < settings.similarityRange.upperBound){
     return true;
   }
   return false;
-}
-
+}*/
 function Histogram(dataModel, settings, boxPlots){
-  /*var margin = { top: 20, right: 0, bottom: 20, left: 0 }
-  var width = 300 - margin.left - margin.right
-  var height = 400 - margin.top - margin.bottom
-  var data = dataModel.data
-  var probColumns = dataModel.probColumns
-
-  var max = {negative: 0, positive: 0}
-  var bins = [0,1,2,3,4,5,6,7,8,9]
-  var strokeWidth = 2
-  var textLength = 40
-  var yAxisStroke = 2*/
-
   // initialize empty JS object to contain data for histograms
+  var that = this
   var initiateData = function(dataModel){
     var histogramData = dataModel.classNames.map(function(name, i){
       return {classNum: i, className: name, data: []}
@@ -88,9 +76,9 @@ function Histogram(dataModel, settings, boxPlots){
 
       // increment classification counts for classes
       for (classNum = 0; classNum < dataModel.numClasses; classNum++) {
-        if (inRange(example[dataModel.probColumns[classNum]], settings) && inRangeSimilarity(example[dataModel.similarity_column], settings)){
-          binNum = getBinNum(example[dataModel.probColumns[classNum]], settings)
+        if (inRange(example[dataModel.probColumns[classNum]], settings.probabilityRange) && inRange(example[settings.distanceMeasure], settings.distanceRange)){
 
+          binNum = getBinNum(example[dataModel.probColumns[classNum]], settings.probabilityRange, settings.numBins)
           if (settings.display.TP && actual.includes(classNum) && predicted.includes(classNum)) { //TP
             if (example[dataModel.probColumns[classNum]] < settings.TPThreshold){
               histogramData[classNum]['data'][binNum]['tp'][0].count += 1
@@ -114,128 +102,32 @@ function Histogram(dataModel, settings, boxPlots){
         }
       }
     })
-
+    console.log(histogramData)
     // add previous sum key for each count, needed for drawing svg
-    histogram = calculate_previous_sum(histogramData)
+    histogram = calculatePreviousSum(histogramData, dataModel.numClasses)
     console.log(histogram)
     return histogramData
   }
 
-  // calculate the sum of examples of the previous classes in the bin
-  var calculate_previous_sum = function(histogramData){
-    histogramData.forEach(function(histogram){
-      histogram.data.forEach(function(bin){
-        bin['fn'][0].previous_sum = 0
-        bin['fp'][0].previous_sum = 0
-        for (i = 1; i < dataModel.numClasses; i++){
-          bin['fn'][i].previous_sum = bin['fn'][i-1].previous_sum + bin['fn'][i-1].count
-          bin['fp'][i].previous_sum = bin['fp'][i-1].previous_sum + bin['fp'][i-1].count
-        }
-        bin['tn'][0].previous_sum = bin['fn'][dataModel.numClasses-1].previous_sum + bin['fn'][dataModel.numClasses-1].count
-        bin['tp'][0].previous_sum = bin['fp'][dataModel.numClasses-1].previous_sum + bin['fp'][dataModel.numClasses-1].count
-      })
-    })
-    return histogramData
-  }
-
-  // find the max count in a bin for the overall histograms
-  var findMax = function(classification, histogramData){
-    return d3.max(histogramData.map(function(histogram){ // max in each class
-      return d3.max(histogram.data.map(function(bin){ //for each bin
-        return bin[classification][0].count + bin[classification][0].previous_sum
-      }))
-    })
-  )}
-
   ///////////////
   // SELECT BARS
   //////////////
-  var numSelected = 0
+  var numSelected = [0]
   var selectedInfo = []
-  var getInformation = function(element){
-    var thisClass = element.attr('class').split(' ')
-    var classification = thisClass[0] //fp, tp, tn, fn
-    var binNum = 9 - element.parent().attr('class').split(' ')[1] //bin number
-    var actualClass = "";
-    var predictedClass = "";
-    if (classification == 'TP'){
-      actualClass = element.parent().parent().parent().attr('class').split(' ')[1] //svg's class //use whatever the svg class is for probability
-      predictedClass = actualClass
-    }
-    else if (classification == 'FP'){
-      actualClass = thisClass[1]  //text
-      predictedClass = element.parent().parent().parent().attr('class').split(' ')[1] //svg class
-    }
-    else{
-      actualClass = element.parent().parent().parent().attr('class').split(' ')[1] //svg class
-      predictedClass = thisClass[1]
-    }
 
-    var info = {
-      classification: classification,
-      binNum: binNum,
-      actualClass: actualClass.charAt(actualClass.length - 1), //class0 => 0
-      predictedClass: predictedClass.charAt(predictedClass.length - 1)
-    }
-    return info
-  }
 
-  var removeSelection = function(element){
-    numSelected -= 1
-    /*var infoToRemove = getInformation(element)
-    var index = selectedInfo.indexOf(infoToRemove)
-    console.log(index)
-    if (index > -1){
-      selectedInfo.splice(index, 1);
-    }*/
-    selectedInfo = []
-    element.removeClass("highlight")
-    console.log(selectedInfo)
-  }
-
-  var addSelection = function(element){
-    numSelected += 1;
-    if (numSelected == 1){
-      element.addClass("highlight")
-      selectedInfo.push(getInformation(element))
-      console.log(selectedInfo)
-    }
-    else if(numSelected == 2){
-      element.addClass("highlight")
-      selectedInfo.push(getInformation(element))
-      console.log(selectedInfo)
-      // function to make comparisons
-    }
-    else{ //new selections
-      // remove highlights and empty info array
-      var all = $(".FP, .TP, .FN, .TN")
-      all.removeClass("highlight")
-      selectedInfo = []
-
-      // highlight new array, add info, change numSelected
-      element.addClass("highlight")
-      selectedInfo.push(getInformation(element))
-      numSelected = 1;
-      console.log(selectedInfo)
-    }
-  }
-
-  var makeSelection = function(){
+  var selectedStack = function(){
     // increment number of selected stacks
 
-    if ($(this).attr('class').split(' ').length == 3){
-      removeSelection($(this))
+    if ($(this).attr('class').split(' ').length == 3){ //already selected, so remove selection
+      removeSelectedStack($(this), selectedInfo, numSelected)
     } //alright selected
     else{
-      addSelection($(this));
+      addSelectedStack($(this), selectedInfo, numSelected);
+      console.log(selectedInfo)
+      console.log(numSelected)
     }
-
-    if (numSelected == 2){
-      /*var newWindow = window.open('compare.html')
-      newWindow.histogramData = histogramData
-      newWindow.selectedInfo = selectedInfo
-      newWindow.dataModel = dataModel
-      newWindow.settings = settings*/
+    if (numSelected[0] == 2){
       boxPlots.makeComparison(selectedInfo, histogramData, dataModel.data)
     }
   }
@@ -243,7 +135,7 @@ function Histogram(dataModel, settings, boxPlots){
 
   // append svg elements to "draw" the histogram from the data
   var constructHistogram = function(histogramData){
-    console.log(settings)
+    //console.log(settings)
     //var histogramData = this.histogramData
     //var bins = [9,8,7,6,5,4,3,2,1,0]
     // find the max counts in the negative and positive histograms
@@ -306,6 +198,7 @@ function Histogram(dataModel, settings, boxPlots){
     // use the overall max as the x-domain scale
     var xDomainScale = Math.max(maxNeg , maxPos)
 
+
     var xScale = d3.scaleLinear()
         .domain([-xDomainScale, xDomainScale]).nice()
         .rangeRound([0, settings.histogramWidth])
@@ -326,7 +219,7 @@ function Histogram(dataModel, settings, boxPlots){
     // axis
     //var axisScale = d3.scaleLinear().domain([1.0,0.0]).range([0,settings.histogramHeight]) //fix domain
     //var axis = d3.axisLeft(axisScale)
-
+    /* Axis */
     d3.select(".histograms")
       .attr("width", settings.totalWidth)
       .attr("height", settings.svgHeight)
@@ -339,11 +232,19 @@ function Histogram(dataModel, settings, boxPlots){
         .attr("transform", "translate(" + (settings.axisWidth - 5) + "," + settings.margin.top + ")")
         .call(settings.axis)
 
+    d3.select(".svg-axis")
+      .append("text")
+      .attr("style", "writing-mode: tb")
+      .attr("x", 20)
+      .attr("y", (400 - 70)/2)
+      .text("probability")
+      .attr("textLength", 70)
+
     var svg = d3.select(".histograms")
         .selectAll(".svg-histogram")
         .data(histogramData)
       .enter().append("g")
-        .attr("transform", function(d) { return "translate(" + (settings.axisWidth + settings.histogramWidth * d.classNum) + "," + 0 + ")" })
+        .attr("transform", function(d) { return "translate(" + (20 + (settings.axisWidth + settings.histogramWidth * d.classNum)) + "," + 0 + ")" })
       .append("svg")
         .attr("class", function(d) { return "svg-histogram " + d.className })
         .attr("width", settings.histogramWidth)
@@ -409,9 +310,9 @@ function Histogram(dataModel, settings, boxPlots){
         .attr("fill", function (d) { return color(d.className)})
         .attr("text", function(d){ return d.previous_sum + "," + d.count })
 
-    fp.on("click", makeSelection)
-    fn.on("click", makeSelection)
-    tp.on("click", makeSelection)
+    fp.on("click", selectedStack)
+    fn.on("click", selectedStack)
+    tp.on("click", selectedStack)
 
       svg.append("g")
           .attr("class", "y-axis")

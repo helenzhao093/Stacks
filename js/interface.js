@@ -3,6 +3,7 @@ function Interface(data){
   var that = this
   var dataModel = new DataModel(data);
   var settings = new Settings(dataModel);
+  console.log(settings)
 
   $('#tn').prop("checked", settings.displayDefault.TN)
   $('#tp').prop("checked", settings.displayDefault.TP)
@@ -35,6 +36,7 @@ function Interface(data){
 
   var probRangeSlider = document.getElementById('probRange-slider');
   noUiSlider.create(probRangeSlider, {
+    orientation: "vertical",
     start: [settings.probabilityRange.lowerBound, settings.probabilityRange.upperBound],
     step: 0.1,
     behavior: 'drag',
@@ -46,9 +48,9 @@ function Interface(data){
     }
   });
 
-  var similarityRangeSlider = document.getElementById('similarity-slider');
-  noUiSlider.create(similarityRangeSlider, {
-    start: [settings.similarityRange.lowerBound, settings.similarityRange.upperBound],
+  /*var distanceRangeSlider = document.getElementById('distance-slider');
+  noUiSlider.create(distanceRangeSlider, {
+    start: [settings.distanceRange.lowerBound, settings.distanceRange.upperBound],
     step: settings.similarityRangeStep,
     behavior: 'drag',
     connect: true,
@@ -57,11 +59,11 @@ function Interface(data){
       'min': settings.similarityRange.lowerBound,
       'max': settings.similarityRange.upperBound
     }
-  });
+  });*/
 
   var draw = d3.line()
       .x(function (d) { return settings.xScale(d[0])} )
-      .y(function (d) { return settings.yScale(getBinNum(d[1], settings)) + settings.margin.top })
+      .y(function (d) { return settings.yScale(getBinNum(d[1], settings.probabilityRange, settings.numBins)) + settings.margin.top })
 
 
   var drawPath = function(data, dataModel, settings, temp){

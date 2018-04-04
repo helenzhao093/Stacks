@@ -40,7 +40,7 @@ function DataTable(dataModel, appSettings){
   var classColumns = dataModel.numClasses * 3 + dataModel.numFeatures
   var similarityIndex = 0 //dataModel.numClasses * columnPerClass
 
-  columns.push({data: dataModel.similarity_column, title: "similarity"})
+  columns.push({data: appSettings.distanceMeasure, title: "similarity"})
   for (i = 0; i < dataModel.numClasses; i++){
     columns.push({data: dataModel.classNames[i], title: dataModel.classNames[i]})
     columns.push({data: dataModel.actualClasses[i], type: "num", title: dataModel.actualClasses[i]})

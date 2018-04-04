@@ -33,9 +33,7 @@ body {
 
 
 #probRange-slider {
-  height: 0.5em;
   border-color: grey;
-  margin: 0.3em 0.5em;
 }
 
 #probRange-slider .noUi-connect{
@@ -56,6 +54,16 @@ body {
   float:left;
   width: 150px;
   padding-right: 5px;
+}
+
+#probRange-container {
+  height: 400px;
+  width: 20px;
+  margin-top: 20px;
+}
+
+#probRange-slider {
+  height: 360px;
 }
 
 
@@ -195,11 +203,17 @@ td, th {
   width: 1.5em;
   height: 1.5em;
 }
-.noUi-handle::after, .noUi-handle::before {
-  content: none
+
+/* vertical sliders */
+.noUi-vertical .noUi-handle {
+    height: 20px;
+    width: 18px;
+    left: -1px;
+    top: -10px;
+    border: 1px solid #D9D9D9;
+    border-radius: 5px;
+    background: whitesmoke;
 }
-
-
 /* Style the tab */
 .tab {
     overflow: hidden;

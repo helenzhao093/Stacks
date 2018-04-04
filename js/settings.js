@@ -12,7 +12,10 @@ function Settings(dataModel){
   this.TPMin = 0.5
 
   this.probabilityRangeDefault = { lowerBound: 0.0, upperBound: 1.0 }
-  this.probabilityRange = { lowerBound: 0.0, upperBound: 1.0 }
+  this.probabilityRange = {
+    lowerBound: 0.0,
+    upperBound: 1.0
+  }
 
   // current thresholds
   this.TNThreshold = 0.1
@@ -21,29 +24,6 @@ function Settings(dataModel){
   this.displayDefault = { TP: true, FP: true, FN: true, TN: false }
   this.display = { TP: true, FP: true, FN: true, TN: false }
 
-  this.similarityRange = {
-    lowerBound: Math.floor(dataModel.similarity_min * 10)/10,
-    upperBound: Math.ceil(dataModel.similarity_max*10)/10,
-  }
-
-  this.similarityRangeDefault = {
-    lowerBound: Math.floor(dataModel.similarity_min * 10)/10,
-    upperBound: Math.ceil(dataModel.similarity_max*10)/10,
-  }
-  this.similarityRangeStep = function(){
-    var mag = (that.similarityRange.upperBound - that.similarityRange.lowerBound)
-    var step = 0.01
-    while (mag/10 > 1){
-      mag = mag/10
-      step = step * 10
-    }
-    return step;
-  }();
-
-  //((similarityRange.upperBound - similarityRange.lowerBound) > 10) : 0.1 ? 0.01
-  //upperBound - lowerBound // if on same scale than 0.01 step
-  //scale / 100 is step
-
   // window settings
   this.totalWidth = 1366
 
@@ -51,7 +31,7 @@ function Settings(dataModel){
   this.histogramsWidth = 1240
 
   // histogram settings
-  this.axisWidth = 40
+  this.axisWidth = 60
   this.svgWidth = (this.histogramsWidth - this.axisWidth) / dataModel.numClasses
   this.svgHeight = 400
   this.margin = { top: 20, right: 0, bottom: 20, left: 0 }
@@ -94,4 +74,38 @@ function Settings(dataModel){
   this.yScale = d3.scaleBand()
     .domain(this.bins)
     .rangeRound([0, this.histogramHeight]).padding(0.1)
+
+
+  ////////////
+  //DISTANCE HISTOGRAM SETTINGS
+  /////////////
+  this.distanceMeasures = ["cosine", "euclidean", "manhattan"]
+  this.defaultDistanceMeasure = dataModel.distanceColumns[0]
+  this.distanceMeasure = "similarity"//dataModel.distanceColumns[0]
+  this.distanceMax = d3.max(dataModel.data.map(function(d) {
+    return d[that.distanceMeasure];
+  }))
+  this.distanceMin = d3.min(dataModel.data.map(function(d) {
+    return d[that.distanceMeasure];
+  }))
+  this.distanceRangeDefault = {
+    lowerBound : Math.floor(this.distanceMin * 10)/10,
+    upperBound : Math.ceil(this.distanceMax*10)/10
+  }
+  this.distanceRange = {
+    lowerBound : Math.floor(this.distanceMin * 10)/10,
+    upperBound : Math.ceil(this.distanceMax*10)/10
+  }
+
+  this.calculateDistanceMetadata = function(distanceColumn) {
+    this.distanceMax = d3.max(dataModel.data.map(function(d) {
+      return d[distanceColumn];
+    }))
+    this.distanceMin = d3.min(dataModel.data.map(function(d) {
+      return d[distanceColumn];
+    }))
+    this.distanceRange.lowerBound = Math.floor(this.distanceMin * 10)/10
+    this.distanceRange.upperBound = Math.ceil(this.distanceMax*10)/10
+  }
+
 }

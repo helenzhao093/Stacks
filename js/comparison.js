@@ -3,6 +3,8 @@ function BoxPlot(dataModel, settings){
   //console.log(selectedInfo)
   //console.log(settings)
   // boxplot descriptions
+  var that = this
+  this.settings = settings
   var bottomAxisHeight = 40
   var titleHeight = 30
   var margin = { top: 30, right: 30, bottom: 30, left: 30}
@@ -49,7 +51,7 @@ function BoxPlot(dataModel, settings){
     return [
       constructPlotData(dataModel.probColumns, groups),
       constructPlotData(dataModel.featureColumns, groups),
-      constructPlotData([dataModel.similarity_column], groups)
+      constructPlotData([that.settings.distanceMeasure], groups)
     ]
   }
 
@@ -133,7 +135,8 @@ function BoxPlot(dataModel, settings){
         // get the min and max from each
         xScaleMin = d3.min(pairOfData[0].quartiles.concat(pairOfData[1].quartiles))
         xScaleMax = d3.max(pairOfData[0].quartiles.concat(pairOfData[1].quartiles))
-        //console.log(xScaleMin, xScaleMax)
+        console.log(pairOfData)
+        console.log(xScaleMin, xScaleMax)
         var xScale = d3.scaleLinear()
         	.domain([xScaleMin, xScaleMax])
           .range([0, plotWidth])
@@ -178,6 +181,8 @@ function BoxPlot(dataModel, settings){
             .enter()
           .append("line")
             .attr("x1", function(d){
+              console.log(d.quartiles[0])
+              console.log(xScale(d.quartiles[0]))
           	   return xScale(d.quartiles[0])
              })
             .attr("y1", function(d){
@@ -279,7 +284,7 @@ function BoxPlot(dataModel, settings){
     var group2 = filterDataForSelected(data, selectedInfo[1])
 
     var boxPlotData = constructAllPlotData([group1,group2], dataModel)
-    console.log(boxPlotData)
+
     modifySelectedInfo(selectedInfo, boxPlotData)
     constructLegend(selectedInfo)
     constructAllBoxPlots(boxPlotData, selectedInfo)
