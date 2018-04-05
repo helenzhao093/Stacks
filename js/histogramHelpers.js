@@ -50,7 +50,9 @@ var inRange = function(data, range){
 }
 
 /* classification is TP FP TN FN */
+//ONLY WORKS FOR TP AND TN
 var findMax = function(classification, histogramData){
+  console.log(histogramData)
   return d3.max(histogramData.map(function(histogram){ // max in each class
     return d3.max(histogram.data.map(function(bin){
       return bin[classification][0].count + bin[classification][0].previous_sum
@@ -58,9 +60,21 @@ var findMax = function(classification, histogramData){
   })
 )}
 
+var findMaxFN = function(histogramData){
+  //console.log(histogramData)
+  return d3.max(histogramData.map(function(histogram){ // max in each class
+    return d3.max(histogram.data.map(function(bin){
+      //return bin['fn'][0].count + bin[classification][0].previous_sum
+      return d3.max(bin['fn'].map(function(d){
+        return d.count + d.previous_sum
+      }))
+    }))
+  }))
+}
+
 var calculateXDomain = function (pos, neg, histogramData) {
   var maxNeg = findMax(pos, histogramData);
-  var maxPos = findMax(neg, histogramData);
+  var maxPos = (neg == 'fn') ? findMaxFN(histogramData) : findMax(neg, histogramData)
   return Math.max(maxNeg , maxPos)
 }
 

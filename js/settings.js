@@ -35,7 +35,7 @@ function Settings(dataModel){
   this.axisWidth = 60
   this.svgWidth = (this.histogramsWidth - this.axisWidth) / dataModel.numClasses
   this.svgHeight = 400
-  this.margin = { top: 20, right: 0, bottom: 20, left: 0 }
+  this.margin = { top: 20, right: 5, bottom: 20, left: 5 }
   this.histogramHeight = this.svgHeight - this.margin.top - this.margin.bottom
   this.histogramWidth = this.svgWidth - this.margin.left - this.margin.right
   this.textLength = 40

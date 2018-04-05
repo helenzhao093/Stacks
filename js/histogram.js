@@ -205,7 +205,9 @@ function Histogram(dataModel, settings, histogramType){
 
       fn
           .attr("width", function (d) { return (d.count == 0) ? 0 : (xScaleCount(d.count) - settings.fnStrokeWidth)})
-          .attr("x", function (d) { return  (d.previous_sum == 0) ? xScale(0) - xScaleCount(d.count) + settings.fnStrokeWidth/2 - settings.yAxisStrokeWidth/2 : xScale(0) - xScaleCount(d.previous_sum) - xScaleCount(d.count) + settings.fnStrokeWidth/2 - settings.yAxisStrokeWidth/2})
+          .attr("x", function (d) { return  (d.previous_sum == 0) ?
+            xScale(0) - xScaleCount(d.count) + settings.fnStrokeWidth/2 - settings.yAxisStrokeWidth/2 :
+            xScale(0) - xScaleCount(d.previous_sum) - xScaleCount(d.count) + settings.fnStrokeWidth/2 - settings.yAxisStrokeWidth/2})
           .attr("text", function (d) { return xScaleCount(d.count)})
 
       fn.exit().remove();
