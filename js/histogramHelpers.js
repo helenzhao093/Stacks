@@ -43,7 +43,7 @@ var getBinNum = function(data, range, numBins){
 
 /* return true if data is in the range, false otherwise */
 var inRange = function(data, range){
-  if (data > range.lowerBound && data < range.upperBound){
+  if (data >= range.lowerBound && data <= range.upperBound){
     return true;
   }
   return false;
@@ -57,6 +57,12 @@ var findMax = function(classification, histogramData){
     }))
   })
 )}
+
+var calculateXDomain = function (pos, neg, histogramData) {
+  var maxNeg = findMax(pos, histogramData);
+  var maxPos = findMax(neg, histogramData);
+  return Math.max(maxNeg , maxPos)
+}
 
 var getSelectedStackInfo = function(element){
   var thisClass = element.attr('class').split(' ')

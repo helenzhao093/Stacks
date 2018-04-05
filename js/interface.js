@@ -3,7 +3,6 @@ function Interface(data){
   var that = this
   var dataModel = new DataModel(data);
   var settings = new Settings(dataModel);
-  console.log(settings)
 
   $('#tn').prop("checked", settings.displayDefault.TN)
   $('#tp').prop("checked", settings.displayDefault.TP)
@@ -37,6 +36,7 @@ function Interface(data){
   var probRangeSlider = document.getElementById('probRange-slider');
   noUiSlider.create(probRangeSlider, {
     orientation: "vertical",
+    direction: 'rtl',
     start: [settings.probabilityRange.lowerBound, settings.probabilityRange.upperBound],
     step: 0.1,
     behavior: 'drag',
@@ -89,30 +89,20 @@ function Interface(data){
       .exit().remove()
     }
   }
-
-
-  //console.log(dataModel)
-  //this.histogramContainer = d3.select(".histograms")
-
   var boxPlots = new BoxPlot(dataModel, settings)
-  var histograms = new Histogram(dataModel, settings, boxPlots);
+  var histograms = new DistributionHistogram(dataModel, settings, boxPlots);
+  var distanceHistograms = new Histogram(dataModel, settings, settings.histogramTypes.distance);
+  var probabilityHistograms = new Histogram(dataModel, settings, settings.histogramTypes.probability);
   var datatable = new DataTable(dataModel, settings)
-
-/*  probRangeSlider.noUiSlider.on('update', function(){
-    settings.probabilityRange.lowerBound = +probRangeSlider.noUiSlider.get()[0];
-    settings.probabilityRange.upperBound = +probRangeSlider.noUiSlider.get()[1];
-    histograms.updateData(histograms.constructData(dataModel, settings))
-  })*/
 
 
   var numFilter = 0;
-
   $('#filter').on('click', function(e){
     e.preventDefault();
     settings.probabilityRange.lowerBound = +probRangeSlider.noUiSlider.get()[0];
     settings.probabilityRange.upperBound = +probRangeSlider.noUiSlider.get()[1];
-    settings.similarityRange.lowerBound = +similarityRangeSlider.noUiSlider.get()[0];
-    settings.similarityRange.upperBound = +similarityRangeSlider.noUiSlider.get()[1];
+    //settings.similarityRange.lowerBound = +similarityRangeSlider.noUiSlider.get()[0];
+    //settings.similarityRange.upperBound = +similarityRangeSlider.noUiSlider.get()[1];
     settings.TPThreshold = +tpSlider.noUiSlider.get();
     settings.TNThreshold = +tnSlider.noUiSlider.get();
     settings.display.TN = $('#tn').is(":checked")
@@ -123,6 +113,8 @@ function Interface(data){
     numFilter += 1
     console.log(settings)
     histograms.updateData(histograms.constructData(dataModel, settings))
+    distanceHistograms.updateData(distanceHistograms.constructData(dataModel, settings), settings.distanceRange)
+    probabilityHistograms.updateData(probabilityHistograms.constructData(dataModel, settings), settings.probabilityRange)
   })
 
   $('#clearFilter').on('click', function(e){
@@ -132,7 +124,7 @@ function Interface(data){
     tpSlider.noUiSlider.set(settings.TPThresholdDefault)
     tnSlider.noUiSlider.set(settings.TNThresholdDefault)
     probRangeSlider.noUiSlider.set([settings.probabilityRangeDefault.lowerBound, settings.probabilityRangeDefault.upperBound])
-    similarityRangeSlider.noUiSlider.set([settings.similarityRangeDefault.lowerBound, settings.similarityRangeDefault.upperBound])
+    //similarityRangeSlider.noUiSlider.set([settings.similarityRangeDefault.lowerBound, settings.similarityRangeDefault.upperBound])
     settings.display.TN = settings.displayDefault.TN
     settings.display.TP = settings.displayDefault.TP
     settings.display.FN = settings.displayDefault.FN
@@ -141,14 +133,16 @@ function Interface(data){
     settings.TNThreshold = settings.TNThresholdDefault
     settings.probabilityRange.lowerBound = settings.probabilityRangeDefault.lowerBound
     settings.probabilityRange.upperBound = settings.probabilityRangeDefault.upperBound
-    settings.similarityRange.lowerBound = settings.similarityRangeDefault.lowerBound
-    settings.similarityRange.upperBound = settings.similarityRangeDefault.upperBound
+    //settings.similarityRange.lowerBound = settings.similarityRangeDefault.lowerBound
+    //settings.similarityRange.upperBound = settings.similarityRangeDefault.upperBound
     console.log(settings)
     $( "#tn" ).prop( "checked", settings.display.TN );
     $( "#tp" ).prop( "checked", settings.display.TP );
     $( "#fn" ).prop( "checked", settings.display.FN );
     $( "#fp" ).prop( "checked", settings.display.FP );
     histograms.updateData(histograms.constructData(dataModel, settings))
+    //distanceHistograms.updateData(distanceHistograms.constructData(dataModel, settings), settings.distanceRange)
+    probabilityHistograms.updateData(probabilityHistograms.constructData(dataModel, settings), settings.probabilityRange)
     d3.selectAll(".hover-line").remove();
     d3.selectAll(".click-line").remove();
     d3.select(".connect-histograms").append("path").attr("class", "hover-line")

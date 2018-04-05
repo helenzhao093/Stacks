@@ -1,25 +1,4 @@
-// convert probability to bin
-/*var getBinNum = function(prob, settings){
-  var bin = Math.floor((prob - settings.probabilityRange.lowerBound)/
-                        ((settings.probabilityRange.upperBound - settings.probabilityRange.lowerBound)/settings.numBins))
-  //var bin = Math.floor(prob/0.1)
-  return (bin == 10) ? 9 : bin
-}*/
-/*
-var inRange = function(prob, settings){
-  if (prob > settings.probabilityRange.lowerBound && prob < settings.probabilityRange.upperBound){
-    return true;
-  }
-  return false;
-}*/
-
-/*var inRangeSimilarity = function(prob, settings){
-  if (prob > settings.similarityRange.lowerBound && prob < settings.similarityRange.upperBound){
-    return true;
-  }
-  return false;
-}*/
-function Histogram(dataModel, settings, boxPlots){
+function DistributionHistogram(dataModel, settings, boxPlots){
   // initialize empty JS object to contain data for histograms
   var that = this
   var initiateData = function(dataModel){
@@ -227,7 +206,7 @@ function Histogram(dataModel, settings, boxPlots){
         .attr("class", "svg-axis")
         .attr("width", settings.axisWidth)
         .attr("height", settings.svgHeight)
-        .append("g")
+      .append("g")
         .attr("class", "axis")
         .attr("transform", "translate(" + (settings.axisWidth - 5) + "," + settings.margin.top + ")")
         .call(settings.axis)
@@ -337,11 +316,11 @@ function Histogram(dataModel, settings, boxPlots){
   }
 
   this.updateData = function(histogramData){
-    console.log(histogramData)
+    //console.log(histogramData)
     var maxNeg = findMax("tn", histogramData)
     var maxPos = findMax("tp", histogramData)
     var xDomainScale = Math.max(maxNeg , maxPos)
-    console.log(xDomainScale)
+    //console.log(xDomainScale)
 
     var xScale = d3.scaleLinear()
         .domain([-xDomainScale, xDomainScale]).nice()
@@ -354,7 +333,7 @@ function Histogram(dataModel, settings, boxPlots){
     var svg = d3.select(".histograms")
             .selectAll(".svg-histogram")
             .data(histogramData)
-    console.log(svg)
+    //console.log(svg)
 
     // enter
     svg.enter().append("svg")
@@ -374,7 +353,7 @@ function Histogram(dataModel, settings, boxPlots){
     var fp = bins.selectAll(".FP")
         .data( function(d) {return d.fp})
 
-    console.log(fp)
+    //console.log(fp)
 
     // enter
     fp.enter().append("rect")
@@ -427,11 +406,11 @@ function Histogram(dataModel, settings, boxPlots){
     tn.exit().remove();
 
     settings.axisDomain = settings.axisDomain.map(function(d, i){ return settings.probabilityRange.lowerBound + (settings.numBins - i)*(settings.probabilityRange.upperBound - settings.probabilityRange.lowerBound)/settings.numBins })
-    console.log(settings.axisDomain)
+    //console.log(settings.axisDomain)
     settings.axisScale.domain(settings.axisDomain)
     var axis = d3.select(".axis")
       .call(settings.axis)
-    console.log(axis)
+    //console.log(axis)
     /*var axisScale = d3.scaleLinear().domain([1.0,0.0]).range([0,settings.histogramHeight]) //fix domain
     var axis = d3.axisLeft(axisScale)
 
@@ -446,21 +425,6 @@ function Histogram(dataModel, settings, boxPlots){
         .attr("transform", "translate(" + (settings.axisWidth - 5) + "," + settings.margin.top + ")")
         .call(axis)*/
   }
-
-
-  /*$('#filter').on('click', function(e){
-    e.preventDefault();
-    settings.TPThreshold = $('#tp-threshold').val()
-    settings.TNThreshold = $('#tn-threshold').val()
-    settings.display.TN = $('#tn').is(":checked")
-    settings.display.TP = $('#tp').is(":checked")
-    settings.display.FN = $('#fn').is(":checked")
-    settings.display.FP = $('#fp').is(":checked")
-    //console.log(settings)
-    var histogramData = this.constructData(dataModel, settings)
-    //console.log(histogmaramData)
-    updateData(histogramData)
-  })*/
 
   var histogramData = this.constructData(dataModel, settings)
   constructHistogram(histogramData)

@@ -10,9 +10,10 @@
         <script src="https://code.jquery.com/jquery-2.2.4.min.js"></script>
         <script>
           $(function(){
-            $('#probability-tab').load("stackHistogram.html")
-            $('#feature-tab').load("compare.html");
+            $('#probability-tab').load("probHistogram.html")
             $('#distance-tab').load("distanceHistogram.html")
+            $('#prob-distribution-tab').load("stackHistogram.html")
+            $('#feature-tab').load("compare.html");
           })
 
           function openContent(evt, tabName){
@@ -45,6 +46,7 @@
       <div class="tab">
         <button class="tablinks" onclick="openContent(event, 'probability-tab')">Probability</button>
         <button class="tablinks" onclick="openContent(event, 'distance-tab')">Distance</button>
+        <button class="tablinks" onclick="openContent(event, 'prob-distribution-tab')">Probability Distribution</button>
         <button class="tablinks" onclick="openContent(event, 'feature-tab')">Features</button>
       </div>
 
@@ -54,10 +56,6 @@
             <label id="similarity-label">Similarity Range</label>
             <div id="distance-slider" /> </div>
           </div>
-          <!--<div class="slider-container" id="probRange-container">
-            <label id="probRange-label">Probability Range </label>
-            <div id="probRange-slider" /> </div>
-          </div> -->
           <div class="slider-container" id="tp-container">
             <label id="tp-label">Filter High TPs</label>
             <div id="tp-threshold-slider" /> </div>
@@ -99,9 +97,10 @@
       <button id="filter">Filter</button>
       <button id="clearFilter">Clear</button>
 
-      <div id="probability-tab" class="tabcontent"></div>
-      <div id="distance-tab" class="tabcontent"></div>
-      <div id="feature-tab" class="tabcontent"></div>
+      <div id="probability-tab" class="tabcontent" style="display: block;"></div>
+      <div id="distance-tab" class="tabcontent" style="display: none;"></div>
+      <div id="prob-distribution-tab" class="tabcontent" style="display: none;"></div>
+      <div id="feature-tab" class="tabcontent" style="display:none;"></div>
 
       <script type="text/javascript" src="js/d3.min.js"></script>
       <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.16/js/jquery.dataTables.js"></script>
@@ -112,7 +111,8 @@
       <script type="text/javascript" src="js/interface.js"></script>
       <script type="text/javascript" src="js/model.js"></script>
       <script type="text/javascript" src="js/settings.js"></script>
-      <script type="text/javascript" src="js/stackHistogram2.js"></script>
+      <script type="text/javascript" src="js/distributionHistogram.js"></script>
+      <script type="text/javascript" src="js/histogram.js"></script>
       <script type="text/javascript" src="js/datatable.js"></script>
       <script type="text/javascript" src="js/comparison.js"></script>
     </body>

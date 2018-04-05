@@ -2,6 +2,8 @@ function Settings(dataModel){
   var that = this
   // filter settings
   // default thresholds
+
+
   this.TNThresholdDefault = 0.1
   this.TNMax = 0.5
   this.TNMin = 0.0
@@ -10,7 +12,6 @@ function Settings(dataModel){
   this.TPThresholdDefault = 0.9
   this.TPMax = 1.0
   this.TPMin = 0.5
-
   this.probabilityRangeDefault = { lowerBound: 0.0, upperBound: 1.0 }
   this.probabilityRange = {
     lowerBound: 0.0,
@@ -66,7 +67,8 @@ function Settings(dataModel){
   for (i = 0; i < dataModel.numClasses; i++){
     pathRange.push(this.axisWidth + (i+0.5) * this.svgWidth)
   }
-  // scale for paths in histograms
+
+  /* scales for paths in histograms */
   this.xScale = d3.scaleOrdinal()
     .domain(dataModel.classNames)
     .range(pathRange)
@@ -106,6 +108,64 @@ function Settings(dataModel){
     }))
     this.distanceRange.lowerBound = Math.floor(this.distanceMin * 10)/10
     this.distanceRange.upperBound = Math.ceil(this.distanceMax*10)/10
+  }
+
+  this.distanceAxisStep = (this.distanceRange.upperBound - this.distanceRange.lowerBound) / this.numBins
+  this.distanceAxisDomain =
+    [10, 9, 8, 7, 6, 5, 4, 3, 2, 1, 0].map(function (bin){
+      return bin * that.distanceAxisStep;
+    })
+  console.log(this)
+  console.log(this.distanceAxisDomain)
+  this.distanceAxisScale = d3.scalePoint().domain(this.distanceAxisDomain)
+      .range([0, this.histogramHeight])
+  this.distanceAxis = d3.axisLeft(this.distanceAxisScale).tickFormat(d3.format(".2f"))
+
+  this.histogramTypes = {
+    distance: {
+      type: "distance",
+      getBinNum: [this.distanceMeasure],
+      axis: this.distanceAxis,
+      axisScale: this.distanceAxisScale,
+      range: this.distanceRange,
+      axisDomain: this.distanceAxisDomain
+    },
+    probability: {
+      type: "probability",
+      getBinNum: dataModel.probColumns,
+      axis: this.axis,
+      axisScale: this.axisScale,
+      range: this.probabilityRange,
+      axisDomain: this.axisDomain
+    }
+  }
+
+  ////HISTOGRAM CREATE SCALE FUNCTIONS
+  this.yScale = d3.scaleBand()
+      //.domain(settings.bins)
+      .domain([0,1,2,3,4,5,6,7,8,9])
+      .rangeRound([0, this.histogramHeight]).padding(0.1)
+
+  this.xScale = function(xDomainScale){
+    return d3.scaleLinear()
+        .domain([-xDomainScale, xDomainScale]).nice()
+        .rangeRound([0, this.histogramWidth])
+  }
+
+  this.xScaleCount = function(xDomainScale){
+    return d3.scaleLinear()
+        .domain([0, xDomainScale*2])
+        .rangeRound([0, this.histogramWidth])
+  }
+
+  this.color = d3.scaleOrdinal()
+      .range(this.colorRange)
+      .domain(this.allClassNames)
+
+  this.getAxis = function(axisDomain){
+    var axisScale = d3.scalePoint().domain(axisDomain)
+        .range([0, this.histogramHeight])
+    return d3.axisLeft(axisScale).tickFormat(d3.format(".2f"))
   }
 
 }
