@@ -12,9 +12,12 @@ def similarity(filename):
     cosine_dist = [cosine(features, np.ones(num_features)) for features in X]
     euclid_dist = [sqeuclidean(features, np.zeros(num_features)) for features in X]
     minkowski_dist = [minkowski(features, np.zeros(num_features), 2) for features in X]
-    np.savetxt('man_dist_' + filename + '.csv', man_dist, fmt='%i', delimiter=',')
-    np.savetxt('cosine_dist_' + filename + '.csv', cosine_dist, fmt='%i', delimiter=',')
-    np.savetxt('euclid_dist_' + filename + '.csv', euclid_dist, fmt='%i', delimiter=',')
-    np.savetxt('minkowski_dist_' + filename + '.csv', minkowski_dist, fmt='%i', delimiter=',')
+    all_dist = np.column_stack((np.column_stack((np.column_stack((man_dist, cosine_dist)), euclid_dist)), minkowski_dist))
+    header = ["distance_man", "distance_cosine", "distance_euclidean", "distance_minkowski"]
+    all_dist = np.vstack(header, all_dist)
+    np.savetxt('distance_' + filename + '.csv', man_dist, fmt='%i', delimiter=',')
+    #np.savetxt('cosine_dist_' + filename + '.csv', cosine_dist, fmt='%i', delimiter=',')
+    #np.savetxt('euclid_dist_' + filename + '.csv', euclid_dist, fmt='%i', delimiter=',')
+    #np.savetxt('minkowski_dist_' + filename + '.csv', minkowski_dist, fmt='%i', delimiter=',')
 
 similarity()

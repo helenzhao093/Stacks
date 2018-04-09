@@ -1,12 +1,12 @@
 import numpy as np
 
 # takes filenames of data, creates a csv file of the data
-def create_csv_file(probabilities_csv, actual_class_csv, predicted_class_csv, features_csv, similarity_measure_csv, output_fname, multilabel=False):
+def create_csv_file(probabilities_csv, actual_class_csv, predicted_class_csv, features_csv, distances_csv, output_fname, multilabel=False):
     probabilities = np.genfromtxt(probabilities_csv, delimiter=',')
     actual_class = np.genfromtxt(actual_class_csv, delimiter=',')
     predicted_class = np.genfromtxt(predicted_class_csv, delimiter=',')
     features = np.genfromtxt(features_csv, delimiter=',')
-    similarity_measure = np.genfromtxt(similarity_measure_csv, delimiter=',')
+    distances = np.genfromtxt(distances_csv, delimiter=',')
     if not multilabel:
         actual_class = vectorize(actual_class, len(probabilities[0]))
         predicted_class = vectorize(predicted_class, len(probabilities[0]))
@@ -14,7 +14,7 @@ def create_csv_file(probabilities_csv, actual_class_csv, predicted_class_csv, fe
     assert len(actual_class[0]) == len(probabilities[0]), "Number of classes does not match number of predicted probabilities"
     assert len(predicted_class[0]) == len(probabilities[0]), "Number of classes does not match number of predicted probabilities"
 
-    dataset = concatenate_data(probabilities, actual_class, predicted_class, features, similarity_measure, multilabel)
+    dataset = concatenate_data(probabilities, actual_class, predicted_class, features, distances, multilabel)
     print (dataset[0])
 
     num_features = len(features[0])
@@ -34,16 +34,16 @@ def vectorize(y, num_classes):
 
 
 # takes numpy arrays,  concatenated numpy array
-def concatenate_data(probabilities, actual_class, predicted_class, features, similarity_measure, multilabel=False):
+def concatenate_data(probabilities, actual_class, predicted_class, features, distances, multilabel=False):
     #concatanate the arrays
-    return np.column_stack((np.column_stack((np.column_stack((np.column_stack((probabilities, actual_class)), predicted_class)), features)), similarity_measure))
+    return np.column_stack((np.column_stack((np.column_stack((np.column_stack((probabilities, actual_class)), predicted_class)), features)), distances))
 
 def generate_csv(output_fname, dataset, num_classes, num_features):
     column_fmt = []
     column_fmt += (['%5f']*num_classes)
     column_fmt += (['%i']*2*num_classes)
     column_fmt += (['%5f']*num_features)
-    column_fmt += (['%5f'])
+    column_fmt += (['%5f']*4)
 
     assert len(column_fmt) == len(dataset[0]), "Format of columns does not match number of columns"
 
@@ -54,23 +54,11 @@ def generate_csv(output_fname, dataset, num_classes, num_features):
 
     np.savetxt(output_fname+'dataset.csv', dataset, fmt=column_fmt, delimiter=',', header=generated_header)
 
-"""
-def generate_header(num_classes, num_features):
-    header = []
-    texts = ['prob', 'actual', 'predicted', 'feature']
-    for text in texts:
-        if text == 'feature':
-            for i in range(num_features):
-                header.append(text+str(i))
-        else:
-            for i in range(num_classes):
-                header.append(text+str(i))
-    return header
-"""
 
 def generate_header(num_classes, num_features):
     header = ""
     texts = ['prob', 'actual', 'predicted', 'feature']
+    distances = ["distance_man", "distance_cosine", "distance_euclidean", "distance_minkowski"]
     for text in texts:
         if text == 'feature':
             for i in range(num_features):
@@ -78,7 +66,8 @@ def generate_header(num_classes, num_features):
         else:
             for i in range(num_classes):
                 header += text + str(i) + ','
-    header += 'similarity'
+    for dist in distances:
+        header += dist + ","
     return header
 
 def find_file(filename, rootdir):
@@ -92,7 +81,7 @@ create_csv_file("100_proba_4_classes_random_forest.csv",
 "100_actual_4_classes.csv",
 "100_predicted_4_classes_random_forest.csv",
 "100_features_4_classes.csv",
-"100_minkowski_dist_10features.csv", "minkowski_similarity_100_random_forest_4_classes_")
+"distance_100_features_4_classes.csv", "ranforest_4classes_multidistance_")
 
 #if __name__ == '__main__':
 #    # Locate data files
