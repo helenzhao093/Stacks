@@ -38,9 +38,9 @@ function DataTable(dataModel, appSettings){
   var probColumn = 4
   var columnPerClass = 4
   var classColumns = dataModel.numClasses * 3 + dataModel.numFeatures
-  var similarityIndex = 0 //dataModel.numClasses * columnPerClass
+  var distanceIndex = 0 //dataModel.numClasses * columnPerClass
 
-  columns.push({data: appSettings.distanceMeasure, title: "similarity"})
+  columns.push({data: appSettings.distanceMeasure, title: "distance"})
   for (i = 0; i < dataModel.numClasses; i++){
     columns.push({data: dataModel.classNames[i], title: dataModel.classNames[i]})
     columns.push({data: dataModel.actualClasses[i], type: "num", title: dataModel.actualClasses[i]})
@@ -56,7 +56,7 @@ function DataTable(dataModel, appSettings){
   console.log(columns)
 
   var columnDef = []
-  columnDef.push({targets:[similarityIndex], className: "similarity-column"})
+  columnDef.push({targets:[distanceIndex], className: "distance-column"})
   for (i = actualColumn; i < dataModel.numClasses * columnPerClass; i = i + columnPerClass){
     columnDef.push({targets:[i], orderData:[i,i+1, i+2]})
   }
@@ -74,12 +74,12 @@ function DataTable(dataModel, appSettings){
 
   // filtering
   filterDataTable = function(appSettings){
-    console.log(appSettings)
+    //console.log(appSettings)
     $.fn.dataTable.ext.search.push( //if they are not matchings then remove them
       function(settings, data, dataIndex) {
         for (i = classColumn; i < dataModel.numClasses * 4; i = i + 4){
-          //console.log(data[similarityIndex])
-          if (inRange(data[i+3], appSettings) && inRangeSimilarity(data[similarityIndex], appSettings)){ //probability in range
+          console.log(inRange(data[distanceIndex], appSettings.distanceRange))
+          if (inRange(data[i+3], appSettings.probabilityRange) && inRange(data[distanceIndex], appSettings.distanceRange)){ //probability in range
             if (data[i] == "FN"){
               if (appSettings.display.FN){
                 return true;

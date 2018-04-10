@@ -50,18 +50,14 @@
         <button class="tablinks" onclick="openContent(event, 'feature-tab')">Features</button>
       </div>
 
-      <div class="settings-pane">
+      <div class="settings-pane row">
         <div id="settings-form">
-          <div class="slider-container" id="similarity-container">
-            <label id="similarity-label">Similarity Range</label>
-            <div id="distance-slider" /> </div>
-          </div>
           <div class="slider-container" id="tp-container">
-            <label id="tp-label">Filter High TPs</label>
+            <label id="tp-label">Filter Confident TPs</label>
             <div id="tp-threshold-slider" /> </div>
           </div>
           <div class="slider-container" id="tn-container">
-            <label id="tn-label">Filter Low TNs</label>
+            <label id="tn-label">Filter Confident TNs</label>
             <div id="tn-threshold-slider" /> </div>
           </div>
           <div class="switch">
@@ -92,10 +88,12 @@
               <span class="lever fn"></span>
             </label>
           </div>
+
         </div>
+        <button id="filter">Filter</button>
+        <button id="clearFilter">Clear</button>
       </div>
-      <button id="filter">Filter</button>
-      <button id="clearFilter">Clear</button>
+
 
       <div id="probability-tab" class="tabcontent" style="display: block;"></div>
       <div id="distance-tab" class="tabcontent" style="display: none;"></div>

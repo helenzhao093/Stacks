@@ -136,6 +136,7 @@ function Interface(data){
     settings.display.TP = $('#tp').is(":checked")
     settings.display.FN = $('#fn').is(":checked")
     settings.display.FP = $('#fp').is(":checked")
+
     datatable.applyFilter(settings)
     numFilter += 1
     console.log(settings)
