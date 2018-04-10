@@ -15,8 +15,20 @@ function Settings(dataModel){
   this.probabilityRangeDefault = { lowerBound: 0.0, upperBound: 1.0 }
   this.probabilityRange = {
     lowerBound: 0.0,
-    upperBound: 1.0
+    upperBound: 1.0,
   }
+
+  this.calculateProbabilityRange = function(sliderLower, sliderUpper){
+    if (sliderLower != this.probabilityRangeDefault.lowerBound ||
+      sliderUpper != this.probabilityRangeDefault.upperBound){
+        var range = this.probabilityRange.upperBound - this.probabilityRange.lowerBound
+        var newLowerBound = this.probabilityRange.lowerBound + (range * sliderLower)
+        var newUpperBound = this.probabilityRange.upperBound - (range * (1 - sliderUpper))
+        this.probabilityRange.lowerBound = newLowerBound
+        this.probabilityRange.upperBound = newUpperBound
+      }
+  }
+
 
   // current thresholds
   this.TNThreshold = 0.1
@@ -59,7 +71,7 @@ function Settings(dataModel){
   this.axis = d3.axisLeft(this.axisScale).tickFormat(d3.format(".2f"))
 
   //this.colorRange = ["#d73027","#f46d43","#fdae61","#a6d96a","#66bd63","#1a9850"]
-  this.colorRange = ["#FE3600", "#DA0049", "#5408A2", "#00AA4F", "#91A738", "#2A5370", "#AE7C3A", "#79286F"]
+  this.colorRange = ["#00649b", "#bc4577", "#ff7e5a", "#b2bae4", "#a97856", "#a3a6af", "#48322e", "#ad8a85"]
   this.allClassNames = ["class0", "class1", "class2", "class3", "class4", "class5", "class6", "class7"]
   //this.width = 300 - margin.left - margin.right
   //this.height = 400 - margin.top - margin.bottom
@@ -69,11 +81,11 @@ function Settings(dataModel){
   }
 
   /* scales for paths in histograms */
-  this.xScale = d3.scaleOrdinal()
+  this.xScalePath = d3.scaleOrdinal()
     .domain(dataModel.classNames)
     .range(pathRange)
 
-  this.yScale = d3.scaleBand()
+  this.yScalePath = d3.scaleBand()
     .domain(this.bins)
     .rangeRound([0, this.histogramHeight]).padding(0.1)
 
@@ -81,9 +93,9 @@ function Settings(dataModel){
   ////////////
   //DISTANCE HISTOGRAM SETTINGS
   /////////////
-  this.distanceMeasures = ["cosine", "euclidean", "manhattan"]
+  this.distanceMeasures = dataModel.distanceColumns
   this.defaultDistanceMeasure = dataModel.distanceColumns[0]
-  this.distanceMeasure = "similarity"//dataModel.distanceColumns[0]
+  this.distanceMeasure = dataModel.distanceColumns[0]
   this.distanceMax = d3.max(dataModel.data.map(function(d) {
     return d[that.distanceMeasure];
   }))
@@ -110,11 +122,22 @@ function Settings(dataModel){
     this.distanceRange.upperBound = Math.ceil(this.distanceMax*10)/10
   }
 
+  this.calculateDistanceRange = function(sliderLower, sliderUpper){
+    // current range
+    var totalRange = this.distanceRangeDefault.upperBound - this.distanceRangeDefault.lowerBound
+    var range = this.distanceRange.upperBound - this.distanceRange.lowerBound
+    var newLowerBound = this.distanceRange.lowerBound + (range * (sliderLower - this.distanceRangeDefault.lowerBound)/totalRange)
+    var newUpperBound = this.distanceRange.upperBound - (range * (this.distanceRangeDefault.upperBound - sliderUpper)/totalRange)
+    this.distanceRange.lowerBound = newLowerBound
+    this.distanceRange.upperBound = newUpperBound
+  }
+
   this.distanceAxisStep = (this.distanceRange.upperBound - this.distanceRange.lowerBound) / this.numBins
   this.distanceAxisDomain =
     [10, 9, 8, 7, 6, 5, 4, 3, 2, 1, 0].map(function (bin){
-      return bin * that.distanceAxisStep;
+      return bin * that.distanceAxisStep + that.distanceRange.lowerBound
     })
+
   console.log(this)
   console.log(this.distanceAxisDomain)
   this.distanceAxisScale = d3.scalePoint().domain(this.distanceAxisDomain)

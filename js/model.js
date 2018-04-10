@@ -35,7 +35,7 @@ function DataModel(data){
   })();
 
   this.distanceColumns = getColumnNames("distance")
-
+  console.log(this.distanceColumns)
 
   // returns array with feature names
   function getColumnNames(columnName){

@@ -14,7 +14,7 @@ body {
 #tp-threshold-slider {
   height: 0.5em;
   border-color: grey;
-  margin: 0.3em 0.5em;
+  margin-top: 5px;
 }
 
 #tp-threshold-slider .noUi-connect{
@@ -24,7 +24,7 @@ body {
 #tn-threshold-slider {
   height: 0.5em;
   border-color: grey;
-  margin: 0.3em 0.5em;
+  margin-top: 5px;
 }
 
 #tn-threshold-slider .noUi-connect{
@@ -40,36 +40,57 @@ body {
   background: blue
 }
 
-#similarity-slider {
-  height: 0.5em;
-  border-color: grey;
-  margin: 0.3em 0.5em;
-}
-
-#similarity-slider .noUi-connect{
-  background: lilac
-}
 
 .slider-container {
   float:left;
   width: 150px;
-  padding-right: 5px;
+  margin: 5px 15px;
+  /*padding-right: 5px;*/
+}
+
+.slider-container label {
+  font-size: 13px;
 }
 
 #probRange-container {
   height: 400px;
-  width: 20px;
+  width: 10px;
   margin-top: 20px;
+}
+
+#distanceRange-container {
+  height: 400px;
+  width: 10px;
+  margin-top: 20px;
+}
+
+.noUi-vertical {
+    width: 10px;
 }
 
 #probRange-slider {
   height: 360px;
+  margin-left: 5px;
 }
 
+#probRange-slider-dist {
+  height: 360px;
+  margin-left: 5px;
+}
+
+#distanceRange-slider{
+  height: 360px;
+  margin-left: 5px;
+}
 
 .switch {
   float: left;
-  width:80px
+  width:70px;
+  margin-top:20px
+}
+
+.switch label .lever {
+  margin: 0px 0px;
 }
 
 .switch label input[type="checkbox"]:checked + .lever.tp {
@@ -141,7 +162,7 @@ rect.FP{
 }
 
 td.TN {
-  background: rgba(0,0,0,0.5)
+  background: #d0cfd2; /*rgba(0,0,0,0.5)*/
 }
 
 td.TP {
@@ -204,11 +225,15 @@ td, th {
   height: 1.5em;
 }
 
+.noUi-handle::after, .noUi-handle::before {
+  content: none;
+}
+
 /* vertical sliders */
 .noUi-vertical .noUi-handle {
     height: 20px;
     width: 18px;
-    left: -1px;
+    left: -5px;
     top: -10px;
     border: 1px solid #D9D9D9;
     border-radius: 5px;

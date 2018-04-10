@@ -23,13 +23,13 @@ function Interface(data){
 
   var tnSlider = document.getElementById('tn-threshold-slider');
   noUiSlider.create(tnSlider, {
-    start: settings.TNThresholdDefault,
+    start: 1 - settings.TNThresholdDefault,
     connect: 'lower',
     tooltips: true,
     step: 0.01,
     range: {
-      'min': settings.TNMin,
-      'max': settings.TNMax
+      'min': settings.TNMin + 0.5,
+      'max': settings.TNMax + 0.5
     }
   });
 
@@ -48,29 +48,47 @@ function Interface(data){
     }
   });
 
-  /*var distanceRangeSlider = document.getElementById('distance-slider');
-  noUiSlider.create(distanceRangeSlider, {
-    start: [settings.distanceRange.lowerBound, settings.distanceRange.upperBound],
-    step: settings.similarityRangeStep,
+  var probRangeSlider2 = document.getElementById('probRange-slider-dist');
+  noUiSlider.create(probRangeSlider2, {
+    orientation: "vertical",
+    direction: 'rtl',
+    start: [settings.probabilityRange.lowerBound, settings.probabilityRange.upperBound],
+    step: 0.1,
     behavior: 'drag',
     connect: true,
     tooltips: [ true, true ],
     range: {
-      'min': settings.similarityRange.lowerBound,
-      'max': settings.similarityRange.upperBound
+      'min': settings.probabilityRange.lowerBound,
+      'max': settings.probabilityRange.upperBound
     }
-  });*/
+  });
+
+  var distanceRangeSlider = document.getElementById('distanceRange-slider');
+  noUiSlider.create(distanceRangeSlider, {
+    orientation: "vertical",
+    direction: 'rtl',
+    start: [settings.distanceRange.lowerBound, settings.distanceRange.upperBound],
+    step: settings.distanceAxisStep,
+    behavior: 'drag',
+    connect: true,
+    tooltips: [ true, true ],
+    range: {
+      'min': settings.distanceRange.lowerBound,
+      'max': settings.distanceRange.upperBound
+    }
+  });
+  console.log(distanceRangeSlider)
 
   var draw = d3.line()
-      .x(function (d) { return settings.xScale(d[0])} )
-      .y(function (d) { return settings.yScale(getBinNum(d[1], settings.probabilityRange, settings.numBins)) + settings.margin.top })
+      .x(function (d) { return settings.xScalePath(d[0])} )
+      .y(function (d) { return settings.yScalePath(getBinNum(d[1], settings.probabilityRange, settings.numBins)) + settings.margin.top })
 
 
   var drawPath = function(data, dataModel, settings, temp){
     var datapoints = [dataModel.classNames.map(function (d, i){
       return [ dataModel.classNames[i], +data[dataModel.probColumns[i]] ]
     })];
-    console.log(datapoints)
+    //console.log(datapoints)
     //var data = [[["class0", 0.8],["class1", 0.7]]]
 
     if (temp == true){
@@ -95,16 +113,25 @@ function Interface(data){
   var probabilityHistograms = new Histogram(dataModel, settings, settings.histogramTypes.probability);
   var datatable = new DataTable(dataModel, settings)
 
+  var moveSliders = function(){
+    probRangeSlider.noUiSlider.set([settings.probabilityRangeDefault.lowerBound,
+                                    settings.probabilityRangeDefault.upperBound]);
+    probRangeSlider2.noUiSlider.set([settings.probabilityRangeDefault.lowerBound,
+                                    settings.probabilityRangeDefault.upperBound]);
+    distanceRangeSlider.noUiSlider.set([settings.distanceRangeDefault.lowerBound,
+                                  settings.distanceRangeDefault.upperBound]);
+  }
 
   var numFilter = 0;
   $('#filter').on('click', function(e){
     e.preventDefault();
-    settings.probabilityRange.lowerBound = +probRangeSlider.noUiSlider.get()[0];
-    settings.probabilityRange.upperBound = +probRangeSlider.noUiSlider.get()[1];
-    //settings.similarityRange.lowerBound = +similarityRangeSlider.noUiSlider.get()[0];
-    //settings.similarityRange.upperBound = +similarityRangeSlider.noUiSlider.get()[1];
+
+    settings.calculateProbabilityRange(+probRangeSlider.noUiSlider.get()[0], +probRangeSlider.noUiSlider.get()[1]);
+    settings.calculateProbabilityRange(+probRangeSlider2.noUiSlider.get()[0], +probRangeSlider2.noUiSlider.get()[1]);
+    settings.calculateDistanceRange(+distanceRangeSlider.noUiSlider.get()[0], +distanceRangeSlider.noUiSlider.get()[1])
+
     settings.TPThreshold = +tpSlider.noUiSlider.get();
-    settings.TNThreshold = +tnSlider.noUiSlider.get();
+    settings.TNThreshold = 1 - (+tnSlider.noUiSlider.get());
     settings.display.TN = $('#tn').is(":checked")
     settings.display.TP = $('#tp').is(":checked")
     settings.display.FN = $('#fn').is(":checked")
@@ -115,6 +142,8 @@ function Interface(data){
     histograms.updateData(histograms.constructData(dataModel, settings))
     distanceHistograms.updateData(distanceHistograms.constructData(dataModel, settings), settings.distanceRange)
     probabilityHistograms.updateData(probabilityHistograms.constructData(dataModel, settings), settings.probabilityRange)
+
+    moveSliders()
   })
 
   $('#clearFilter').on('click', function(e){
@@ -122,27 +151,34 @@ function Interface(data){
     console.log(settings)
     datatable.clearFilter(numFilter)
     tpSlider.noUiSlider.set(settings.TPThresholdDefault)
-    tnSlider.noUiSlider.set(settings.TNThresholdDefault)
-    probRangeSlider.noUiSlider.set([settings.probabilityRangeDefault.lowerBound, settings.probabilityRangeDefault.upperBound])
-    //similarityRangeSlider.noUiSlider.set([settings.similarityRangeDefault.lowerBound, settings.similarityRangeDefault.upperBound])
-    settings.display.TN = settings.displayDefault.TN
+    tnSlider.noUiSlider.set(1 - settings.TNThresholdDefault)
+    moveSliders()
+    //probRangeSlider.noUiSlider.set([settings.probabilityRangeDefault.lowerBound, settings.probabilityRangeDefault.upperBound])
+    //distanceRangeSlider.noUiSlider.set([settings.distanceRangeDefault.lowerBound,settings.distanceRangeDefault.upperBound]);
+
     settings.display.TP = settings.displayDefault.TP
     settings.display.FN = settings.displayDefault.FN
     settings.display.FP = settings.displayDefault.FP
+    settings.display.TN = settings.displayDefault.TN
+
     settings.TPThreshold = settings.TPThresholdDefault
     settings.TNThreshold = settings.TNThresholdDefault
+
     settings.probabilityRange.lowerBound = settings.probabilityRangeDefault.lowerBound
     settings.probabilityRange.upperBound = settings.probabilityRangeDefault.upperBound
-    //settings.similarityRange.lowerBound = settings.similarityRangeDefault.lowerBound
-    //settings.similarityRange.upperBound = settings.similarityRangeDefault.upperBound
-    console.log(settings)
+
+    settings.distanceRange.lowerBound = settings.distanceRangeDefault.lowerBound
+    settings.distanceRange.upperBound = settings.distanceRangeDefault.upperBound
+
     $( "#tn" ).prop( "checked", settings.display.TN );
     $( "#tp" ).prop( "checked", settings.display.TP );
     $( "#fn" ).prop( "checked", settings.display.FN );
     $( "#fp" ).prop( "checked", settings.display.FP );
+
     histograms.updateData(histograms.constructData(dataModel, settings))
-    //distanceHistograms.updateData(distanceHistograms.constructData(dataModel, settings), settings.distanceRange)
     probabilityHistograms.updateData(probabilityHistograms.constructData(dataModel, settings), settings.probabilityRange)
+    distanceHistograms.updateData(distanceHistograms.constructData(dataModel, settings), settings.distanceRange)
+
     d3.selectAll(".hover-line").remove();
     d3.selectAll(".click-line").remove();
     d3.select(".connect-histograms").append("path").attr("class", "hover-line")
