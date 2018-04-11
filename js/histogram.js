@@ -1,5 +1,6 @@
-function Histogram(dataModel, settings, histogramType){
+function Histogram(dataModel, settings, histogramType, boxPlots){
   console.log(histogramType)
+  var that = this;
   this.histogramType = histogramType
   var initializeData = function(){
     var histogramData = dataModel.classNames.map(function(name, i){
@@ -60,9 +61,27 @@ function Histogram(dataModel, settings, histogramType){
     return histogramData
   }
 
+  var numSelected = [0]
+  var selectedInfo = []
+
+  var selectedStack = function(){
+    // increment number of selected stacks
+
+    if ($(this).attr('class').split(' ').length == 3){ //already selected, so remove selection
+      //removeSelectedStack($(this), selectedInfo, numSelected)
+    } //alright selected
+    else{
+      addSelectedStack($(this), selectedInfo, numSelected, false);
+      console.log(selectedInfo)
+      console.log(numSelected)
+    }
+    if (numSelected[0] == 2){
+      boxPlots.makeComparison(selectedInfo, histogramData, dataModel.data)
+    }
+  }
+
   var constructHistogram = function(histogramData){
     //console.log(histogramData)
-
     var xDomainScale = calculateXDomain("tp", "fn", histogramData)
 
     console.log(xDomainScale)
@@ -142,6 +161,9 @@ function Histogram(dataModel, settings, histogramType){
         .attr("stroke", function (d) { return settings.color(d.className) })
         .attr("stroke-width", settings.fnStrokeWidth)
         .attr("text", function(d){ return xScaleCount(d.count) })
+
+    fn.on("click", selectedStack)
+    tp.on("click", selectedStack)
 
     svg.append("g")
         .attr("class", "y-axis")

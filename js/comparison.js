@@ -1,10 +1,11 @@
 function BoxPlot(dataModel, settings){
   //console.log(dataModel)
   //console.log(selectedInfo)
-  //console.log(settings)
   // boxplot descriptions
+  // console.log(settings)
   var that = this
   this.settings = settings
+  var distanceMeasure = settings.distanceMeasure
   var bottomAxisHeight = 40
   var titleHeight = 30
   var margin = { top: 30, right: 30, bottom: 30, left: 30}
@@ -55,14 +56,8 @@ function BoxPlot(dataModel, settings){
     ]
   }
 
-  var getBinNum = function(prob){
-    var bin = Math.floor((prob - settings.probabilityRange.lowerBound)/
-                          ((settings.probabilityRange.upperBound - settings.probabilityRange.lowerBound)/settings.numBins))
-    //var bin = Math.floor(prob/0.1)
-    return (bin == 10) ? 9 : bin
-  }
-
-  var filterDataForSelected = function(data, selectedInfo, settings){
+  var filterDataForSelected = function(data, selectedInfo, distanceMeasure){
+    console.log(settings)
     var svgClass = ""
     if (selectedInfo.classification == "TP" || selectedInfo.classification == "FP"){
       svgClass = "predictedClass"
@@ -72,8 +67,13 @@ function BoxPlot(dataModel, settings){
     }
     var filtered = data.filter(example => example["actual" + selectedInfo["actualClass"]] == 1)
       .filter(example => example["predicted" + selectedInfo["predictedClass"]] == 1)
-      .filter(example => getBinNum(example["prob" + selectedInfo[svgClass]]) == selectedInfo["binNum"])
 
+    if (selectedInfo.distance){
+      filtered = filtered.filter(example => getBinNum(example[settings.distanceMeasure], settings.distanceRange, settings.numBins) == selectedInfo["binNum"])
+    }
+    else {
+      filtered = filtered.filter(example => getBinNum(example["prob" + selectedInfo[svgClass]], settings.probabilityRange, settings.numBins) == selectedInfo["binNum"])
+    }
     console.log(filtered)
     return filtered
   }
@@ -135,8 +135,8 @@ function BoxPlot(dataModel, settings){
         // get the min and max from each
         xScaleMin = d3.min(pairOfData[0].quartiles.concat(pairOfData[1].quartiles))
         xScaleMax = d3.max(pairOfData[0].quartiles.concat(pairOfData[1].quartiles))
-        console.log(pairOfData)
-        console.log(xScaleMin, xScaleMax)
+        //console.log(pairOfData)
+        //console.log(xScaleMin, xScaleMax)
         var xScale = d3.scaleLinear()
         	.domain([xScaleMin, xScaleMax])
           .range([0, plotWidth])
@@ -181,8 +181,8 @@ function BoxPlot(dataModel, settings){
             .enter()
           .append("line")
             .attr("x1", function(d){
-              console.log(d.quartiles[0])
-              console.log(xScale(d.quartiles[0]))
+              //console.log(d.quartiles[0])
+              //console.log(xScale(d.quartiles[0]))
           	   return xScale(d.quartiles[0])
              })
             .attr("y1", function(d){
@@ -280,8 +280,9 @@ function BoxPlot(dataModel, settings){
   }
 
   this.makeComparison = function(selectedInfo, histogramData, data){
-    var group1 = filterDataForSelected(data, selectedInfo[0])
-    var group2 = filterDataForSelected(data, selectedInfo[1])
+    console.log(distanceMeasure)
+    var group1 = filterDataForSelected(data, selectedInfo[0], distanceMeasure)
+    var group2 = filterDataForSelected(data, selectedInfo[1], distanceMeasure)
 
     var boxPlotData = constructAllPlotData([group1,group2], dataModel)
 

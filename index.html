@@ -52,6 +52,14 @@
 
       <div class="settings-pane row">
         <div id="settings-form">
+          <div class="distance-select">
+            <select>
+              <option value="distance_man">Manhattan</option>
+              <option value="distance_cosine">Cosine</option>
+              <option value="distance_euclidean">Euclidean</option>
+              <option value="distance_minkowski">Minkowski</option>
+            </select>
+          </div>
           <div class="slider-container" id="tp-container">
             <label id="tp-label">Filter Confident TPs</label>
             <div id="tp-threshold-slider" /> </div>
@@ -93,7 +101,7 @@
         <button id="filter">Filter</button>
         <button id="clearFilter">Clear</button>
       </div>
-
+      <hr>
 
       <div id="probability-tab" class="tabcontent" style="display: block;"></div>
       <div id="distance-tab" class="tabcontent" style="display: none;"></div>
@@ -113,5 +121,6 @@
       <script type="text/javascript" src="js/histogram.js"></script>
       <script type="text/javascript" src="js/datatable.js"></script>
       <script type="text/javascript" src="js/comparison.js"></script>
+      <script type="text/javascript" src="js/select.js"></script>
     </body>
 </html>

@@ -78,12 +78,17 @@ var calculateXDomain = function (pos, neg, histogramData) {
   return Math.max(maxNeg , maxPos)
 }
 
-var getSelectedStackInfo = function(element){
+var getSelectedStackInfo = function(element, isDistribution){
   var thisClass = element.attr('class').split(' ')
   var classification = thisClass[0] //fp, tp, tn, fn
   var binNum = 9 - element.parent().attr('class').split(' ')[1] //bin number
   var actualClass = "";
   var predictedClass = "";
+  var distance = false;
+
+  if (element.parent().parent().parent().attr('class').split(' ')[0] == "distance-histogram"){
+    distance = true;
+  }
   if (classification == 'TP'){
     actualClass = element.parent().parent().parent().attr('class').split(' ')[1] //svg's class //use whatever the svg class is for probability
     predictedClass = actualClass
@@ -93,29 +98,36 @@ var getSelectedStackInfo = function(element){
     predictedClass = element.parent().parent().parent().attr('class').split(' ')[1] //svg class
   }
   else{
-    actualClass = element.parent().parent().parent().attr('class').split(' ')[1] //svg class
-    predictedClass = thisClass[1]
+    if (isDistribution){
+      actualClass = element.parent().parent().parent().attr('class').split(' ')[1] //svg class
+      predictedClass = thisClass[1]
+    }
+    else {
+      actualClass = element.parent().parent().parent().attr('class').split(' ')[1]
+      predictedClass = thisClass[1]
+    }
   }
 
   var info = {
     classification: classification,
     binNum: binNum,
     actualClass: actualClass.charAt(actualClass.length - 1), //class0 => 0
-    predictedClass: predictedClass.charAt(predictedClass.length - 1)
-  }
+    predictedClass: predictedClass.charAt(predictedClass.length - 1),
+    distance: distance
+  };
   return info
 }
 
-var addSelectedStack = function(element, selectedInfo, numSelected){
+var addSelectedStack = function(element, selectedInfo, numSelected, isDistribution){
   numSelected[0] += 1;
   if (numSelected[0] == 1){
     element.addClass("highlight")
-    selectedInfo.push(getSelectedStackInfo(element))
+    selectedInfo.push(getSelectedStackInfo(element, isDistribution))
     ///console.log(selectedInfo)
   }
   else if(numSelected[0] == 2){
     element.addClass("highlight")
-    selectedInfo.push(getSelectedStackInfo(element))
+    selectedInfo.push(getSelectedStackInfo(element, isDistribution))
     //console.log(selectedInfo)
     // function to make comparisons
   }

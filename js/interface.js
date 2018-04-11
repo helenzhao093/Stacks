@@ -80,7 +80,7 @@ function Interface(data){
   console.log(distanceRangeSlider)
 
   var draw = d3.line()
-      .x(function (d) { return settings.xScalePath(d[0])} )
+      .x(function (d) { return 20 + settings.xScalePath(d[0])} )
       .y(function (d) { return settings.yScalePath(getBinNum(d[1], settings.probabilityRange, settings.numBins)) + settings.margin.top })
 
 
@@ -109,8 +109,8 @@ function Interface(data){
   }
   var boxPlots = new BoxPlot(dataModel, settings)
   var histograms = new DistributionHistogram(dataModel, settings, boxPlots);
-  var distanceHistograms = new Histogram(dataModel, settings, settings.histogramTypes.distance);
-  var probabilityHistograms = new Histogram(dataModel, settings, settings.histogramTypes.probability);
+  var distanceHistograms = new Histogram(dataModel, settings, settings.histogramTypes.distance, boxPlots);
+  var probabilityHistograms = new Histogram(dataModel, settings, settings.histogramTypes.probability, boxPlots);
   var datatable = new DataTable(dataModel, settings)
 
   var moveSliders = function(){
@@ -205,8 +205,8 @@ function Interface(data){
     // change distance measure in settings and recalculate the distance range
     settings.distanceMeasure = select_item.id;
     settings.calculateDistanceMetadata()
-
-    // update the distance histograms distance measure and redraw the histograms 
+    boxPlots.distanceMeasure = settings.distanceMeasure
+    // update the distance histograms distance measure and redraw the histograms
     distanceHistograms.histogramType.getBinNum[0] = settings.distanceMeasure;
     distanceHistograms.updateData(distanceHistograms.constructData(dataModel, settings), settings.distanceRange)
   }

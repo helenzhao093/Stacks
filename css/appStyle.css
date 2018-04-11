@@ -122,10 +122,21 @@ body {
   height: 50px;
   overflow: hidden;
   background: linear-gradient(to right, #333, #333);
+  position: fixed;
+  z-index: 100;
+  top: 0;
 }
 
 .settings-pane {
-  width: 1366px
+  width: 1366px;
+  position: fixed;
+  top:100px;
+  z-index: 100;
+  background: lightblue;
+  padding-bottom: 17px;
+  border-bottom: 2px grey;
+  border-bottom-style: solid;
+  margin-bottom: 0px;
 }
 
 #settings-form {
@@ -162,7 +173,12 @@ rect.FP{
 }
 
 .prob-column{
-  border-right: 4px solid;
+  border-right: 3px solid;
+}
+
+.distance-column {
+  border-right: 3px solid;
+  border-left: 3px solid;
 }
 
 td.TN {
@@ -245,6 +261,10 @@ td, th {
 }
 /* Style the tab */
 .tab {
+    position:fixed;
+    z-index: 100;
+    top:50px;
+    width:100%;
     overflow: hidden;
     border: 1px solid #ccc;
     background-color: #f1f1f1;
@@ -336,4 +356,11 @@ select {
 }
 .select-items div:hover {
   background-color: rgba(0, 0, 0, 0.1);
+}
+
+
+.tabcontent {
+  margin-top:150px;
+  position:static;
+  z-index: -1;
 }

@@ -94,15 +94,14 @@ function DistributionHistogram(dataModel, settings, boxPlots){
   var numSelected = [0]
   var selectedInfo = []
 
-
   var selectedStack = function(){
     // increment number of selected stacks
 
     if ($(this).attr('class').split(' ').length == 3){ //already selected, so remove selection
-      removeSelectedStack($(this), selectedInfo, numSelected)
+      //removeSelectedStack($(this), selectedInfo, numSelected)
     } //alright selected
     else{
-      addSelectedStack($(this), selectedInfo, numSelected);
+      addSelectedStack($(this), selectedInfo, numSelected, true);
       console.log(selectedInfo)
       console.log(numSelected)
     }
@@ -110,7 +109,6 @@ function DistributionHistogram(dataModel, settings, boxPlots){
       boxPlots.makeComparison(selectedInfo, histogramData, dataModel.data)
     }
   }
-
 
   // append svg elements to "draw" the histogram from the data
   var constructHistogram = function(histogramData){

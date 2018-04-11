@@ -61,7 +61,7 @@ function DataTable(dataModel, appSettings){
     columnDef.push({targets:[i], orderData:[i,i+1, i+2]})
   }
 
-  for (i = probColumn; i < dataModel.numClasses * columnPerClass; i = i+columnPerClass){
+  for (i = probColumn; i < dataModel.numClasses * columnPerClass + 1; i = i+columnPerClass){
     columnDef.push({className: 'dt-right prob-column', targets:[i]})
   }
 
@@ -138,11 +138,5 @@ function DataTable(dataModel, appSettings){
     }
     this.table.draw()
   }
-
-  /*$('#clearFilter').on('click', function(e){
-    e.preventDefault();
-    $.fn.dataTable.ext.search.pop()
-    datatable.table.draw()
-  })*/
 
 }
