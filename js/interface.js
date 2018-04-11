@@ -194,4 +194,20 @@ function Interface(data){
     console.log(datatable.table.row(this).data())
     drawPath(datatable.table.row(this).data(), dataModel, settings, false);
   });
+
+  settings.distanceMeasures.forEach(function(distance){
+    $('#'+ distance).on('click', function(){
+      newDistanceSelected(this)
+    })
+  })
+
+  var newDistanceSelected = function(select_item){
+    // change distance measure in settings and recalculate the distance range
+    settings.distanceMeasure = select_item.id;
+    settings.calculateDistanceMetadata()
+
+    // update the distance histograms distance measure and redraw the histograms 
+    distanceHistograms.histogramType.getBinNum[0] = settings.distanceMeasure;
+    distanceHistograms.updateData(distanceHistograms.constructData(dataModel, settings), settings.distanceRange)
+  }
 }

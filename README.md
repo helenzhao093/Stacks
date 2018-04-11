@@ -79,7 +79,7 @@ the probability ranges, feature ranges, and similarity range
 TODO:
 1) Add tabs
 2) Add slider functionality to y axis
-3) Dropdown for distance 
+3) Dropdown for distance
 4) Reorganize sliders
 
 ### WEEK 6:
@@ -88,3 +88,9 @@ TODO:
 3) Added tabs
 4) Moved sliders
 5) All tab views correspond to each other and to filtering
+
+TODO:
+1) Fix sliders: after filtering, moving bars back to max and min positions.
+adjust the step size for the sliders.
+2) Fix datatable filtering
+3) Add slider to distance tab

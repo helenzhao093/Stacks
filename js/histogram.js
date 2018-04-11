@@ -1,5 +1,6 @@
 function Histogram(dataModel, settings, histogramType){
   console.log(histogramType)
+  this.histogramType = histogramType
   var initializeData = function(){
     var histogramData = dataModel.classNames.map(function(name, i){
       return {classNum: i, className: name, data: []}
@@ -39,7 +40,7 @@ function Histogram(dataModel, settings, histogramType){
             var columnName = (histogramType.getBinNum.length == 1) ? histogramType.getBinNum[0] : histogramType.getBinNum[i]
 
             var binNum = getBinNum(example[columnName], histogramType.range, settings.numBins)
-
+            //console.log(binNum, columnName, example[columnName], histogramType.range)
             dataModel.predictedClasses.forEach(function(predictedClass, j){
               if (example[dataModel.predictedClasses[j]] == 1) {
                 if (i == j && settings.display.TP && (example[dataModel.probColumns[i]] < settings.TPThreshold) ){

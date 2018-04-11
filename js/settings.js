@@ -111,6 +111,23 @@ function Settings(dataModel){
     upperBound : Math.ceil(this.distanceMax*10)/10
   }
 
+  this.calculateDistanceMetadata = function() {
+    that.distanceMax = d3.max(dataModel.data.map(function(d) {
+      //console.log(that.distanceMeasure)
+      //console.log(d[that.distanceMeasure])
+      return d[that.distanceMeasure];
+    }))
+    that.distanceMin = d3.min(dataModel.data.map(function(d) {
+      return d[that.distanceMeasure];
+    }))
+    that.distanceRangeDefault.lowerBound = Math.floor(that.distanceMin * 10)/10
+    that.distanceRangeDefault.upperBound = Math.ceil(that.distanceMax*10)/10
+    that.distanceRange.lowerBound = Math.floor(that.distanceMin * 10)/10
+    that.distanceRange.upperBound = Math.ceil(that.distanceMax*10)/10
+    console.log(that.distanceRange)
+  }
+
+  /*
   this.calculateDistanceMetadata = function(distanceColumn) {
     this.distanceMax = d3.max(dataModel.data.map(function(d) {
       return d[distanceColumn];
@@ -120,7 +137,7 @@ function Settings(dataModel){
     }))
     this.distanceRange.lowerBound = Math.floor(this.distanceMin * 10)/10
     this.distanceRange.upperBound = Math.ceil(this.distanceMax*10)/10
-  }
+  }*/
 
   this.calculateDistanceRange = function(sliderLower, sliderUpper){
     // current range
