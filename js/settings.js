@@ -3,7 +3,6 @@ function Settings(dataModel){
   // filter settings
   // default thresholds
 
-
   this.TNThresholdDefault = 0.1
   this.TNMax = 0.5
   this.TNMin = 0.0
@@ -28,7 +27,6 @@ function Settings(dataModel){
         this.probabilityRange.upperBound = newUpperBound
       }
   }
-
 
   // current thresholds
   this.TNThreshold = 0.1
@@ -129,17 +127,6 @@ function Settings(dataModel){
     //console.log(that.distanceRange)
   }
 
-  /*
-  this.calculateDistanceMetadata = function(distanceColumn) {
-    this.distanceMax = d3.max(dataModel.data.map(function(d) {
-      return d[distanceColumn];
-    }))
-    this.distanceMin = d3.min(dataModel.data.map(function(d) {
-      return d[distanceColumn];
-    }))
-    this.distanceRange.lowerBound = Math.floor(this.distanceMin * 10)/10
-    this.distanceRange.upperBound = Math.ceil(this.distanceMax*10)/10
-  }*/
 
   this.calculateDistanceRange = function(sliderLower, sliderUpper){
     // current range
@@ -165,6 +152,28 @@ function Settings(dataModel){
   this.distanceAxisScale = d3.scalePoint().domain(this.distanceAxisDomain)
       .range([0, this.histogramHeight])
   this.distanceAxis = d3.axisLeft(this.distanceAxisScale).tickFormat(d3.format(".2f"))
+
+
+  this.default = {
+    TPThreshold: this.TPThresholdDefault,
+    TNThreshold: this.TNThresholdDefault,
+    display: {
+      TN: this.displayDefault.TN,
+      TP: this.displayDefault.TP,
+      FN: this.displayDefault.FN,
+      FP: this.displayDefault.FP
+    },
+    probabilityRange:{
+      lowerBound: this.probabilityRangeDefault.lowerBound,
+      upperBound: this.probabilityRangeDefault.upperBound
+    },
+    distanceRange: {
+      lowerBound: this.distanceRangeDefault.lowerBound,
+      upperBound: this.distanceRangeDefault.upperBound
+    },
+    distanceMeasure: this.defaultDistanceMeasure
+  }
+
 
   this.histogramTypes = {
     distance: {

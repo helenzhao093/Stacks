@@ -121,13 +121,80 @@ function Interface(data){
     distanceRangeSlider.noUiSlider.set([0, 1]);
   }
 
+  var applySettings = function(){
+    histograms.updateData(histograms.constructData(dataModel, settings))
+    distanceHistograms.updateData(distanceHistograms.constructData(dataModel, settings), settings.distanceRange)
+    probabilityHistograms.updateData(probabilityHistograms.constructData(dataModel, settings), settings.probabilityRange)
+    moveSliders()
+  }
+
   var numFilter = 0;
+  var filterStack = []
+  var addFilter = function(){
+    numFilter += 1
+    filterStack.push({
+      TPThreshold: settings.TPThreshold,
+      TNThreshold: settings.TNThreshold,
+      display: {
+        TN: settings.display.TN,
+        TP: settings.display.TP,
+        FN: settings.display.FN,
+        FP: settings.display.FP
+      },
+      probabilityRange:{
+        lowerBound: settings.probabilityRange.lowerBound,
+        upperBound: settings.probabilityRange.upperBound
+      },
+      distanceRange: {
+        lowerBound: settings.distanceRange.lowerBound,
+        upperBound: settings.distanceRange.upperBound
+      },
+      distanceMeasure: settings.distanceMeasure
+    })
+    console.log(filterStack)
+  }
+
+  var setSettings = function(newSettings){
+    settings.display.TP = newSettings.display.TP
+    settings.display.FN = newSettings.display.FN
+    settings.display.FP = newSettings.display.FP
+    settings.display.TN = newSettings.display.TN
+
+    settings.TPThreshold = newSettings.TPThreshold
+    settings.TNThreshold = newSettings.TNThreshold
+
+    tpSlider.noUiSlider.set(settings.TPThreshold)
+    tnSlider.noUiSlider.set(1 - settings.TNThreshold)
+
+    settings.probabilityRange.lowerBound = newSettings.probabilityRange.lowerBound
+    settings.probabilityRange.upperBound = newSettings.probabilityRange.upperBound
+
+    settings.distanceRange.lowerBound = newSettings.distanceRange.lowerBound
+    settings.distanceRange.upperBound = newSettings.distanceRange.upperBound
+
+    $( "#tn" ).prop( "checked", newSettings.display.TN );
+    $( "#tp" ).prop( "checked", newSettings.display.TP );
+    $( "#fn" ).prop( "checked", newSettings.display.FN );
+    $( "#fp" ).prop( "checked", newSettings.display.FP );
+  }
+
   $('#filter').on('click', function(e){
     e.preventDefault();
+
+    $('#undoFilter').css("display", "inline");
+
+    addFilter()
 
     settings.calculateProbabilityRange(+probRangeSlider.noUiSlider.get()[0], +probRangeSlider.noUiSlider.get()[1]);
     settings.calculateProbabilityRange(+probRangeSlider2.noUiSlider.get()[0], +probRangeSlider2.noUiSlider.get()[1]);
     settings.calculateDistanceRange(+distanceRangeSlider.noUiSlider.get()[0], +distanceRangeSlider.noUiSlider.get()[1])
+
+    if (settings.probabilityRange.upperBound < settings.TPThreshold){
+      tpSlider.noUiSlider.set(settings.probabilityRange.upperBound)
+    }
+    if (settings.probabilityRange.lowerBound > settings.TNThreshold){
+      tnSlider.noUiSlider.set(1 - settings.probabilityRange.lowerBound)
+    }
 
     settings.TPThreshold = +tpSlider.noUiSlider.get();
     settings.TNThreshold = 1 - (+tnSlider.noUiSlider.get());
@@ -137,47 +204,31 @@ function Interface(data){
     settings.display.FP = $('#fp').is(":checked")
 
     datatable.applyFilter(settings)
-    numFilter += 1
-    console.log(settings)
-    histograms.updateData(histograms.constructData(dataModel, settings))
-    distanceHistograms.updateData(distanceHistograms.constructData(dataModel, settings), settings.distanceRange)
-    probabilityHistograms.updateData(probabilityHistograms.constructData(dataModel, settings), settings.probabilityRange)
+    applySettings()
+  })
 
-    moveSliders()
+  $('#undoFilter').on('click', function(e){
+    oldSettings = filterStack.pop()
+    console.log(oldSettings)
+    numFilter -= 1
+    if (numFilter == 0){
+      $(this).css("display", "none");
+    }
+    setSettings(oldSettings)
+    datatable.clearFilter(1)
+    applySettings()
   })
 
   $('#clearFilter').on('click', function(e){
     e.preventDefault();
-    console.log(settings)
+
     datatable.clearFilter(numFilter)
+    $('#undoFilter').css("display", "none");
+
     tpSlider.noUiSlider.set(settings.TPThresholdDefault)
     tnSlider.noUiSlider.set(1 - settings.TNThresholdDefault)
-    moveSliders()
-    //probRangeSlider.noUiSlider.set([settings.probabilityRangeDefault.lowerBound, settings.probabilityRangeDefault.upperBound])
-    //distanceRangeSlider.noUiSlider.set([settings.distanceRangeDefault.lowerBound,settings.distanceRangeDefault.upperBound]);
-
-    settings.display.TP = settings.displayDefault.TP
-    settings.display.FN = settings.displayDefault.FN
-    settings.display.FP = settings.displayDefault.FP
-    settings.display.TN = settings.displayDefault.TN
-
-    settings.TPThreshold = settings.TPThresholdDefault
-    settings.TNThreshold = settings.TNThresholdDefault
-
-    settings.probabilityRange.lowerBound = settings.probabilityRangeDefault.lowerBound
-    settings.probabilityRange.upperBound = settings.probabilityRangeDefault.upperBound
-
-    settings.distanceRange.lowerBound = settings.distanceRangeDefault.lowerBound
-    settings.distanceRange.upperBound = settings.distanceRangeDefault.upperBound
-
-    $( "#tn" ).prop( "checked", settings.display.TN );
-    $( "#tp" ).prop( "checked", settings.display.TP );
-    $( "#fn" ).prop( "checked", settings.display.FN );
-    $( "#fp" ).prop( "checked", settings.display.FP );
-
-    histograms.updateData(histograms.constructData(dataModel, settings))
-    probabilityHistograms.updateData(probabilityHistograms.constructData(dataModel, settings), settings.probabilityRange)
-    distanceHistograms.updateData(distanceHistograms.constructData(dataModel, settings), settings.distanceRange)
+    setSettings(settings.default)
+    applySettings()
 
     d3.selectAll(".hover-line").remove();
     d3.selectAll(".click-line").remove();
