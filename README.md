@@ -94,3 +94,17 @@ TODO:
 adjust the step size for the sliders.
 2) Fix datatable filtering
 3) Add slider to distance tab
+
+### WEEK 7:
+1) Fixed sliders. After filtering, bars move back to max and min positions
+2) Fix filtering in datatables
+3) Sorted plots in features tab
+4) Adjusted colors
+
+## WEEK 8:
+TODO:
+1) Make slider fixed on probability distribution tab
+2) Add data table tab
+3) Add descriptions to tabs
+4) Add sub-tabs to features tab
+5) Fix sliders for selected distance
