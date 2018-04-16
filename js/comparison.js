@@ -44,8 +44,18 @@ function BoxPlot(dataModel, settings){
         })
       })
     })
-    //console.log(data)
-    return data
+
+    var sortedData = sortPlotData(data)
+    return sortedData
+  }
+
+  var sortPlotData = function (boxPlotData){
+    var sorted = boxPlotData.sort(function(a,b){
+      //console.log(a,b)
+      return Math.abs((a[0].quartiles[4] - b[0].quartiles[0]) - (a[1].quartiles[4] - b[1].quartiles[0]))
+    })
+    console.log(sorted)
+    return sorted
   }
 
   var constructAllPlotData = function(groups, dataModel){
@@ -55,6 +65,8 @@ function BoxPlot(dataModel, settings){
       constructPlotData([that.settings.distanceMeasure], groups)
     ]
   }
+
+
 
   var filterDataForSelected = function(data, selectedInfo, distanceMeasure){
     console.log(settings)
@@ -125,9 +137,6 @@ function BoxPlot(dataModel, settings){
 
   function constructBoxPlots(boxPlotData, selectedInfo, divClassName){
     //[ [{}{}] [{}{}] [{}{}] ]
-    //var divClassNames = [".probability-boxplot-pane", ".feature-boxplot-pane", ".similarity-boxplot-pane"]
-
-    /* remove all the previous box-plots */
 
       boxPlotData.forEach(function(pairOfData){
         var title = pairOfData[0].name
@@ -285,7 +294,7 @@ function BoxPlot(dataModel, settings){
     var group2 = filterDataForSelected(data, selectedInfo[1], distanceMeasure)
 
     var boxPlotData = constructAllPlotData([group1,group2], dataModel)
-
+    //var sortedboxPlotData = sortPlotData(boxPlotData)
     modifySelectedInfo(selectedInfo, boxPlotData)
     constructLegend(selectedInfo)
     constructAllBoxPlots(boxPlotData, selectedInfo)

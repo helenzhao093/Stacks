@@ -114,6 +114,13 @@ function DataTable(dataModel, appSettings){
     "columnDefs": columnDef
   })
 
+  this.tableTab = $('#tab-datatable').DataTable( {
+    //"scrollX": true,
+    "data": tableData,
+    "columns": columns,
+    "columnDefs": columnDef
+  })
+
   var currentClass = ""
   this.table.cells().every( function () {
     var data = this.data();

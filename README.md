@@ -108,3 +108,10 @@ TODO:
 3) Add descriptions to tabs
 4) Add sub-tabs to features tab
 5) Fix sliders for selected distance
+6) Make bars solid on probability and distance tabs
+7) Don't set limit on number of boxplots to compare
+8) Undo button
+
+Completed:
+1) fixed distance slider
+2) fixed path on distribution tab. Path was distorted by the slider div

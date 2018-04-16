@@ -67,14 +67,14 @@ function Interface(data){
   noUiSlider.create(distanceRangeSlider, {
     orientation: "vertical",
     direction: 'rtl',
-    start: [settings.distanceRange.lowerBound, settings.distanceRange.upperBound],
-    step: settings.distanceAxisStep,
+    start: [0, 1],
+    step: 0.1,
     behavior: 'drag',
     connect: true,
     tooltips: [ true, true ],
     range: {
-      'min': settings.distanceRange.lowerBound,
-      'max': settings.distanceRange.upperBound
+      'min': 0,
+      'max': 1
     }
   });
   console.log(distanceRangeSlider)
@@ -118,8 +118,7 @@ function Interface(data){
                                     settings.probabilityRangeDefault.upperBound]);
     probRangeSlider2.noUiSlider.set([settings.probabilityRangeDefault.lowerBound,
                                     settings.probabilityRangeDefault.upperBound]);
-    distanceRangeSlider.noUiSlider.set([settings.distanceRangeDefault.lowerBound,
-                                  settings.distanceRangeDefault.upperBound]);
+    distanceRangeSlider.noUiSlider.set([0, 1]);
   }
 
   var numFilter = 0;

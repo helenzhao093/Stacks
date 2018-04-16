@@ -32,8 +32,6 @@ function Histogram(dataModel, settings, histogramType, boxPlots){
     // only adding to the chart if the true class is current class
     var histogramData = initializeData()
     dataModel.data.forEach(function(example){
-      //var binNum = getBinNum(example[settings.distanceMeasure], settings.distanceRange, settings.numBins)
-      //console.log(binNum)
       if (inRange(example[settings.distanceMeasure], settings.distanceRange)){
         dataModel.actualClasses.forEach(function(actualClass, i){
           //console.log(example[dataModel.probColumns[i]], inRange(example[dataModel.probColumns[i]], settings.probabilityRange), settings.probabilityRange.upperBound)
@@ -148,18 +146,16 @@ function Histogram(dataModel, settings, histogramType, boxPlots){
         .data( function(d) {return d.fn})
       .enter().append("rect")
         .attr("class", function(d) {return "FN " + d.className })
-        .attr("height", function(d) { return settings.yScale.bandwidth() - settings.fnStrokeWidth})
-        .attr("width", function (d) { return (d.count == 0) ? 0 : (xScaleCount(d.count) - settings.fnStrokeWidth)})
+        .attr("height", function(d) { return settings.yScale.bandwidth()})
+        .attr("width", function (d) { return (d.count == 0) ? 0 : xScaleCount(d.count)})
         .attr("x", function (d) {
-          //console.log(d)
-          //console.log(d.previous_sum)
-          return  (d.previous_sum == 0) ? xScale(0) - xScaleCount(d.count) + settings.fnStrokeWidth/2 - settings.yAxisStrokeWidth/2 :
-          xScale(0) - xScaleCount(d.previous_sum) - xScaleCount(d.count) + settings.fnStrokeWidth/2 - settings.yAxisStrokeWidth/2})
+          return  (d.previous_sum == 0) ? xScale(0) - xScaleCount(d.count) - settings.yAxisStrokeWidth/2:
+          xScale(0) - xScaleCount(d.previous_sum) - xScaleCount(d.count) - settings.yAxisStrokeWidth/2 })
         //.attr("x", function(d){ return xScale(0) - xScaleCount(d.previous_sum + d.count)})
-        .attr("y", function (d) {return settings.yScale(d.bin) + settings.fnStrokeWidth/2})
-        .attr("fill", "white")
-        .attr("stroke", function (d) { return settings.color(d.className) })
-        .attr("stroke-width", settings.fnStrokeWidth)
+        .attr("y", function (d) {return settings.yScale(d.bin) })
+        .attr("fill", function (d) { return settings.color(d.className) })
+        //.attr("stroke", function (d) { return settings.color(d.className) })
+        //.attr("stroke-width", settings.fnStrokeWidth)
         .attr("text", function(d){ return xScaleCount(d.count) })
 
     fn.on("click", selectedStack)
@@ -227,10 +223,10 @@ function Histogram(dataModel, settings, histogramType, boxPlots){
       fn.enter().append("rect")
 
       fn
-          .attr("width", function (d) { return (d.count == 0) ? 0 : (xScaleCount(d.count) - settings.fnStrokeWidth)})
+          .attr("width", function (d) { return (d.count == 0) ? 0 : xScaleCount(d.count)})
           .attr("x", function (d) { return  (d.previous_sum == 0) ?
-            xScale(0) - xScaleCount(d.count) + settings.fnStrokeWidth/2 - settings.yAxisStrokeWidth/2 :
-            xScale(0) - xScaleCount(d.previous_sum) - xScaleCount(d.count) + settings.fnStrokeWidth/2 - settings.yAxisStrokeWidth/2})
+            xScale(0) - xScaleCount(d.count) - settings.yAxisStrokeWidth/2 :
+            xScale(0) - xScaleCount(d.previous_sum) - xScaleCount(d.count) - settings.yAxisStrokeWidth/2})
           .attr("text", function (d) { return xScaleCount(d.count)})
 
       fn.exit().remove();

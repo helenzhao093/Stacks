@@ -28,11 +28,16 @@
             /* remove active class from tablinks buttons */
             tablinks = document.getElementsByClassName("tablinks");
             for (i = 0; i < tablinks.length; i++){
-              console.log(tablinks[i])
+              //console.log(tablinks[i])
               tablinks[i].classList.remove("active");
             }
 
             /* show the selected tab */
+            if (tabName == "table-tab"){
+              document.getElementById('table-tab').appendChild(
+                document.getElementById('datatable_wrapper')
+              );
+            }
             document.getElementById(tabName).style.display = "block";
 
             /* add active class to the selected tab */
@@ -42,20 +47,22 @@
     </head>
     <body>
       <div class="header-pane">
+        Stacks
       </div>
       <div class="tab">
         <button class="tablinks" onclick="openContent(event, 'probability-tab')">Probability</button>
         <button class="tablinks" onclick="openContent(event, 'distance-tab')">Distance</button>
         <button class="tablinks" onclick="openContent(event, 'prob-distribution-tab')">Probability Distribution</button>
         <button class="tablinks" onclick="openContent(event, 'feature-tab')">Features</button>
+        <button class="tablinks" onclick="openContent(event, 'table-tab')">Table</button>
       </div>
 
       <div class="settings-pane row">
         <div id="settings-form">
           <div class="distance-select">
             <select>
-              <option value="distance_man">Manhattan</option>
               <option value="distance_cosine">Cosine</option>
+              <option value="distance_man">Manhattan</option>
               <option value="distance_euclidean">Euclidean</option>
               <option value="distance_minkowski">Minkowski</option>
             </select>
@@ -100,13 +107,14 @@
         </div>
         <button id="filter">Filter</button>
         <button id="clearFilter">Clear</button>
+        <button id="undoFilter" style="display: none;">Undo</button>
       </div>
-      <hr>
 
       <div id="probability-tab" class="tabcontent" style="display: block;"></div>
       <div id="distance-tab" class="tabcontent" style="display: none;"></div>
       <div id="prob-distribution-tab" class="tabcontent" style="display: none;"></div>
       <div id="feature-tab" class="tabcontent" style="display:none;"></div>
+      <div id="table-tab" class="tabcontent" style="display:none;"></div>
 
       <script type="text/javascript" src="js/d3.min.js"></script>
       <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.16/js/jquery.dataTables.js"></script>

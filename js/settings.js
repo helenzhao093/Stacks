@@ -77,8 +77,9 @@ function Settings(dataModel){
   //this.height = 400 - margin.top - margin.bottom
   var pathRange = []
   for (i = 0; i < dataModel.numClasses; i++){
-    pathRange.push(this.axisWidth + (i+0.5) * this.svgWidth)
+    pathRange.push(5 + this.axisWidth + (i+0.5) * this.histogramWidth)
   }
+  console.log(pathRange)
 
   /* scales for paths in histograms */
   this.xScalePath = d3.scaleOrdinal()
@@ -94,8 +95,8 @@ function Settings(dataModel){
   //DISTANCE HISTOGRAM SETTINGS
   /////////////
   this.distanceMeasures = dataModel.distanceColumns
-  this.defaultDistanceMeasure = dataModel.distanceColumns[0]
-  this.distanceMeasure = dataModel.distanceColumns[0]
+  this.defaultDistanceMeasure = dataModel.distanceColumns[1]
+  this.distanceMeasure = this.defaultDistanceMeasure
   this.distanceMax = d3.max(dataModel.data.map(function(d) {
     return d[that.distanceMeasure];
   }))
@@ -124,7 +125,8 @@ function Settings(dataModel){
     that.distanceRangeDefault.upperBound = Math.ceil(that.distanceMax*10)/10
     that.distanceRange.lowerBound = Math.floor(that.distanceMin * 10)/10
     that.distanceRange.upperBound = Math.ceil(that.distanceMax*10)/10
-    console.log(that.distanceRange)
+    this.distanceAxisStep = (this.distanceRange.upperBound - this.distanceRange.lowerBound) / this.numBins
+    //console.log(that.distanceRange)
   }
 
   /*
@@ -142,9 +144,12 @@ function Settings(dataModel){
   this.calculateDistanceRange = function(sliderLower, sliderUpper){
     // current range
     var totalRange = this.distanceRangeDefault.upperBound - this.distanceRangeDefault.lowerBound
-    var range = this.distanceRange.upperBound - this.distanceRange.lowerBound
-    var newLowerBound = this.distanceRange.lowerBound + (range * (sliderLower - this.distanceRangeDefault.lowerBound)/totalRange)
-    var newUpperBound = this.distanceRange.upperBound - (range * (this.distanceRangeDefault.upperBound - sliderUpper)/totalRange)
+    var currentRange = this.distanceRange.upperBound - this.distanceRange.lowerBound
+
+    var newUpperBound = this.distanceRange.upperBound - (currentRange * (1 - sliderUpper))
+    var newLowerBound = this.distanceRange.lowerBound + (currentRange * sliderLower)
+    //var newLowerBound = this.distanceRange.lowerBound + (range * (sliderLower - this.distanceRangeDefault.lowerBound)/totalRange)
+    //var newUpperBound = this.distanceRange.upperBound - (range * (this.distanceRangeDefault.upperBound - sliderUpper)/totalRange)
     this.distanceRange.lowerBound = newLowerBound
     this.distanceRange.upperBound = newUpperBound
   }
