@@ -358,9 +358,12 @@ select {
   background-color: rgba(0, 0, 0, 0.1);
 }
 
-
 .tabcontent {
   margin-top:160px;
   position:static;
   z-index: -1;
+}
+
+#boxplot-select {
+  display: block;
 }

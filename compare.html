@@ -1,4 +1,10 @@
 <div class="legend"> </div>
-<div class="probability-boxplot-pane"> </div>
-<div class="feature-boxplot-pane"> </div>
-<div class="similarity-boxplot-pane"> </div>
+<select id="boxplot-select">
+  <option value="feature-boxplot-pane">Features</option>
+  <option value="probability-boxplot-pane">Probability</option>
+  <option value="similarity-boxplot-pane">Distance</option>
+</select>
+
+  <div class="probability-boxplot-pane" style="display:none;"> </div>
+  <div class="feature-boxplot-pane" style="display:block;"> </div>
+  <div class="similarity-boxplot-pane" style="display:none;"> </div>

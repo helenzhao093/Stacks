@@ -137,7 +137,6 @@ function BoxPlot(dataModel, settings){
 
   function constructBoxPlots(boxPlotData, selectedInfo, divClassName){
     //[ [{}{}] [{}{}] [{}{}] ]
-
       boxPlotData.forEach(function(pairOfData){
         var title = pairOfData[0].name
 
@@ -299,6 +298,15 @@ function BoxPlot(dataModel, settings){
     constructLegend(selectedInfo)
     constructAllBoxPlots(boxPlotData, selectedInfo)
   }
+
+  $("#boxplot-select").change(function(){
+    console.log($(this).val())
+    var boxplot_classes = ["probability-boxplot-pane","feature-boxplot-pane","similarity-boxplot-pane"]
+    for (var i = 0; i < boxplot_classes.length; i++){
+      document.getElementsByClassName(boxplot_classes[i])[0].style.display = "none";
+    }
+    document.getElementsByClassName($(this).val())[0].style.display = "block";
+  })
 
   //makeComparison(selectedInfo, histogramData, dataModel.data)
 }

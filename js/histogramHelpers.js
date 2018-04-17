@@ -118,9 +118,23 @@ var getSelectedStackInfo = function(element, isDistribution){
   return info
 }
 
+var removeAll = function(selectedInfo, maxSelect){
+  var all = $(".FP, .TP, .FN, .TN")
+  all.removeClass("highlight")
+  for (var i = 0; i < maxSelect; i++){
+    selectedInfo.pop()
+  }
+}
+
 var addSelectedStack = function(element, selectedInfo, numSelected, isDistribution){
+
+
+  // highlight new array, add info, change numSelected
+  element.addClass("highlight")
+  selectedInfo.push(getSelectedStackInfo(element))
   numSelected[0] += 1;
-  if (numSelected[0] == 1){
+
+  /*if (numSelected[0] == 1){
     element.addClass("highlight")
     selectedInfo.push(getSelectedStackInfo(element, isDistribution))
     ///console.log(selectedInfo)
@@ -141,19 +155,22 @@ var addSelectedStack = function(element, selectedInfo, numSelected, isDistributi
     element.addClass("highlight")
     selectedInfo.push(getSelectedStackInfo(element))
     numSelected[0] = 1;
-    //console.log(selectedInfo)
-  }
+    //console.log(selectedInfo)*/
+  //}
 }
 
 var removeSelectedStack = function(element, selectedInfo, numSelected){
-  numSelected[0] = 0
-  /*var infoToRemove = getInformation(element)
-  var index = selectedInfo.indexOf(infoToRemove)
-  console.log(index)
-  if (index > -1){
-    selectedInfo.splice(index, 1);
-  }*/
-  selectedInfo.pop()
+  console.log(element)
+  numSelected[0] -= 1
+  var infoToRemove = getSelectedStackInfo(element)
+  console.log(infoToRemove)
+  for (i=0; i < selectedInfo.length; i++){
+    if (selectedInfo[i].actualClass == infoToRemove.actualClass
+      && selectedInfo[i].binNum == infoToRemove.binNum
+      && selectedInfo[i].classification == infoToRemove.classification
+      && selectedInfo[i].predictedClass == infoToRemove.predictedClass)
+      selectedInfo.splice(i, 1)
+  }
+  console.log(selectedInfo)
   element.removeClass("highlight")
-  //console.log(selectedInfo)
 }
