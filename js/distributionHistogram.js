@@ -110,6 +110,23 @@ function DistributionHistogram(dataModel, settings, boxPlots){
     console.log(numSelected)
   }
 
+  $("#features-button").on('click', function(){
+    //console.log($("#prob-distribution-tab").css('display') == 'block')
+    console.log($("#prob-distribution-tab").css('display'))
+    if ($("#prob-distribution-tab").css('display') == 'block'){
+      boxPlots.makeComparison(selectedInfo, histogramData, dataModel.data)
+    }
+    $('#prob-distribution-tab').css('display', "none");
+    tablinks = document.getElementsByClassName("tablinks");
+    for (i = 0; i < tablinks.length; i++){
+      //console.log(tablinks[i])
+      tablinks[i].classList.remove("active");
+    }
+    $("#features-button").addClass("active")
+    $('#feature-tab').css('display', "block");
+
+  })
+
   // append svg elements to "draw" the histogram from the data
   var constructHistogram = function(histogramData){
     //console.log(settings)

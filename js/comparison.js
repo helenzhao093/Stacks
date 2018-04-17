@@ -11,10 +11,10 @@ function BoxPlot(dataModel, settings){
   var margin = { top: 30, right: 30, bottom: 30, left: 30}
   var boxMargin = { left: 20, top: 5 }
   var plotWidth = 300
-  var plotHeight = 100
+  var plotHeight = 120
   var totalWidth = plotWidth + margin.right + margin.left + boxMargin.left
   var totalHeight = plotHeight + margin.top + margin.bottom + boxMargin.top + bottomAxisHeight + titleHeight
-  var boxHeight = 30
+  var boxHeights = [0, 0, 30, 25, 20, 15]
 
   var boxQuartiles = function (d) { // d is an array
     var sorted = d.sort(function(a,b){return a - b})
@@ -137,23 +137,33 @@ function BoxPlot(dataModel, settings){
 
   function constructBoxPlots(boxPlotData, selectedInfo, divClassName){
     //[ [{}{}] [{}{}] [{}{}] ]
-      boxPlotData.forEach(function(pairOfData){
-        var title = pairOfData[0].name
+      boxPlotData.forEach(function(featureData){
+        var title = featureData[0].name
 
+        var boxHeight = boxHeights[selectedInfo.length]
         // get the min and max from each
-        xScaleMin = d3.min(pairOfData[0].quartiles.concat(pairOfData[1].quartiles))
-        xScaleMax = d3.max(pairOfData[0].quartiles.concat(pairOfData[1].quartiles))
-        //console.log(pairOfData)
-        //console.log(xScaleMin, xScaleMax)
+        //xScaleMin = d3.min(pairOfData[0].quartiles.concat(pairOfData[1].quartiles))
+        xScaleMin = d3.min(featureData.map(function(d){
+          return d.quartiles[0]
+        }))
+        xScaleMax = d3.max(featureData.map(function(d){
+          return d.quartiles[4]
+        }))
+        console.log(xScaleMin, xScaleMax)
         var xScale = d3.scaleLinear()
         	.domain([xScaleMin, xScaleMax])
           .range([0, plotWidth])
 
         var xAxis = d3.axisBottom(xScale).tickFormat(d3.format(".2f"))
 
+        var h = (selectedInfo.length == 2) ? 100 : plotHeight
         var yScale = d3.scalePoint()
-          .domain([pairOfData[0].group, pairOfData[1].group])
-          .rangeRound([0, plotHeight - boxHeight])
+          //.domain([pairOfData[0].group, pairOfData[1].group])
+          .domain(featureData.map(function(d){
+            return d.group
+          }))
+          //.rangeRound([0, h])
+          .rangeRound([0, plotHeight - boxHeight/2])
 
         // setup svg and group that will contain the box plot
         //console.log(divClassName, pairOfData)
@@ -185,7 +195,7 @@ function BoxPlot(dataModel, settings){
           .attr("transform", "translate(" + boxMargin.left + "," + (boxMargin.top + titleHeight) + ")");
 
         var horizontalLines = g.selectAll(".horizontal-line")
-            .data(pairOfData)
+            .data(featureData)
             .enter()
           .append("line")
             .attr("x1", function(d){
@@ -206,7 +216,7 @@ function BoxPlot(dataModel, settings){
             .attr("stroke-width", 1)
 
         var rects = g.selectAll("rect")
-            .data(pairOfData)
+            .data(featureData)
             .enter()
           .append("rect")
             .attr("width", function(d){
@@ -258,7 +268,7 @@ function BoxPlot(dataModel, settings){
         for (i = 0; i < whiskers.length; i++){
           var whiskerConfig = whiskers[i];
           var horizontalLine = g.selectAll(".whiskers")
-              .data(pairOfData)
+              .data(featureData)
               .enter()
             .append("line")
               .attr("x1", whiskerConfig.x1)
@@ -288,13 +298,18 @@ function BoxPlot(dataModel, settings){
   }
 
   this.makeComparison = function(selectedInfo, histogramData, data){
-    console.log(distanceMeasure)
-    var group1 = filterDataForSelected(data, selectedInfo[0], distanceMeasure)
-    var group2 = filterDataForSelected(data, selectedInfo[1], distanceMeasure)
+    console.log(selectedInfo)
+    //var group1 = filterDataForSelected(data, selectedInfo[0], distanceMeasure)
+    //var group2 = filterDataForSelected(data, selectedInfo[1], distanceMeasure)
 
-    var boxPlotData = constructAllPlotData([group1,group2], dataModel)
+    var groups = selectedInfo.map(function(info){
+      return filterDataForSelected(data, info, distanceMeasure)
+    })
+    var boxPlotData = constructAllPlotData(groups, dataModel)
+    console.log(boxPlotData)
     //var sortedboxPlotData = sortPlotData(boxPlotData)
     modifySelectedInfo(selectedInfo, boxPlotData)
+    console.log(selectedInfo)
     constructLegend(selectedInfo)
     constructAllBoxPlots(boxPlotData, selectedInfo)
   }

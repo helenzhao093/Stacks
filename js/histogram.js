@@ -78,6 +78,30 @@ function Histogram(dataModel, settings, histogramType, boxPlots){
     console.log(numSelected)
   }
 
+  $("#features-button").on('click', function(){
+    //console.log('clicked')
+    //console.log(selectedInfo)
+    if (histogramType.type == "distance"){
+      if ($("#distance-tab").css('display') == 'block'){
+        boxPlots.makeComparison(selectedInfo, histogramData, dataModel.data)
+        $('#distance-tab').css('display', "none");
+      }
+    }
+    if (histogramType.type == "probability"){
+      if ($("#probability-tab").css('display') == 'block'){
+        boxPlots.makeComparison(selectedInfo, histogramData, dataModel.data)
+        $('#probability-tab').css('display', "none");
+      }
+    }
+    tablinks = document.getElementsByClassName("tablinks");
+    for (i = 0; i < tablinks.length; i++){
+      //console.log(tablinks[i])
+      tablinks[i].classList.remove("active");
+    }
+    $("#features-button").addClass("active")
+    $('#feature-tab').css('display', "block");
+  })
+
   var constructHistogram = function(histogramData){
     //console.log(histogramData)
     var xDomainScale = calculateXDomain("tp", "fn", histogramData)

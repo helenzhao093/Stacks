@@ -32,12 +32,12 @@
               tablinks[i].classList.remove("active");
             }
 
-            /* show the selected tab */
             if (tabName == "table-tab"){
               document.getElementById('table-tab').appendChild(
                 document.getElementById('datatable_wrapper')
               );
             }
+              /* show the selected tab */
             document.getElementById(tabName).style.display = "block";
 
             /* add active class to the selected tab */
@@ -53,7 +53,7 @@
         <button class="tablinks" onclick="openContent(event, 'probability-tab')">Probability</button>
         <button class="tablinks" onclick="openContent(event, 'distance-tab')">Distance</button>
         <button class="tablinks" onclick="openContent(event, 'prob-distribution-tab')">Probability Distribution</button>
-        <button class="tablinks" onclick="openContent(event, 'feature-tab')">Features</button>
+        <button id="features-button" class="tablinks">Features</button>
         <button class="tablinks" onclick="openContent(event, 'table-tab')">Table</button>
       </div>
 

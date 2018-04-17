@@ -111,7 +111,9 @@ TODO:
 6) Make bars solid on probability and distance tabs
 7) Don't set limit on number of boxplots to compare
 8) Undo button
+9) Style datatable, adjust precision
 
 Completed:
 1) fixed distance slider
 2) fixed path on distribution tab. Path was distorted by the slider div
+3) added table tab
