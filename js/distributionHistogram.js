@@ -57,7 +57,7 @@ function DistributionHistogram(dataModel, settings, boxPlots){
       for (classNum = 0; classNum < dataModel.numClasses; classNum++) {
         if (inRange(example[dataModel.probColumns[classNum]], settings.probabilityRange) && inRange(example[settings.distanceMeasure], settings.distanceRange)){
 
-          binNum = getBinNum(example[dataModel.probColumns[classNum]], settings.probabilityRange, settings.numBins)
+          binNum = getBinNum(example[dataModel.probColumns[classNum]], settings.probabilityRangeDefault, settings.numBins)
           if (settings.display.TP && actual.includes(classNum) && predicted.includes(classNum)) { //TP
             if (example[dataModel.probColumns[classNum]] < settings.TPThreshold){
               histogramData[classNum]['data'][binNum]['tp'][0].count += 1
@@ -96,15 +96,15 @@ function DistributionHistogram(dataModel, settings, boxPlots){
   var maxSelect = 5
   var selectedStack = function(){
     if ($(this).attr('class').split(' ').length == 3){ //already selected, so remove selection
-      removeSelectedStack($(this), selectedInfo, numSelected)
+      removeSelectedStack($(this), selectedInfo, numSelected, true, settings.probabilityRange)
     }
     else if (numSelected[0] == maxSelect){
       removeAll(selectedInfo, maxSelect)
       numSelected[0] = 0
-      addSelectedStack($(this), selectedInfo, numSelected, true);
+      addSelectedStack($(this), selectedInfo, numSelected, true, settings.probabilityRange);
     }
     else{
-      addSelectedStack($(this), selectedInfo, numSelected, true);
+      addSelectedStack($(this), selectedInfo, numSelected, true, settings.probabilityRange);
     }
     console.log(selectedInfo)
     console.log(numSelected)
@@ -112,11 +112,13 @@ function DistributionHistogram(dataModel, settings, boxPlots){
 
   $("#features-button").on('click', function(){
     //console.log($("#prob-distribution-tab").css('display') == 'block')
-    console.log($("#prob-distribution-tab").css('display'))
-    if ($("#prob-distribution-tab").css('display') == 'block'){
+    //console.log($("#prob-distribution-tab").css('display'))
+    if ($("#prob-distribution-tab").css('display') == 'block' && numSelected[0] > 1){
+      console.log(selectedInfo, numSelected)
       boxPlots.makeComparison(selectedInfo, histogramData, dataModel.data)
     }
     $('#prob-distribution-tab').css('display', "none");
+    $('#table-tab').css('display', "none");
     tablinks = document.getElementsByClassName("tablinks");
     for (i = 0; i < tablinks.length; i++){
       //console.log(tablinks[i])
@@ -420,11 +422,11 @@ function DistributionHistogram(dataModel, settings, boxPlots){
 
     tn.exit().remove();
 
-    settings.axisDomain = settings.axisDomain.map(function(d, i){ return settings.probabilityRange.lowerBound + (settings.numBins - i)*(settings.probabilityRange.upperBound - settings.probabilityRange.lowerBound)/settings.numBins })
+    /*settings.axisDomain = settings.axisDomain.map(function(d, i){ return settings.probabilityRange.lowerBound + (settings.numBins - i)*(settings.probabilityRange.upperBound - settings.probabilityRange.lowerBound)/settings.numBins })
     //console.log(settings.axisDomain)
     settings.axisScale.domain(settings.axisDomain)
     var axis = d3.select(".axis")
-      .call(settings.axis)
+      .call(settings.axis)*/
     //console.log(axis)
     /*var axisScale = d3.scaleLinear().domain([1.0,0.0]).range([0,settings.histogramHeight]) //fix domain
     var axis = d3.axisLeft(axisScale)

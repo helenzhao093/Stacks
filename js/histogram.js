@@ -63,16 +63,17 @@ function Histogram(dataModel, settings, histogramType, boxPlots){
   var selectedInfo = []
   var maxSelect = 5
   var selectedStack = function(){
+    console.log(selectedInfo)
     if ($(this).attr('class').split(' ').length == 3){ //already selected, so remove selection
-      removeSelectedStack($(this), selectedInfo, numSelected)
+      removeSelectedStack($(this), selectedInfo, numSelected, false, histogramType.range)
     }
     else if (numSelected[0] == maxSelect){
       removeAll(selectedInfo, maxSelect)
       numSelected[0] = 0
-      addSelectedStack($(this), selectedInfo, numSelected, true);
+      addSelectedStack($(this), selectedInfo, numSelected, false, histogramType.range);
     }
     else{
-      addSelectedStack($(this), selectedInfo, numSelected, true);
+      addSelectedStack($(this), selectedInfo, numSelected, false, histogramType.range );
     }
     console.log(selectedInfo)
     console.log(numSelected)
@@ -80,15 +81,18 @@ function Histogram(dataModel, settings, histogramType, boxPlots){
 
   $("#features-button").on('click', function(){
     //console.log('clicked')
-    //console.log(selectedInfo)
+    //console.log(selectedInfo, numSelected)
     if (histogramType.type == "distance"){
-      if ($("#distance-tab").css('display') == 'block'){
+      //console.log(selectedInfo, numSelected)
+      if ($("#distance-tab").css('display') == 'block' && numSelected[0] > 1){
         boxPlots.makeComparison(selectedInfo, histogramData, dataModel.data)
         $('#distance-tab').css('display', "none");
       }
     }
     if (histogramType.type == "probability"){
-      if ($("#probability-tab").css('display') == 'block'){
+      //console.log(selectedInfo, numSelected)
+      //console.log($("#probability-tab").css('display'))
+      if ($("#probability-tab").css('display') == 'block' && numSelected[0] > 1){
         boxPlots.makeComparison(selectedInfo, histogramData, dataModel.data)
         $('#probability-tab').css('display', "none");
       }

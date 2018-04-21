@@ -78,10 +78,20 @@ var calculateXDomain = function (pos, neg, histogramData) {
   return Math.max(maxNeg , maxPos)
 }
 
-var getSelectedStackInfo = function(element, isDistribution){
+var calculateRangeFromBin = function(binNum, range){
+  var lower = (range.upperBound - range.lowerBound)/10 * (binNum) + range.lowerBound
+  var upper = (range.upperBound - range.lowerBound)/10 * (binNum + 1) + range.lowerBound
+  console.log(lower, upper)
+  return {lower:lower, upper:upper}
+}
+
+var getSelectedStackInfo = function(element, isDistribution, range){
+  console.log(range)
   var thisClass = element.attr('class').split(' ')
   var classification = thisClass[0] //fp, tp, tn, fn
   var binNum = 9 - element.parent().attr('class').split(' ')[1] //bin number
+  var stackRange = calculateRangeFromBin(binNum, range)
+  //console.log(stackRange)
   var actualClass = "";
   var predictedClass = "";
   var distance = false;
@@ -113,7 +123,8 @@ var getSelectedStackInfo = function(element, isDistribution){
     binNum: binNum,
     actualClass: actualClass.charAt(actualClass.length - 1), //class0 => 0
     predictedClass: predictedClass.charAt(predictedClass.length - 1),
-    distance: distance
+    distance: distance,
+    range: stackRange
   };
   return info
 }
@@ -126,12 +137,13 @@ var removeAll = function(selectedInfo, maxSelect){
   }
 }
 
-var addSelectedStack = function(element, selectedInfo, numSelected, isDistribution){
-
+var addSelectedStack = function(element, selectedInfo, numSelected, isDistribution, range){
+  console.log(range)
 
   // highlight new array, add info, change numSelected
   element.addClass("highlight")
-  selectedInfo.push(getSelectedStackInfo(element))
+    //var stackRange = calculateRangeFromBin(binNum, range)
+  selectedInfo.push(getSelectedStackInfo(element, isDistribution, range))
   numSelected[0] += 1;
 
   /*if (numSelected[0] == 1){
@@ -159,10 +171,10 @@ var addSelectedStack = function(element, selectedInfo, numSelected, isDistributi
   //}
 }
 
-var removeSelectedStack = function(element, selectedInfo, numSelected){
+var removeSelectedStack = function(element, selectedInfo, numSelected, isDistribution, range){
   console.log(element)
   numSelected[0] -= 1
-  var infoToRemove = getSelectedStackInfo(element)
+  var infoToRemove = getSelectedStackInfo(element, isDistribution, range)
   console.log(infoToRemove)
   for (i=0; i < selectedInfo.length; i++){
     if (selectedInfo[i].actualClass == infoToRemove.actualClass

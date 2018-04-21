@@ -45,8 +45,8 @@ function BoxPlot(dataModel, settings){
       })
     })
 
-    var sortedData = sortPlotData(data)
-    return sortedData
+    //var sortedData = sortPlotData(data)
+    return data //sortedData
   }
 
   var sortPlotData = function (boxPlotData){
@@ -90,11 +90,12 @@ function BoxPlot(dataModel, settings){
     return filtered
   }
   //legend
-  var legendWidth = 300
-  var legendHeight = 60
+  var legendWidth = 500
+  var legendHeight = 30
   var legendMargin = {top: 10, left: 20}
   var legendBoxHeight = 20
   var legendRowHeight = 25
+  var colors = ['#BE3B59', '#FF945A', '#4771AF', '#938FA9', '#82353F']
   function constructLegend(info){
 
     /* remove the previous legend */
@@ -103,7 +104,7 @@ function BoxPlot(dataModel, settings){
     var svg = d3.select(".legend")
       .append("svg")
       .attr("width", legendWidth)
-      .attr("height", legendHeight)
+      .attr("height", legendHeight * info.length)
       .attr("class", "svg-legend")
 
     for (var i = 0; i < info.length; i++){
@@ -124,7 +125,7 @@ function BoxPlot(dataModel, settings){
         .attr("y", 15)
         .attr("font-family", "Verdana")
         .attr("font-size", 15)
-        .text("actual:" + info[i].actualClass + "; predicted:" + info[i].predictedClass +  "; bin:" + info[i].binNum)
+        .text("true class:" + info[i].actualClass + "; predicted class:" + info[i].predictedClass +  "; range:" + info[i].range.lower.toFixed(3) + "-" + info[i].range.upper.toFixed(3))
     }
   }
 
@@ -138,7 +139,21 @@ function BoxPlot(dataModel, settings){
   function constructBoxPlots(boxPlotData, selectedInfo, divClassName){
     //[ [{}{}] [{}{}] [{}{}] ]
       boxPlotData.forEach(function(featureData){
-        var title = featureData[0].name
+
+        // var title = (divClassName == ".similarity-boxplot-pane") ? "distance" : featureData[0].name
+        var title, textLength;
+        if (divClassName == ".probability-boxplot-pane"){
+          title = "Class " + featureData[0].name.substring(4,5) + " Probability"
+          textLength = 100
+        }
+        else if(divClassName == ".feature-boxplot-pane"){
+          title = "Feature " + featureData[0].name.substring(7,8)
+          textLength = 60
+        }
+        else{
+          title = "Distance"
+          textLength = 50
+        }
 
         var boxHeight = boxHeights[selectedInfo.length]
         // get the min and max from each
@@ -179,7 +194,7 @@ function BoxPlot(dataModel, settings){
             .attr("class", "title")
             .attr("x", plotWidth/2 )
             .attr("y", titleHeight/2 )
-            .attr("textLength", 50)
+            .attr("textLength", textLength)
             .attr("font-family", "Verdana")
             .attr("font-size", 15)
             .text(title)
@@ -283,12 +298,12 @@ function BoxPlot(dataModel, settings){
 
   var modifySelectedInfo = function(selectedInfo, boxPlotData){
 
-    var colors = []
+    /*var colors = []
     selectedInfo.forEach(function(info, i){
       var colorIndex = settings.allClassNames.indexOf("class" + info["actualClass"])
       colors.push(settings.colorRange[colorIndex])
     })
-    //console.log(colors)
+    //console.log(colors)*/
 
     selectedInfo.forEach(function(d, i){
       d.groupNum = i,
@@ -306,7 +321,6 @@ function BoxPlot(dataModel, settings){
       return filterDataForSelected(data, info, distanceMeasure)
     })
     var boxPlotData = constructAllPlotData(groups, dataModel)
-    console.log(boxPlotData)
     //var sortedboxPlotData = sortPlotData(boxPlotData)
     modifySelectedInfo(selectedInfo, boxPlotData)
     console.log(selectedInfo)

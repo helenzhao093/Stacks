@@ -252,6 +252,7 @@ function Interface(data){
   })
 
   var newDistanceSelected = function(select_item){
+    console.log(select_item)
     // change distance measure in settings and recalculate the distance range
     settings.distanceMeasure = select_item.id;
     settings.calculateDistanceMetadata()

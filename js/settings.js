@@ -93,7 +93,7 @@ function Settings(dataModel){
   //DISTANCE HISTOGRAM SETTINGS
   /////////////
   this.distanceMeasures = dataModel.distanceColumns
-  this.defaultDistanceMeasure = dataModel.distanceColumns[1]
+  this.defaultDistanceMeasure = dataModel.distanceColumns[0]
   this.distanceMeasure = this.defaultDistanceMeasure
   this.distanceMax = d3.max(dataModel.data.map(function(d) {
     return d[that.distanceMeasure];

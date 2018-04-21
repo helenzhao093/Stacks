@@ -106,20 +106,16 @@ function DataTable(dataModel, appSettings){
     })
   }
 
+
   //$(document).ready(function(){
   this.table = $('#datatable').DataTable( {
-    //"scrollX": true,
     "data": tableData,
     "columns": columns,
-    "columnDefs": columnDef
+    "columnDefs": columnDef,
+    "pagingType": "numbers"
   })
 
-  this.tableTab = $('#tab-datatable').DataTable( {
-    //"scrollX": true,
-    "data": tableData,
-    "columns": columns,
-    "columnDefs": columnDef
-  })
+
 
   var currentClass = ""
   this.table.cells().every( function () {
