@@ -30,7 +30,6 @@ var calculatePreviousSumTPFN = function(histogramData, numClasses){
       bin['tp'][0].previous_sum = 0 //bin['fp'][dataModel.numClasses-1].previous_sum + bin['fp'][dataModel.numClasses-1].count
     })
   })
-  console.log(histogramData)
   return histogramData
 }
 
@@ -52,7 +51,6 @@ var inRange = function(data, range){
 /* classification is TP FP TN FN */
 //ONLY WORKS FOR TP AND TN
 var findMax = function(classification, histogramData){
-  console.log(histogramData)
   return d3.max(histogramData.map(function(histogram){ // max in each class
     return d3.max(histogram.data.map(function(bin){
       return bin[classification][0].count + bin[classification][0].previous_sum
@@ -81,12 +79,10 @@ var calculateXDomain = function (pos, neg, histogramData) {
 var calculateRangeFromBin = function(binNum, range){
   var lower = (range.upperBound - range.lowerBound)/10 * (binNum) + range.lowerBound
   var upper = (range.upperBound - range.lowerBound)/10 * (binNum + 1) + range.lowerBound
-  console.log(lower, upper)
   return {lower:lower, upper:upper}
 }
 
 var getSelectedStackInfo = function(element, isDistribution, range){
-  console.log(range)
   var thisClass = element.attr('class').split(' ')
   var classification = thisClass[0] //fp, tp, tn, fn
   var binNum = 9 - element.parent().attr('class').split(' ')[1] //bin number
@@ -138,8 +134,6 @@ var removeAll = function(selectedInfo, maxSelect){
 }
 
 var addSelectedStack = function(element, selectedInfo, numSelected, isDistribution, range){
-  console.log(range)
-
   // highlight new array, add info, change numSelected
   element.addClass("highlight")
     //var stackRange = calculateRangeFromBin(binNum, range)
@@ -172,10 +166,8 @@ var addSelectedStack = function(element, selectedInfo, numSelected, isDistributi
 }
 
 var removeSelectedStack = function(element, selectedInfo, numSelected, isDistribution, range){
-  console.log(element)
   numSelected[0] -= 1
   var infoToRemove = getSelectedStackInfo(element, isDistribution, range)
-  console.log(infoToRemove)
   for (i=0; i < selectedInfo.length; i++){
     if (selectedInfo[i].actualClass == infoToRemove.actualClass
       && selectedInfo[i].binNum == infoToRemove.binNum
@@ -183,6 +175,5 @@ var removeSelectedStack = function(element, selectedInfo, numSelected, isDistrib
       && selectedInfo[i].predictedClass == infoToRemove.predictedClass)
       selectedInfo.splice(i, 1)
   }
-  console.log(selectedInfo)
   element.removeClass("highlight")
 }

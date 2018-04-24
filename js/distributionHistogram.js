@@ -34,12 +34,12 @@ function DistributionHistogram(dataModel, settings, boxPlots){
   }
 
   // fill the JS object with counts for histograms
-  this.constructData = function(dataModel, settings){
+  this.constructData = function(data, settings){
     // initialize data
     var histogramData = initiateData(dataModel)
 
     // iterate through each example in the dataset
-    dataModel.data.forEach(function(example){
+    data.forEach(function(example){
 
       // store class names for actual and predicted classes
       var actual = []
@@ -108,9 +108,13 @@ function DistributionHistogram(dataModel, settings, boxPlots){
     }
     console.log(selectedInfo)
     console.log(numSelected)
+
+    if (numSelected != 0){
+      $("#filter").css("display", "inline")
+    }
   }
 
-  $("#features-button").on('click', function(){
+  /*$("#features-button").on('click', function(){
     //console.log($("#prob-distribution-tab").css('display') == 'block')
     //console.log($("#prob-distribution-tab").css('display'))
     if ($("#prob-distribution-tab").css('display') == 'block' && numSelected[0] > 1){
@@ -127,7 +131,7 @@ function DistributionHistogram(dataModel, settings, boxPlots){
     $("#features-button").addClass("active")
     $('#feature-tab').css('display', "block");
 
-  })
+  })*/
 
   // append svg elements to "draw" the histogram from the data
   var constructHistogram = function(histogramData){
@@ -443,6 +447,19 @@ function DistributionHistogram(dataModel, settings, boxPlots){
         .call(axis)*/
   }
 
-  var histogramData = this.constructData(dataModel, settings)
+  var histogramData = this.constructData(dataModel.data, settings)
   constructHistogram(histogramData)
+
+  this.getSelectedInfo = function(){
+    return selectedInfo
+  }
+
+  this.getHistogramData = function(){
+    return histogramData
+  }
+
+  this.clearSelected = function(){
+    selectedInfo = []
+    numSelected[0] = 0
+  }
 }

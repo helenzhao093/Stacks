@@ -28,10 +28,10 @@ function Histogram(dataModel, settings, histogramType, boxPlots){
     return histogramData
   }
 
-  this.constructData = function(dataModel, settings){
+  this.constructData = function(data, settings){
     // only adding to the chart if the true class is current class
     var histogramData = initializeData()
-    dataModel.data.forEach(function(example){
+    data.forEach(function(example){
       if (inRange(example[settings.distanceMeasure], settings.distanceRange)){
         dataModel.actualClasses.forEach(function(actualClass, i){
           //console.log(example[dataModel.probColumns[i]], inRange(example[dataModel.probColumns[i]], settings.probabilityRange), settings.probabilityRange.upperBound)
@@ -77,9 +77,13 @@ function Histogram(dataModel, settings, histogramType, boxPlots){
     }
     console.log(selectedInfo)
     console.log(numSelected)
+
+    if (numSelected != 0){
+      $("#filter").css("display", "inline")
+    }
   }
 
-  $("#features-button").on('click', function(){
+  /*$("#features-button").on('click', function(){
     //console.log('clicked')
     //console.log(selectedInfo, numSelected)
     if (histogramType.type == "distance"){
@@ -104,7 +108,7 @@ function Histogram(dataModel, settings, histogramType, boxPlots){
     }
     $("#features-button").addClass("active")
     $('#feature-tab').css('display', "block");
-  })
+  })*/
 
   var constructHistogram = function(histogramData){
     //console.log(histogramData)
@@ -274,6 +278,19 @@ function Histogram(dataModel, settings, histogramType, boxPlots){
 
     }
 
-    var histogramData = this.constructData(dataModel, settings)
+    var histogramData = this.constructData(dataModel.data, settings)
     constructHistogram(histogramData)
+
+    this.getSelectedInfo = function(){
+      return selectedInfo
+    }
+
+    this.getHistogramData = function(){
+      return histogramData
+    }
+
+    this.clearSelected = function(){
+      selectedInfo = []
+      numSelected[0] = 0
+    }
 }

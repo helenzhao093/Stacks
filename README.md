@@ -117,3 +117,15 @@ Completed:
 1) fixed distance slider
 2) fixed path on distribution tab. Path was distorted by the slider div
 3) added table tab
+
+## WEEK 9:
+TODO:
+1) Reorganize table?
+2) Filter for examples in the selected bars and remove probability and distance boxplots from feature tab
+3) Fix feature button
+4) Look to see if we can integrate with scikit-learn
+5) Allow users to view boxplots of just one bar
+6) Add tooltips
+
+
+Completed

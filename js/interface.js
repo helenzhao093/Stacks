@@ -3,7 +3,6 @@ function Interface(data){
   var that = this
   var dataModel = new DataModel(data);
   var settings = new Settings(dataModel);
-
   $('#tn').prop("checked", settings.displayDefault.TN)
   $('#tp').prop("checked", settings.displayDefault.TP)
   $('#fn').prop("checked", settings.displayDefault.FN)
@@ -122,9 +121,9 @@ function Interface(data){
   }
 
   var applySettings = function(){
-    histograms.updateData(histograms.constructData(dataModel, settings))
-    distanceHistograms.updateData(distanceHistograms.constructData(dataModel, settings), settings.distanceRange)
-    probabilityHistograms.updateData(probabilityHistograms.constructData(dataModel, settings), settings.probabilityRange)
+    histograms.updateData(histograms.constructData(dataModel.data, settings))
+    distanceHistograms.updateData(distanceHistograms.constructData(dataModel.data, settings), settings.distanceRange)
+    probabilityHistograms.updateData(probabilityHistograms.constructData(dataModel.data, settings), settings.probabilityRange)
     moveSliders()
   }
 
@@ -178,10 +177,10 @@ function Interface(data){
     $( "#fp" ).prop( "checked", newSettings.display.FP );
   }
 
-  $('#filter').on('click', function(e){
+  $('#apply').on('click', function(e){
     e.preventDefault();
 
-    $('#undoFilter').css("display", "inline");
+    $('#undo').css("display", "inline");
 
     addFilter()
 
@@ -207,7 +206,7 @@ function Interface(data){
     applySettings()
   })
 
-  $('#undoFilter').on('click', function(e){
+  $('#undo').on('click', function(e){
     oldSettings = filterStack.pop()
     console.log(oldSettings)
     numFilter -= 1
@@ -219,20 +218,111 @@ function Interface(data){
     applySettings()
   })
 
-  $('#clearFilter').on('click', function(e){
+  var removePaths = function(){
+    d3.selectAll(".hover-line").remove();
+    d3.selectAll(".click-line").remove();
+    d3.select(".connect-histograms").append("path").attr("class", "hover-line")
+  }
+
+  var clearSelectedInfo = function(){
+    histograms.clearSelected()
+    probabilityHistograms.clearSelected()
+    distanceHistograms.clearSelected()
+    var all = $(".FP, .TP, .FN, .TN")
+    all.removeClass("highlight")
+  }
+
+  $('#clear').on('click', function(e){
     e.preventDefault();
 
     datatable.clearFilter(numFilter)
-    $('#undoFilter').css("display", "none");
+    $('#undo').css("display", "none");
 
     tpSlider.noUiSlider.set(settings.TPThresholdDefault)
     tnSlider.noUiSlider.set(1 - settings.TNThresholdDefault)
     setSettings(settings.default)
     applySettings()
+    clearSelectedInfo()
+    removePaths()
+  })
 
-    d3.selectAll(".hover-line").remove();
-    d3.selectAll(".click-line").remove();
-    d3.select(".connect-histograms").append("path").attr("class", "hover-line")
+  $('#filter').on('click', function(e){
+    e.preventDefault();
+    var selectedInfo
+    if (currentSelect == "probability-tab"){
+      selectedInfo = probabilityHistograms.getSelectedInfo()
+    }
+    else if (currentSelect == "distance-tab"){
+      selectedInfo = distanceHistograms.getSelectedInfo()
+    }
+    else {
+      selectedInfo = histograms.getSelectedInfo()
+    }
+    console.log(selectedInfo)
+    data = filterAllData(selectedInfo)
+    console.log(data)
+    //filteredDataModel = new DataModel(data)
+    histograms.updateData(histograms.constructData(data, settings))
+    distanceHistograms.updateData(distanceHistograms.constructData(data, settings), settings.distanceRange)
+    probabilityHistograms.updateData(probabilityHistograms.constructData(data, settings), settings.probabilityRange)
+  })
+
+  var filterAllData = function(selectedInfo){
+    var allFilteredData = []
+    for (var i = 0; i < selectedInfo.length; i++){
+      allFilteredData = allFilteredData.concat(filterData(selectedInfo[i]))
+    }
+    console.log(allFilteredData)
+    return allFilteredData
+  }
+
+  var filterData = function(selectedInfo){
+    var svgClass = ""
+    if (selectedInfo.classification == "TP" || selectedInfo.classification == "FP"){
+      svgClass = "predictedClass"
+    } //if TP and FP used prob of predictedclass  (FN used probability of the class that it was pred)
+    else{
+      svgClass = "actualClass"
+    }
+    var filtered = dataModel.data.filter(example => example["actual" + selectedInfo["actualClass"]] == 1)
+      .filter(example => example["predicted" + selectedInfo["predictedClass"]] == 1)
+
+    if (selectedInfo.distance){
+      filtered = filtered.filter(example => getBinNum(example[settings.distanceMeasure], settings.distanceRange, settings.numBins) == selectedInfo["binNum"])
+    }
+    else {
+      filtered = filtered.filter(example => getBinNum(example["prob" + selectedInfo[svgClass]], settings.probabilityRange, settings.numBins) == selectedInfo["binNum"])
+    }
+    console.log(filtered)
+    return filtered
+  }
+
+  $("#features-button").on('click', function(){
+    var selectedInfo
+    var histogramData
+    if (currentSelect == "probability-tab"){
+      selectedInfo = probabilityHistograms.getSelectedInfo()
+      histogramData = probabilityHistograms.getHistogramData()
+    }
+    else if(currentSelect == "distance-tab"){
+      selectedInfo = distanceHistograms.getSelectedInfo()
+      histogramData = distanceHistograms.getHistogramData()
+    }
+    else{
+      selectedInfo = histograms.getSelectedInfo()
+      histogramData = histograms.getHistogramData()
+    }
+
+    boxPlots.makeComparison(selectedInfo, histogramData, dataModel.data)
+    $('#' + currentSelect).css('display', "none");
+    tablinks = document.getElementsByClassName("tablinks");
+    for (i = 0; i < tablinks.length; i++){
+      //console.log(tablinks[i])
+      tablinks[i].classList.remove("active");
+    }
+    $("#features-button").addClass("active")
+    $('#feature-tab').css('display', "block");
+    currentSelect = "feature-tab";
   })
 
   $('#datatable tbody').on( 'click', 'tr', function () {
@@ -259,6 +349,6 @@ function Interface(data){
     boxPlots.distanceMeasure = settings.distanceMeasure
     // update the distance histograms distance measure and redraw the histograms
     distanceHistograms.histogramType.getBinNum[0] = settings.distanceMeasure;
-    distanceHistograms.updateData(distanceHistograms.constructData(dataModel, settings), settings.distanceRange)
+    distanceHistograms.updateData(distanceHistograms.constructData(dataModel.data, settings), settings.distanceRange)
   }
 }
