@@ -17,9 +17,6 @@ body {
   margin-top: 5px;
 }
 
-#tp-container {
-  margin-left: 130px;
-}
 
 #tp-threshold-slider .noUi-connect{
   background: green
@@ -40,16 +37,16 @@ body {
   border-color: grey;
 }
 
-#probRange-slider .noUi-connect{
-  background: blue
-}
-
 
 .slider-container {
   float:left;
   width: 150px;
   margin: 5px 15px;
   /*padding-right: 5px;*/
+}
+
+.leftAlign {
+  margin-left: 130px;
 }
 
 .slider-container label {
@@ -121,10 +118,15 @@ body {
   width: 100%;
   height: 50px;
   overflow: hidden;
-  background: linear-gradient(to right, #333, #333);
   position: fixed;
   z-index: 100;
   top: 0;
+  color: white;
+  font-size: 38px;
+  padding-left: 15px;
+  padding-bottom: 10px;
+  font-family: Helvetica;
+  background: #9099A2;
 }
 
 .settings-pane {
@@ -132,9 +134,9 @@ body {
   position: fixed;
   top:100px;
   z-index: 100;
-  background: lightblue;
+  background: #9685;
   padding-bottom: 17px;
-  border-bottom: 2px grey;
+  border-bottom: 1px #ccc;
   border-bottom-style: solid;
   margin-bottom: 0px;
 }
@@ -160,20 +162,24 @@ rect.FP{
 }
 
 .table-pane {
-  width: 1000px
-  margin: auto 0
+  position: fixed;
+  margin-left: 10px;
 }
 
 #datatable_length {
-  visibility: hidden;
+  display: none;
 }
 
 #datatable_filter {
-  visibility: hidden;
+  display: none;
 }
 
 .prob-column{
   border-right: 3px solid;
+}
+
+.predicted-column{
+  border-right: 3px solid black;
 }
 
 .distance-column {
@@ -181,30 +187,30 @@ rect.FP{
   border-left: 3px solid;
 }
 
+
 td.TN {
-  background: #d0cfd2; /*rgba(0,0,0,0.5)*/
+  background: /*rgba(74,78,90,0.5); */ rgba(0,0,0,0.5)
 }
 
 td.TP {
-  background: rgba(0,128,0,0.5)
+  background: /*rgba(58,159,63,0.5);*/ rgba(0,128,0,0.5)
 }
 
 td.FP {
-  background: rgba(255,0,0,0.5)
+  background: /*rgba(213,144,43,0.5);*/rgba(255,0,0,0.5)
 }
 
 td.FN {
-  background: rgba(255,255,0,0.5)
+  background:/* rgba(244,43,36,0.5);/*/rgba(255,255,0,0.5)
+}
+
+td.distance-column{
+  background: rgba(0,0,0,0.5);
 }
 
 .similarity-column{
   background: #d1d1d1;
   border-right: 4px solid;
-}
-
-.table-pane {
-  width: 1000px;
-  margin:auto
 }
 
 td, th {
@@ -314,7 +320,7 @@ select {
   display: none; /*hide original SELECT element:*/
 }
 .select-selected {
-  background-color: DodgerBlue;
+  background-color: #0099cc;
 }
 /*style the arrow inside the select element:*/
 .select-selected:after {
@@ -343,12 +349,12 @@ select {
 }
 /*style items (options):*/
 .select-items {
-  /* position: absolute; */
-  background-color: DodgerBlue;
+  position: absolute;
+  background-color: #0099cc;
   top: 100%;
-  left: 0;
-  right: 0;
   z-index: 99;
+  margin-left: 10px;
+  border-radius: 4px;
 }
 /*hide the items when the select box is closed:*/
 .select-hide {
@@ -366,4 +372,78 @@ select {
 
 #boxplot-select {
   display: block;
+}
+
+table.dataTable th.dt-right, table.dataTable td.dt-right {
+  text-align: center;
+}
+
+.distance-column {
+  text-align: center;
+}
+
+.noUi-connect {
+    background: #91A9C6;
+}
+
+.settings-pane button {
+  margin-top: 20px;
+  margin-left: 10px;
+  background-color: #0099cc;
+  border-radius: 10px;
+  color: white;
+  border: none;
+  height: 25px;
+  font-size: 13px;
+  font-style: "Helvetica Neue";
+}
+
+label {
+    font-size: .8rem;
+    color: #111;
+}
+
+.select-selected{
+  margin-top: 13px;
+  margin-left: 10px;
+  margin-right: 10px;
+  border-radius: 4px;
+}
+
+#prob-distribution-tab foreignObject{
+  display: none;
+}
+
+.probability-histograms{
+  position: fixed;
+}
+
+.distance-histogram-pane{
+  position: fixed;
+}
+
+.histogram-pane {
+  position: fixed;
+}
+
+#boxplot-select{
+  width: 25%;
+  margin: 0;
+}
+
+.even td {
+  color: white;
+}
+
+.odd td {
+  color: white;
+}
+
+.toggle{
+  margin: 10px 10px;
+}
+
+.toggle-vis {
+  margin-left: 5px;
+  margin-right: 5px;
 }

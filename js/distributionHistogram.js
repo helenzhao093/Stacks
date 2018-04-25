@@ -108,10 +108,6 @@ function DistributionHistogram(dataModel, settings, boxPlots){
     }
     console.log(selectedInfo)
     console.log(numSelected)
-
-    if (numSelected != 0){
-      $("#filter").css("display", "inline")
-    }
   }
 
   /*$("#features-button").on('click', function(){

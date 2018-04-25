@@ -224,12 +224,16 @@ function Interface(data){
     d3.select(".connect-histograms").append("path").attr("class", "hover-line")
   }
 
+  var removeAllHighlights = function(){
+    var all = $(".FP, .TP, .FN, .TN")
+    all.removeClass("highlight")
+  }
+
   var clearSelectedInfo = function(){
     histograms.clearSelected()
     probabilityHistograms.clearSelected()
     distanceHistograms.clearSelected()
-    var all = $(".FP, .TP, .FN, .TN")
-    all.removeClass("highlight")
+    removeAllHighlights()
   }
 
   $('#clear').on('click', function(e){
@@ -241,10 +245,14 @@ function Interface(data){
     tpSlider.noUiSlider.set(settings.TPThresholdDefault)
     tnSlider.noUiSlider.set(1 - settings.TNThresholdDefault)
     setSettings(settings.default)
+    currentData = dataModel.data
+    d3.selectAll(".svg-boxplot").remove()
+    d3.selectAll(".legend-row").remove()
     applySettings()
     clearSelectedInfo()
     removePaths()
   })
+  var currentData = dataModel.data
 
   $('#filter').on('click', function(e){
     e.preventDefault();
@@ -259,12 +267,14 @@ function Interface(data){
       selectedInfo = histograms.getSelectedInfo()
     }
     console.log(selectedInfo)
-    data = filterAllData(selectedInfo)
-    console.log(data)
-    //filteredDataModel = new DataModel(data)
-    histograms.updateData(histograms.constructData(data, settings))
-    distanceHistograms.updateData(distanceHistograms.constructData(data, settings), settings.distanceRange)
-    probabilityHistograms.updateData(probabilityHistograms.constructData(data, settings), settings.probabilityRange)
+    if (selectedInfo.length > 0) {
+      currentData = filterAllData(selectedInfo)
+      //filteredDataModel = new DataModel(data)
+      histograms.updateData(histograms.constructData(currentData, settings))
+      distanceHistograms.updateData(distanceHistograms.constructData(currentData, settings), settings.distanceRange)
+      probabilityHistograms.updateData(probabilityHistograms.constructData(currentData, settings), settings.probabilityRange)
+      removeAllHighlights()
+    }
   })
 
   var filterAllData = function(selectedInfo){
@@ -272,7 +282,6 @@ function Interface(data){
     for (var i = 0; i < selectedInfo.length; i++){
       allFilteredData = allFilteredData.concat(filterData(selectedInfo[i]))
     }
-    console.log(allFilteredData)
     return allFilteredData
   }
 
@@ -293,7 +302,7 @@ function Interface(data){
     else {
       filtered = filtered.filter(example => getBinNum(example["prob" + selectedInfo[svgClass]], settings.probabilityRange, settings.numBins) == selectedInfo["binNum"])
     }
-    console.log(filtered)
+    //console.log(filtered)
     return filtered
   }
 
@@ -312,8 +321,9 @@ function Interface(data){
       selectedInfo = histograms.getSelectedInfo()
       histogramData = histograms.getHistogramData()
     }
-
-    boxPlots.makeComparison(selectedInfo, histogramData, dataModel.data)
+    if (selectedInfo.length > 0) {
+      boxPlots.makeComparison(selectedInfo, histogramData, dataModel.data)
+    }
     $('#' + currentSelect).css('display', "none");
     tablinks = document.getElementsByClassName("tablinks");
     for (i = 0; i < tablinks.length; i++){
@@ -349,6 +359,6 @@ function Interface(data){
     boxPlots.distanceMeasure = settings.distanceMeasure
     // update the distance histograms distance measure and redraw the histograms
     distanceHistograms.histogramType.getBinNum[0] = settings.distanceMeasure;
-    distanceHistograms.updateData(distanceHistograms.constructData(dataModel.data, settings), settings.distanceRange)
+    distanceHistograms.updateData(distanceHistograms.constructData(currentData, settings), settings.distanceRange)
   }
 }

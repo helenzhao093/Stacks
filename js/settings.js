@@ -3,12 +3,12 @@ function Settings(dataModel){
   // filter settings
   // default thresholds
 
-  this.TNThresholdDefault = 0.1
+  this.TNThresholdDefault = 0.0 //0.1
   this.TNMax = 0.5
   this.TNMin = 0.0
   this.numBins = 10
 
-  this.TPThresholdDefault = 0.9
+  this.TPThresholdDefault = 1.0//0.9
   this.TPMax = 1.0
   this.TPMin = 0.5
   this.probabilityRangeDefault = { lowerBound: 0.0, upperBound: 1.0 }
@@ -32,8 +32,8 @@ function Settings(dataModel){
   this.TNThreshold = 0.1
   this.TPThreshold = 0.9
 
-  this.displayDefault = { TP: true, FP: true, FN: true, TN: false }
-  this.display = { TP: true, FP: true, FN: true, TN: false }
+  this.displayDefault = { TP: true, FP: true, FN: true, TN: true }
+  this.display = { TP: true, FP: true, FN: true, TN: true }
 
   // window settings
   this.totalWidth = 1366

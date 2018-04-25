@@ -14,7 +14,7 @@ function BoxPlot(dataModel, settings){
   var plotHeight = 120
   var totalWidth = plotWidth + margin.right + margin.left + boxMargin.left
   var totalHeight = plotHeight + margin.top + margin.bottom + boxMargin.top + bottomAxisHeight + titleHeight
-  var boxHeights = [0, 0, 30, 25, 20, 15]
+  var boxHeights = [0, 30, 30, 25, 20, 15]
 
   var boxQuartiles = function (d) { // d is an array
     var sorted = d.sort(function(a,b){return a - b})
@@ -323,7 +323,7 @@ function BoxPlot(dataModel, settings){
     var boxPlotData = constructAllPlotData(groups, dataModel)
     //var sortedboxPlotData = sortPlotData(boxPlotData)
     modifySelectedInfo(selectedInfo, boxPlotData)
-    console.log(selectedInfo)
+    console.log(boxPlotData)
     constructLegend(selectedInfo)
     constructAllBoxPlots(boxPlotData, selectedInfo)
   }

@@ -106,8 +106,6 @@ function DataTable(dataModel, appSettings){
     })
   }
 
-
-  //$(document).ready(function(){
   this.table = $('#datatable').DataTable( {
     "data": tableData,
     "columns": columns,
