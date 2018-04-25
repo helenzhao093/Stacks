@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <title>Stacks</title>
+        <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='materialize.min.css') }}">
+        <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='nouislider.min.css') }}">
+        <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='dataTables.min.css') }}">
+        <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='appStyle.css')}}">
+        <script src="https://code.jquery.com/jquery-2.2.4.min.js"></script>
+        <script>
+          var currentSelect = "probability-tab";
+          /*$(function(){
+            $('#probability-tab').load("probHistogram.html")
+            $('#distance-tab').load("distanceHistogram.html")
+            $('#prob-distribution-tab').load("stackHistogram.html")
+            $('#feature-tab').load("compare.html");
+          })*/
+
+          function openContent(evt, tabName){
+            currentSelect = tabName
+            var i, tabcontent, tablinks;
+
+            /* set display for tabs to none */
+            tabcontent = document.getElementsByClassName("tabcontent");
+            for (i = 0; i < tabcontent.length; i++){
+              tabcontent[i].style.display = "none";
+            }
+
+            switches = document.getElementsByClassName("switch");
+            if (tabName == "prob-distribution-tab"){
+              for (i = 0; i < switches.length; i++){
+                switches[i].style.display = "block";
+              }
+            }else{
+              for (i = 0; i < switches.length; i++){
+                switches[i].style.display = "none";
+              }
+            }
+
+            distance = document.getElementsByClassName("distance-select")
+            tpContainer = document.getElementById('tp-container')
+            if (tabName == "distance-tab"){
+              distance[0].style.display = "flex"
+              tpContainer.classList.add("leftAlign");
+            }else{
+              distance[0].style.display = "none"
+              tpContainer.classList.remove("leftAlign");
+            }
+            /* remove active class from tablinks buttons */
+            tablinks = document.getElementsByClassName("tablinks");
+            for (i = 0; i < tablinks.length; i++){
+              //console.log(tablinks[i])
+              tablinks[i].classList.remove("active");
+            }
+
+              /* show the selected tab */
+            document.getElementById(tabName).style.display = "block";
+
+            /* add active class to the selected tab */
+            evt.currentTarget.classList.add("active")
+          }
+        </script>
+    </head>
+    <body>
+      <div class="header-pane">
+        Stacks
+      </div>
+      <div class="tab">
+        <button class="tablinks" onclick="openContent(event, 'probability-tab')">Probability</button>
+        <button class="tablinks" onclick="openContent(event, 'distance-tab')">Distance</button>
+        <button class="tablinks" onclick="openContent(event, 'prob-distribution-tab')">Probability Distribution</button>
+        <button id="features-button" class="tablinks">Features</button>
+        <button class="tablinks" onclick="openContent(event, 'table-tab')">Table</button>
+      </div>
+
+      <div class="settings-pane row">
+        <div id="settings-form">
+          <div class="distance-select" style="display:none;">
+            <select>
+              <option value="distance_manhattan">Manhattan</option>
+              <option value="distance_cosine">Cosine</option>
+              <option value="distance_euclidean">Euclidean</option>
+              <option value="distance_minkowski">Minkowski</option>
+            </select>
+          </div>
+          <div class="slider-container" id="tp-container">
+            <label id="tp-label">Filter Confident TPs</label>
+            <div id="tp-threshold-slider" /> </div>
+          </div>
+          <div class="slider-container" id="tn-container">
+            <label id="tn-label">Filter Confident TNs</label>
+            <div id="tn-threshold-slider" /> </div>
+          </div>
+          <div class="switch" style="display:none;">
+            <label>
+              TP
+              <input type="checkbox" id="tp">
+              <span class="lever tp"></span>
+            </label>
+          </div>
+          <div class="switch" style="display:none;">
+            <label>
+              TN
+              <input type="checkbox" id="tn">
+              <span class="lever tn"></span>
+            </label>
+          </div>
+          <div class="switch" style="display:none;">
+            <label>
+              FP
+              <input type="checkbox" id="fp">
+              <span class="lever fp"></span>
+            </label>
+          </div>
+          <div class="switch" style="display:none;">
+            <label>
+              FN
+              <input type="checkbox" id="fn">
+              <span class="lever fn"></span>
+            </label>
+          </div>
+
+        </div>
+        <button id="apply">Apply</button>
+        <button id="clear">Clear</button>
+        <button id="filter">Filter</button>
+        <button id="undo" style="display: none;">Undo</button>
+      </div>
+
+      <div id="probability-tab" class="tabcontent" style="display: block;">
+        <div class="probability-histogram-pane">
+          <svg class="probability-histograms">
+            <foreignobject x="45" y="0" width="20" height="400">
+            <div class="prob-slider-container" id="probRange-container">
+              <div id="probRange-slider" /> </div>
+            </div>
+          </foreignobject>
+          </svg>
+        </div>
+      </div>
+      <div id="distance-tab" class="tabcontent" style="display: none;">
+        <div class="distance-histogram-pane">
+          <svg class="distance-histograms">
+            <foreignobject x="45" y="0" width="20" height="400">
+              <div class="distance-slider-container" id="distanceRange-container">
+                <div id="distanceRange-slider" /> </div>
+              </div>
+            </foreignobject>
+          </svg>
+        </div>
+      </div>
+      <div id="prob-distribution-tab" class="tabcontent" style="display: none;">
+        <div class="histogram-pane">
+          <svg class="histograms">
+            <g class="connect-histograms">
+              <path class=hover-line></path>
+            </g>
+            <foreignobject x="45" y="0" width="20" height="400">
+            <div class="prob-slider-container" id="probRange-container">
+              <div id="probRange-slider-dist" /> </div>
+            </div>
+          </foreignobject>
+          </svg>
+        </div>
+
+
+        <svg width="220" height="400">
+          <defs>
+          <pattern id="pattern-stripe"
+            width="4" height="4"
+            patternUnits="userSpaceOnUse"
+            patternTransform="rotate(45)">
+            <rect width="2" height="4" transform="translate(0,0)" fill="white"></rect>
+          </pattern>
+          <mask id="mask-stripe">
+            <rect width="100%" height="100%" fill="url(#pattern-stripe)" />
+          </mask>
+        </defs>
+        </svg>
+      </div>
+      <div id="feature-tab" class="tabcontent" style="display:none;">
+        <div class="legend"> </div>
+        <div class="feature-boxplot-pane" style="display:block;"> </div>
+      </div>
+      <div id="table-tab" class="tabcontent" style="display:none;">
+        <div class="table-pane">
+          <div> Toggle Columns:
+            <a class="toggle-vis" data-columns="probability-columns">Probability</a>
+            <a class="toggle-vis" data-columns="feature-columns">Feature</a>
+          </div>
+          <table id="datatable" class="dt-right dataTable compact hover"></table>
+        </div>
+      </div>
+      <script type="text/javascript" src="{{ url_for('static', filename='d3.min.js') }}"></script>
+      <script type="text/javascript" charset="utf8" src="{{ url_for('static', filename='dataTables.min.js') }}"></script>
+      <script type="text/javascript" src="{{ url_for('static', filename='nouislider.min.js') }}"></script>
+      <script type="text/javascript" src="{{ url_for('static', filename='materialize.min.js') }}"></script>
+      <script type="text/javascript" src="{{ url_for('static', filename='loadData.js') }}"></script>
+      <script type="text/javascript" src="{{ url_for('static', filename='histogramHelpers.js') }}"></script>
+      <script type="text/javascript" src="{{ url_for('static', filename='interface.js') }}"></script>
+      <script type="text/javascript" src="{{ url_for('static', filename='model.js') }}"></script>
+      <script type="text/javascript" src="{{ url_for('static', filename='settings.js') }}"></script>
+      <script type="text/javascript" src="{{ url_for('static', filename='distributionHistogram.js') }}"></script>
+      <script type="text/javascript" src="{{ url_for('static', filename='histogram.js') }}"></script>
+      <script type="text/javascript" src="{{ url_for('static', filename='datatable2.js') }}"></script>
+      <script type="text/javascript" src="{{ url_for('static', filename='comparison.js') }}"></script>
+      <script type="text/javascript" src="{{ url_for('static', filename='select.js') }}"></script>
+    </body>
+</html>

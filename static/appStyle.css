@@ -1,0 +1,441 @@
+html {
+  height: 100%;
+  min-width: 100%;
+  min-height: 100%;
+}
+
+body {
+  font-family: "Helvetica Neue";
+  min-height: 100%;
+  width: 1366px;
+  margin: 0;
+}
+
+#tp-threshold-slider {
+  height: 0.5em;
+  border-color: grey;
+  margin-top: 5px;
+}
+
+
+#tp-threshold-slider .noUi-connect{
+  background: green
+}
+
+#tn-threshold-slider {
+  height: 0.5em;
+  border-color: grey;
+  margin-top: 5px;
+}
+
+#tn-threshold-slider .noUi-connect{
+  background: grey
+}
+
+
+#probRange-slider {
+  border-color: grey;
+}
+
+
+.slider-container {
+  float:left;
+  width: 150px;
+  margin: 5px 15px;
+  /*padding-right: 5px;*/
+}
+
+.leftAlign {
+  margin-left: 130px;
+}
+
+.slider-container label {
+  font-size: 13px;
+}
+
+#probRange-container {
+  height: 400px;
+  width: 10px;
+  margin-top: 20px;
+}
+
+#distanceRange-container {
+  height: 400px;
+  width: 10px;
+  margin-top: 20px;
+}
+
+.noUi-vertical {
+    width: 10px;
+}
+
+#probRange-slider {
+  height: 360px;
+  margin-left: 5px;
+}
+
+#probRange-slider-dist {
+  height: 360px;
+  margin-left: 5px;
+}
+
+#distanceRange-slider{
+  height: 360px;
+  margin-left: 5px;
+}
+
+.switch {
+  float: left;
+  width:70px;
+  margin-top:20px
+}
+
+.switch label .lever {
+  margin: 0px 0px;
+}
+
+.switch label input[type="checkbox"]:checked + .lever.tp {
+  background: rgba(0,128,0,0.5)
+}
+
+.switch label input[type="checkbox"]:checked + .lever.tn {
+  background: rgba(0,0,0,0.5)
+}
+
+.switch label input[type="checkbox"]:checked + .lever.fn {
+  background: rgba(255,255,0,0.5)
+}
+
+.switch label input[type="checkbox"]:checked + .lever.fp {
+  background: rgba(255,0,0,0.5)
+}
+
+.switch label input[type="checkbox"]:checked + .lever::after {
+  background-color: #d1d1d1
+}
+
+.header-pane{
+  width: 100%;
+  height: 50px;
+  overflow: hidden;
+  position: fixed;
+  z-index: 100;
+  top: 0;
+  color: white;
+  font-size: 38px;
+  padding-left: 15px;
+  padding-bottom: 10px;
+  font-family: Helvetica;
+  background: #9099A2;
+}
+
+.settings-pane {
+  width: 1366px;
+  position: fixed;
+  top:100px;
+  z-index: 100;
+  background: #9685;
+  padding-bottom: 17px;
+  border-bottom: 1px #ccc;
+  border-bottom-style: solid;
+  margin-bottom: 0px;
+}
+
+#settings-form {
+  overflow: :hidden
+  width: 2000px
+}
+
+.histograms {
+  width: 1366px;
+  height:400px
+}
+
+rect.FP{
+  mask: url(#mask-stripe)
+}
+
+.highlight {
+  fill: #FFFF00;
+  stroke: #E6E600;
+  stroke-width: 1;
+}
+
+.table-pane {
+  position: fixed;
+  margin-top: -50px;
+  margin-left: 10px;
+}
+
+#datatable_length {
+  visibility: hidden;
+}
+
+#datatable_filter {
+  visibility: hidden;
+}
+
+.prob-column{
+  border-right: 3px solid;
+}
+
+.predicted-column{
+  border-right: 3px solid black;
+}
+
+.distance-column {
+  border-right: 3px solid;
+  border-left: 3px solid;
+}
+
+
+td.TN {
+  background: /*rgba(74,78,90,0.5); */ rgba(0,0,0,0.5)
+}
+
+td.TP {
+  background: /*rgba(58,159,63,0.5);*/ rgba(0,128,0,0.5)
+}
+
+td.FP {
+  background: /*rgba(213,144,43,0.5);*/rgba(255,0,0,0.5)
+}
+
+td.FN {
+  background:/* rgba(244,43,36,0.5);/*/rgba(255,255,0,0.5)
+}
+
+td.distance-column{
+  background: rgba(0,0,0,0.5);
+}
+
+.similarity-column{
+  background: #d1d1d1;
+  border-right: 4px solid;
+}
+
+td, th {
+  border-radius: 0px
+}
+
+.connect-histograms path {
+    fill: none;
+    stroke: #ccc;
+    stroke-opacity: .5;
+    shape-rendering: crispEdges;
+}
+
+.noUi-horizontal .noUi-handle-lower .noUi-tooltip {
+  background-color: rgba(255,255,255,0);
+  border-radius: 50%;
+  border-width: 0;
+  padding: 0;
+  font-size: .7em;
+  bottom: 3px;
+}
+
+.noUi-horizontal .noUi-handle-upper .noUi-tooltip {
+  background-color: rgba(255,255,255,0);
+  border-radius: 50%;
+  border-width: 0;
+  padding: 0;
+  font-size: .7em;
+  bottom: 3px;
+}
+
+.noUi-horizontal .noUi-handle {
+  box-shadow: 0 1px 3px 1px rgba(0,0,0,0.4);
+  border-width: 0;
+  background-color: #d3d3d3;
+  /* border-radius: 50%;*/
+  width: 1.5em;
+  height: 1.5em;
+}
+
+.noUi-handle::after, .noUi-handle::before {
+  content: none;
+}
+
+/* vertical sliders */
+.noUi-vertical .noUi-handle {
+    height: 20px;
+    width: 18px;
+    left: -5px;
+    top: -10px;
+    border: 1px solid #D9D9D9;
+    border-radius: 5px;
+    background: whitesmoke;
+}
+/* Style the tab */
+.tab {
+    position:fixed;
+    z-index: 100;
+    top:50px;
+    width:100%;
+    overflow: hidden;
+    border: 1px solid #ccc;
+    background-color: #f1f1f1;
+}
+
+/* Style the buttons inside the tab */
+.tab button {
+    background-color: inherit;
+    float: left;
+    border: none;
+    outline: none;
+    cursor: pointer;
+    padding: 14px 16px;
+    transition: 0.3s;
+    font-size: 17px;
+}
+
+/* Change background color of buttons on hover */
+.tab button:hover {
+    background-color: #ddd;
+}
+
+/* Create an active/current tablink class */
+.tab button.active {
+    background-color: #ccc;
+}
+
+/* distance select
+select {
+  display: block;
+  float: left;
+  margin: 20px 10px;
+  border: 1px solid grey;
+  width: 120px;
+  height: 30px;
+} */
+
+/*the container must be positioned relative:*/
+.distance-select {
+  float:left;
+  width: 120px;
+  position: absolute;
+  /*position: relative; */
+  font-family: Arial;
+}
+.distance-select select {
+  display: none; /*hide original SELECT element:*/
+}
+.select-selected {
+  background-color: #0099cc;
+}
+/*style the arrow inside the select element:*/
+.select-selected:after {
+  position: absolute;
+  content: "";
+  top: 14px;
+  right: 10px;
+  width: 0;
+  height: 0;
+  border: 6px solid transparent;
+  border-color: #fff transparent transparent transparent;
+}
+/*point the arrow upwards when the select box is open (active):*/
+.select-selected.select-arrow-active:after {
+  border-color: transparent transparent #fff transparent;
+  top: 7px;
+}
+/*style the items (options), including the selected item:*/
+.select-items div,.select-selected {
+  color: #ffffff;
+  padding: 8px 16px;
+  border: 1px solid transparent;
+  border-color: transparent transparent rgba(0, 0, 0, 0.1) transparent;
+  cursor: pointer;
+  user-select: none;
+}
+/*style items (options):*/
+.select-items {
+  position: absolute;
+  background-color: #0099cc;
+  top: 100%;
+  z-index: 99;
+  margin-left: 10px;
+  border-radius: 4px;
+}
+/*hide the items when the select box is closed:*/
+.select-hide {
+  display: none;
+}
+.select-items div:hover {
+  background-color: rgba(0, 0, 0, 0.1);
+}
+
+.tabcontent {
+  margin-top:160px;
+  position:static;
+  z-index: -1;
+}
+
+#boxplot-select {
+  display: block;
+}
+
+table.dataTable th.dt-right, table.dataTable td.dt-right {
+  text-align: center;
+}
+
+.distance-column {
+  text-align: center;
+}
+
+.noUi-connect {
+    background: #91A9C6;
+}
+
+.settings-pane button {
+  margin-top: 20px;
+  margin-left: 10px;
+  background-color: #0099cc;
+  border-radius: 10px;
+  color: white;
+  border: none;
+  height: 25px;
+  font-size: 13px;
+  font-style: "Helvetica Neue";
+}
+
+label {
+    font-size: .8rem;
+    color: #111;
+}
+
+.select-selected{
+  margin-top: 13px;
+  margin-left: 10px;
+  margin-right: 10px;
+  border-radius: 4px;
+}
+
+#prob-distribution-tab foreignObject{
+  display: none;
+}
+
+.probability-histograms{
+  position: fixed;
+}
+
+.distance-histogram-pane{
+  position: fixed;
+}
+
+.histogram-pane {
+  position: fixed;
+}
+
+#boxplot-select{
+  width: 25%;
+  margin: 0;
+}
+
+.even td {
+  color: white;
+}
+
+.odd td {
+  color: white;
+}
