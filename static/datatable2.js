@@ -25,36 +25,95 @@ function DataTable(dataModel, appSettings) {
   var predictedColumn = 1
   this.probabilityColumns = []
   this.featureColumns = []
+  this.distanceColumns = []
 
   columns.push({data: "actual", title: "actual"})
   columns.push({data: "predicted", title: "predicted"})
 
-  for (i = 0; i < dataModel.numClasses; i++){
+  for (var i = 0; i < dataModel.numClasses; i++){
     columns.push({data: dataModel.probColumns[i], type: "num", title: dataModel.probColumns[i]})
     that.probabilityColumns.push(i+2)
   }
 
-  for (j = 0; j < dataModel.numFeatures; j++){
+  for (var j = 0; j < dataModel.numFeatures; j++){
     columns.push({data: dataModel.featureColumns[j], title: dataModel.featureColumns[j]})
     that.featureColumns.push(j+2+dataModel.numClasses)
   }
+
+  for (var k = 0; k < dataModel.distanceColumns.length; k++){
+    columns.push({data: dataModel.distanceColumns[k], title: dataModel.distanceColumns[k]})
+    that.distanceColumns.push(k + 2 + dataModel.numClasses+dataModel.numFeatures)
+  }
+
   console.log(this.featureColumns, this.probabilityColumns)
   var columnDef = []
   columnDef.push({className: 'dt-right predicted-column', targets: [1]})
   columnDef.push({className: 'dt-right', targets: '_all'})
 
+  var initColumn = 2 + dataModel.numClasses+dataModel.numFeatures
+  for (var i = initColumn; i < initColumn + dataModel.distanceColumns.length; i++){
+    columnDef.push({targets:[i], visible: false})
+  }
+
+  columnDef.push({targets: [0], orderData: [0,1]})
+  columnDef.push({targets: [1], orderData: [0,1]})
+
   this.table = $('#datatable').DataTable( {
     "data": tableData,
-    "scrollX": true,
     "columns": columns,
     "columnDefs": columnDef,
     "pagingType": "numbers",
     "fixedColumns": {
          leftColumns: 2
-       }
+       },
+    "order": [[0, 'asc'],[1, 'asc']]
   })
 
-  var classNames = ["class0", "class1", "class2"]
+  filterSubSet = function(selectedInfo, appSettings){
+    $.fn.dataTable.ext.search.push( //if they are not matchings then remove them
+      function(settings, data, dataIndex) {
+        for (var i = 0; i < selectedInfo.length; i++){
+          if (data[actualColumn] == +selectedInfo[i].actualClass && data[predictedColumn] == +selectedInfo[i].predictedClass){
+            if (selectedInfo[i].distance){
+              var index = 2 + dataModel.numFeatures + dataModel.numClasses + appSettings.distanceColumnNum
+              if (inRange(data[index], selectedInfo[i].range)){
+                return true;
+              }
+            }
+            else{
+              var index = +data[predictedColumn] + +2
+              if (inRange(data[index], selectedInfo[i].range)) {
+                return true;
+              }
+            }
+          }
+        }
+        return false;
+      })
+  }
+
+
+  filterSettings = function(appSettings){
+    $.fn.dataTable.ext.search.push( //if they are not matchings then remove them
+      function(settings, data, dataIndex) {
+        if (+data[actualColumn] == +data[predictedColumn]) { // TP
+          var probIndex = +data[predictedColumn] + +2
+          if (appSettings.display.TP && inRange(data[probIndex], appSettings.probabilityRange) && (appSettings.TPThreshold > data[probIndex]) ){
+            return true;
+          }
+        }
+        else {
+          var probIndex = +data[predictedColumn] + +2
+          if (inRange(data[probIndex], appSettings.probabilityRange) ) {
+            if (appSettings.display.FP || appSettings.display.FN){
+              return true;
+            }
+          }
+        }
+        return false;
+    })
+  }
+
   dataModel.predictedClasses.forEach(function(className, i){
     var color = that.colors[i]
     var classNum = className.substring("predicted".length,"predicted".length +1)
@@ -72,8 +131,9 @@ function DataTable(dataModel, appSettings) {
   $('a.toggle-vis').on('click', function(e){
     e.preventDefault();
     var columnNums
-    var columnType = $(this).attr('data-column');
-    if (+columnType == "probability-columns"){
+    var columnType = $(this).attr('data-columns');
+    console.log(columnType)
+    if (columnType == "probability-columns"){
       columnNums = that.probabilityColumns;
     }else{
       columnNums = that.featureColumns;
@@ -84,4 +144,24 @@ function DataTable(dataModel, appSettings) {
       col.visible(!col.visible());
     })
   })
+
+  this.filterForSubSet = function(selectedInfo, appSettings){
+    console.log(selectedInfo)
+    filterSubSet(selectedInfo, appSettings)
+    this.table.draw()
+  }
+
+  this.filterBySettings = function(appSettings){
+    filterSettings(appSettings)
+    this.table.draw()
+  }
+
+  this.clearFilter = function(numFilter){
+    console.log(numFilter)
+    for (i=0; i < numFilter; i++){
+      $.fn.dataTable.ext.search.pop()
+    }
+    this.table.draw()
+  }
+
 }

@@ -12,7 +12,7 @@ function DataModel(data){
   // number of features
   this.featureColumns = getColumnNames("feature")
   this.numFeatures = this.featureColumns.length
-  //console.log(this.numFeatures);
+  console.log(this.numFeatures);
 
   // array of class names
   this.actualClasses = getColumnNames("actual")

@@ -112,6 +112,14 @@ function Interface(data){
   var probabilityHistograms = new Histogram(dataModel, settings, settings.histogramTypes.probability, boxPlots);
   var datatable = new DataTable(dataModel, settings)
 
+  var sliderMoved = false
+  probRangeSlider.noUiSlider.on('change', function(){
+    sliderMoved = true;
+  })
+  distanceRangeSlider.noUiSlider.on('change', function(){
+    sliderMoved = true;
+  })
+
   var moveSliders = function(){
     probRangeSlider.noUiSlider.set([settings.probabilityRangeDefault.lowerBound,
                                     settings.probabilityRangeDefault.upperBound]);
@@ -177,9 +185,44 @@ function Interface(data){
     $( "#fp" ).prop( "checked", newSettings.display.FP );
   }
 
+  newSettingsApplied = function(){
+    console.log(sliderMoved)
+    if (sliderMoved){
+      return true;
+    }
+
+    var lastFilter = filterStack.pop()
+    if (lastFilter){
+      filterStack.push(lastFilter)
+    }else{
+      lastFilter = settings.default
+    }
+    console.log(lastFilter)
+    console.log(+tpSlider.noUiSlider.get() == lastFilter.TPThreshold)
+    console.log(1 - (+tnSlider.noUiSlider.get()) == lastFilter.TNThreshold)
+    console.log(lastFilter.display.TN == lastFilter.display.TN)
+    console.log(lastFilter.display.TN == $('#tn').is(":checked"))
+    console.log(lastFilter.display.TP == $('#tp').is(":checked"))
+    console.log(lastFilter.display.FN == $('#fn').is(":checked"))
+    console.log(lastFilter.display.FP == $('#fp').is(":checked"))
+
+    if (+tpSlider.noUiSlider.get() == lastFilter.TPThreshold &&
+      (1 - (+tnSlider.noUiSlider.get()) == lastFilter.TNThreshold) &&
+      lastFilter.display.TN == lastFilter.display.TN &&
+      lastFilter.display.TN == $('#tn').is(":checked") &&
+      lastFilter.display.TP == $('#tp').is(":checked") &&
+      lastFilter.display.FN == $('#fn').is(":checked") &&
+      lastFilter.display.FP == $('#fp').is(":checked")){
+        return false;
+      }
+    return true
+  }
+
   $('#apply').on('click', function(e){
     e.preventDefault();
-
+    var newFilter = newSettingsApplied()
+    console.log(newFilter)
+    if (newFilter){
     $('#undo').css("display", "inline");
 
     addFilter()
@@ -202,8 +245,11 @@ function Interface(data){
     settings.display.FN = $('#fn').is(":checked")
     settings.display.FP = $('#fp').is(":checked")
 
-    //datatable.applyFilter(settings)
+    datatable.filterBySettings(settings)
+    console.log(settings)
     applySettings()
+    sliderMoved = false;
+  }
   })
 
   $('#undo').on('click', function(e){
@@ -214,7 +260,7 @@ function Interface(data){
       $(this).css("display", "none");
     }
     setSettings(oldSettings)
-    //datatable.clearFilter(1)
+    datatable.clearFilter(1)
     applySettings()
   })
 
@@ -235,11 +281,12 @@ function Interface(data){
     distanceHistograms.clearSelected()
     removeAllHighlights()
   }
-
+  var filteredBars = false;
   $('#clear').on('click', function(e){
     e.preventDefault();
-
-    //datatable.clearFilter(numFilter)
+    var filtersToClear = (filteredBars) ? numFilter + 1 : numFilter
+    console.log(filteredBars, filtersToClear)
+    datatable.clearFilter(filtersToClear)
     $('#undo').css("display", "none");
 
     tpSlider.noUiSlider.set(settings.TPThresholdDefault)
@@ -255,6 +302,7 @@ function Interface(data){
   var currentData = dataModel.data
 
   $('#filter').on('click', function(e){
+    filteredBars = true
     e.preventDefault();
     var selectedInfo
     if (currentSelect == "probability-tab"){
@@ -275,6 +323,8 @@ function Interface(data){
       probabilityHistograms.updateData(probabilityHistograms.constructData(currentData, settings), settings.probabilityRange)
       removeAllHighlights()
     }
+
+    datatable.filterForSubSet(selectedInfo, settings)
   })
 
   var filterAllData = function(selectedInfo){
@@ -337,13 +387,15 @@ function Interface(data){
 
   $('#datatable tbody').on( 'click', 'tr', function () {
     drawPath(datatable.table.row(this).data(), dataModel, settings, true);
+    console.log(this)
     //console.log(drawPath(table.row( this ).data(), dataModel));
   });
 
+  /*
   $('#datatable tbody').on('mouseover', 'tr', function() {
     console.log(datatable.table.row(this).data())
     drawPath(datatable.table.row(this).data(), dataModel, settings, false);
-  });
+  });*/
 
   settings.distanceMeasures.forEach(function(distance){
     $('#'+ distance).on('click', function(){
@@ -355,6 +407,7 @@ function Interface(data){
     console.log(select_item)
     // change distance measure in settings and recalculate the distance range
     settings.distanceMeasure = select_item.id;
+    settings.distanceColumnNum = settings.distanceMeasures.indexOf(settings.distanceMeasure)
     settings.calculateDistanceMetadata()
     boxPlots.distanceMeasure = settings.distanceMeasure
     // update the distance histograms distance measure and redraw the histograms

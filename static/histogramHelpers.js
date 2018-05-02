@@ -42,7 +42,7 @@ var getBinNum = function(data, range, numBins){
 
 /* return true if data is in the range, false otherwise */
 var inRange = function(data, range){
-  if (data >= range.lowerBound && data <= range.upperBound){
+  if (data >= +range.lowerBound && data <= +range.upperBound){
     return true;
   }
   return false;
@@ -79,7 +79,7 @@ var calculateXDomain = function (pos, neg, histogramData) {
 var calculateRangeFromBin = function(binNum, range){
   var lower = (range.upperBound - range.lowerBound)/10 * (binNum) + range.lowerBound
   var upper = (range.upperBound - range.lowerBound)/10 * (binNum + 1) + range.lowerBound
-  return {lower:lower, upper:upper}
+  return {lowerBound:lower, upperBound:upper}
 }
 
 var getSelectedStackInfo = function(element, isDistribution, range){
@@ -117,8 +117,8 @@ var getSelectedStackInfo = function(element, isDistribution, range){
   var info = {
     classification: classification,
     binNum: binNum,
-    actualClass: actualClass.charAt(actualClass.length - 1), //class0 => 0
-    predictedClass: predictedClass.charAt(predictedClass.length - 1),
+    actualClass: +actualClass.charAt(actualClass.length - 1), //class0 => 0
+    predictedClass: +predictedClass.charAt(predictedClass.length - 1),
     distance: distance,
     range: stackRange
   };
