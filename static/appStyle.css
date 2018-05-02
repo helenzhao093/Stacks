@@ -90,6 +90,10 @@ body {
   margin-top:20px
 }
 
+.first {
+  margin-left: 20px;
+}
+
 .switch label .lever {
   margin: 0px 0px;
 }
@@ -163,16 +167,15 @@ rect.FP{
 
 .table-pane {
   position: fixed;
-  margin-top: -50px;
   margin-left: 10px;
 }
 
 #datatable_length {
-  visibility: hidden;
+  display: none;
 }
 
 #datatable_filter {
-  visibility: hidden;
+  display: none;
 }
 
 .prob-column{
@@ -438,4 +441,17 @@ label {
 
 .odd td {
   color: white;
+}
+
+.toggle{
+  margin: 10px 10px;
+}
+
+.toggle-vis {
+  margin-left: 5px;
+  margin-right: 5px;
+}
+
+#tn-container {
+  display: none;
 }

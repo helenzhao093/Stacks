@@ -10,12 +10,12 @@
         <script src="https://code.jquery.com/jquery-2.2.4.min.js"></script>
         <script>
           var currentSelect = "probability-tab";
-          $(function(){
+          /*$(function(){
             $('#probability-tab').load("probHistogram.html")
             $('#distance-tab').load("distanceHistogram.html")
             $('#prob-distribution-tab').load("stackHistogram.html")
             $('#feature-tab').load("compare.html");
-          })
+          })*/
 
           function openContent(evt, tabName){
             currentSelect = tabName
@@ -27,7 +27,7 @@
               tabcontent[i].style.display = "none";
             }
 
-            switches = document.getElementsByClassName("switch switch-prob-dist");
+            switches = document.getElementsByClassName("switch");
             if (tabName == "prob-distribution-tab"){
               for (i = 0; i < switches.length; i++){
                 switches[i].style.display = "block";
@@ -36,14 +36,6 @@
               for (i = 0; i < switches.length; i++){
                 switches[i].style.display = "none";
               }
-            }
-
-            tnslider = document.getElementById('tn-container')
-            if (tabName == "prob-distribution-tab"){
-              tnslider.style.display = "block";
-            }
-            else{
-              tnslider.style.display = "none";
             }
 
             distance = document.getElementsByClassName("distance-select")
@@ -100,28 +92,28 @@
             <label id="tn-label">Filter Confident TNs</label>
             <div id="tn-threshold-slider" /> </div>
           </div>
-          <div class="switch first">
+          <div class="switch" style="display:none;">
             <label>
               TP
               <input type="checkbox" id="tp">
               <span class="lever tp"></span>
             </label>
           </div>
-          <div class="switch switch-prob-dist" style="display:none;">
+          <div class="switch" style="display:none;">
             <label>
               TN
               <input type="checkbox" id="tn">
               <span class="lever tn"></span>
             </label>
           </div>
-          <div class="switch switch-prob-dist" style="display:none;">
+          <div class="switch" style="display:none;">
             <label>
               FP
               <input type="checkbox" id="fp">
               <span class="lever fp"></span>
             </label>
           </div>
-          <div class="switch">
+          <div class="switch" style="display:none;">
             <label>
               FN
               <input type="checkbox" id="fn">

@@ -29,8 +29,8 @@ function Settings(dataModel){
   }
 
   // current thresholds
-  this.TNThreshold = 0.1
-  this.TPThreshold = 0.9
+  this.TNThreshold = 0.0
+  this.TPThreshold = 1.0
 
   this.displayDefault = { TP: true, FP: true, FN: true, TN: true }
   this.display = { TP: true, FP: true, FN: true, TN: true }

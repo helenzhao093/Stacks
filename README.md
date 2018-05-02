@@ -120,7 +120,7 @@ Completed:
 
 ## WEEK 9:
 TODO:
-1) Reorganize table?
+1) Reorganize table
 2) Filter for examples in the selected bars and remove probability and distance boxplots from feature tab
 3) Fix feature button
 4) Look to see if we can integrate with scikit-learn
@@ -129,3 +129,10 @@ TODO:
 
 
 Completed
+1) Have the table detail feature values for each example. Color the row, the color of the predicted class
+
+## WEEK 10:
+1) Work on presentation
+2) Add tool tooltips
+3) Filter for examples in datatable
+4) Add datasets for presentation

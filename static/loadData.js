@@ -1,5 +1,4 @@
 $(document).ready(function(){
-
   //var graphData = "{{ url_for( 'static', filename='uploaded_file.csv') }}"
   //console.log(graphData)
   // load the dataset
@@ -10,12 +9,11 @@ $(document).ready(function(){
     //d3.csv("datasets/multiclass/dataset200RF/ranforest_4classes_multidistance_dataset.csv", type, function(error, data) {
     //d3.csv("datasets/multiclass/dataset200kneigh/k_neighbor_4classes_multidistance_dataset.csv", type, function(error, data) {
     //d3.csv("datasets/iris/iris_svm.csv", type, function(error, data) {
-    d3.csv("http://localhost:5000/static/uploaded_file.csv", type, function(error, data){
+    d3.json("http://localhost:5000/static/uploaded_file.csv", function(data){
       console.log(data)
       interface = new Interface(data)
     })
   }
-
   //convert strings to number
   function type(d) {
     for (var key in d){

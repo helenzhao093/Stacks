@@ -202,7 +202,7 @@ function Interface(data){
     settings.display.FN = $('#fn').is(":checked")
     settings.display.FP = $('#fp').is(":checked")
 
-    datatable.applyFilter(settings)
+    //datatable.applyFilter(settings)
     applySettings()
   })
 
@@ -214,7 +214,7 @@ function Interface(data){
       $(this).css("display", "none");
     }
     setSettings(oldSettings)
-    datatable.clearFilter(1)
+    //datatable.clearFilter(1)
     applySettings()
   })
 
@@ -239,7 +239,7 @@ function Interface(data){
   $('#clear').on('click', function(e){
     e.preventDefault();
 
-    datatable.clearFilter(numFilter)
+    //datatable.clearFilter(numFilter)
     $('#undo').css("display", "none");
 
     tpSlider.noUiSlider.set(settings.TPThresholdDefault)

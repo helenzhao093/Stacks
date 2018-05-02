@@ -42,7 +42,7 @@ function Histogram(dataModel, settings, histogramType, boxPlots){
             //console.log(binNum, columnName, example[columnName], histogramType.range)
             dataModel.predictedClasses.forEach(function(predictedClass, j){
               if (example[dataModel.predictedClasses[j]] == 1) {
-                if (i == j && settings.display.TP && (example[dataModel.probColumns[i]] < settings.TPThreshold) ){
+                if (i == j && settings.display.TP && (example[dataModel.probColumns[i]] <= settings.TPThreshold) ){
                   histogramData[i]['data'][binNum]['tp'][0].count += 1;
                 }
                 if(i != j && settings.display.FN){
