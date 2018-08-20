@@ -20,4 +20,4 @@ def similarity(filename):
     #np.savetxt('euclid_dist_' + filename + '.csv', euclid_dist, fmt='%i', delimiter=',')
     #np.savetxt('minkowski_dist_' + filename + '.csv', minkowski_dist, fmt='%i', delimiter=',')
 
-similarity("100_features_4_classes.csv")
+similarity("../iris/iris_data.csv")

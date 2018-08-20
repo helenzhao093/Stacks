@@ -90,6 +90,10 @@ body {
   margin-top:20px
 }
 
+.first {
+  margin-left: 20px;
+}
+
 .switch label .lever {
   margin: 0px 0px;
 }
@@ -134,7 +138,7 @@ body {
   position: fixed;
   top:100px;
   z-index: 100;
-  background: #9685;
+  background: #cabbff;
   padding-bottom: 17px;
   border-bottom: 1px #ccc;
   border-bottom-style: solid;
@@ -162,7 +166,6 @@ rect.FP{
 }
 
 .table-pane {
-  position: fixed;
   margin-left: 10px;
 }
 
@@ -446,4 +449,8 @@ label {
 .toggle-vis {
   margin-left: 5px;
   margin-right: 5px;
+}
+
+#tn-container {
+  display: none;
 }

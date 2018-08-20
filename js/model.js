@@ -3,15 +3,16 @@ function DataModel(data){
   var that = this
 
   this.data = data
+  this.columns = Object.keys(data[0])
 
   // number of columns
-  this.numColumns = data.columns.length
+  this.numColumns = this.columns.length
   //console.log(this.numColumns)
 
   // number of features
   this.featureColumns = getColumnNames("feature")
   this.numFeatures = this.featureColumns.length
-  //console.log(this.numFeatures);
+  console.log(this.numFeatures);
 
   // array of class names
   this.actualClasses = getColumnNames("actual")
@@ -39,7 +40,7 @@ function DataModel(data){
 
   // returns array with feature names
   function getColumnNames(columnName){
-    return that.data.columns.filter(column => column.substring(0, columnName.length) == columnName)
+    return that.columns.filter(column => column.substring(0, columnName.length) == columnName)
   }
 
 

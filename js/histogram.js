@@ -35,14 +35,14 @@ function Histogram(dataModel, settings, histogramType, boxPlots){
       if (inRange(example[settings.distanceMeasure], settings.distanceRange)){
         dataModel.actualClasses.forEach(function(actualClass, i){
           //console.log(example[dataModel.probColumns[i]], inRange(example[dataModel.probColumns[i]], settings.probabilityRange), settings.probabilityRange.upperBound)
-          if (example[dataModel.actualClasses[i]] == 1 && inRange(example[dataModel.probColumns[i]], settings.probabilityRange))  {
+          if (example[dataModel.actualClasses[i]] == 1 && inRange(example[dataModel.probColumns[i]], settings.probabilityRange)){
             var columnName = (histogramType.getBinNum.length == 1) ? histogramType.getBinNum[0] : histogramType.getBinNum[i]
 
             var binNum = getBinNum(example[columnName], histogramType.range, settings.numBins)
             //console.log(binNum, columnName, example[columnName], histogramType.range)
             dataModel.predictedClasses.forEach(function(predictedClass, j){
               if (example[dataModel.predictedClasses[j]] == 1) {
-                if (i == j && settings.display.TP && (example[dataModel.probColumns[i]] < settings.TPThreshold) ){
+                if (i == j && settings.display.TP && (example[dataModel.probColumns[i]] <= settings.TPThreshold) ){
                   histogramData[i]['data'][binNum]['tp'][0].count += 1;
                 }
                 if(i != j && settings.display.FN){
@@ -50,7 +50,6 @@ function Histogram(dataModel, settings, histogramType, boxPlots){
                 }
               }
             })
-
           }
         })
       }
@@ -259,7 +258,6 @@ function Histogram(dataModel, settings, histogramType, boxPlots){
 
       fn.exit().remove();
 
-      console.log(newRange)
       var newAxisDomain = histogramType.axisDomain.map(
         function(d, i){
           return newRange.lowerBound +
@@ -275,6 +273,7 @@ function Histogram(dataModel, settings, histogramType, boxPlots){
     }
 
     var histogramData = this.constructData(dataModel.data, settings)
+    console.log(histogramData)
     constructHistogram(histogramData)
 
     this.getSelectedInfo = function(){

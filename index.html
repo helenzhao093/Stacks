@@ -27,6 +27,34 @@
               tabcontent[i].style.display = "none";
             }
 
+            switches = document.getElementsByClassName("switch switch-prob-dist");
+            if (tabName == "prob-distribution-tab"){
+              for (i = 0; i < switches.length; i++){
+                switches[i].style.display = "block";
+              }
+            }else{
+              for (i = 0; i < switches.length; i++){
+                switches[i].style.display = "none";
+              }
+            }
+
+            tnslider = document.getElementById('tn-container')
+            if (tabName == "prob-distribution-tab"){
+              tnslider.style.display = "block";
+            }
+            else{
+              tnslider.style.display = "none";
+            }
+
+            distance = document.getElementsByClassName("distance-select")
+            tpContainer = document.getElementById('tp-container')
+            if (tabName == "distance-tab"){
+              distance[0].style.display = "flex"
+              tpContainer.classList.add("leftAlign");
+            }else{
+              distance[0].style.display = "none"
+              tpContainer.classList.remove("leftAlign");
+            }
             /* remove active class from tablinks buttons */
             tablinks = document.getElementsByClassName("tablinks");
             for (i = 0; i < tablinks.length; i++){
@@ -56,7 +84,7 @@
 
       <div class="settings-pane row">
         <div id="settings-form">
-          <div class="distance-select">
+          <div class="distance-select" style="display:none;">
             <select>
               <option value="distance_manhattan">Manhattan</option>
               <option value="distance_cosine">Cosine</option>
@@ -72,21 +100,21 @@
             <label id="tn-label">Filter Confident TNs</label>
             <div id="tn-threshold-slider" /> </div>
           </div>
-          <div class="switch">
+          <div class="switch first">
             <label>
               TP
               <input type="checkbox" id="tp">
               <span class="lever tp"></span>
             </label>
           </div>
-          <div class="switch">
+          <div class="switch switch-prob-dist" style="display:none;">
             <label>
               TN
               <input type="checkbox" id="tn">
               <span class="lever tn"></span>
             </label>
           </div>
-          <div class="switch">
+          <div class="switch switch-prob-dist" style="display:none;">
             <label>
               FP
               <input type="checkbox" id="fp">
@@ -104,7 +132,7 @@
         </div>
         <button id="apply">Apply</button>
         <button id="clear">Clear</button>
-        <button id="filter" style="display: none;">Filter</button>
+        <button id="filter">Filter</button>
         <button id="undo" style="display: none;">Undo</button>
       </div>
 
@@ -114,7 +142,11 @@
       <div id="feature-tab" class="tabcontent" style="display:none;"></div>
       <div id="table-tab" class="tabcontent" style="display:none;">
         <div class="table-pane">
-          <table id="datatable" class="dt-right dataTable compact hover"></table>
+          <div class="toggle"> Toggle Columns:
+            <a class="toggle-vis" data-columns="probability-columns">Probability</a>
+            <a class="toggle-vis" data-columns="feature-columns">Feature</a>
+          </div>
+          <table id="datatable" style="width:100%" class="dt-right dataTable compact hover"></table>
         </div>
       </div>
       <script type="text/javascript" src="js/d3.min.js"></script>
@@ -128,7 +160,7 @@
       <script type="text/javascript" src="js/settings.js"></script>
       <script type="text/javascript" src="js/distributionHistogram.js"></script>
       <script type="text/javascript" src="js/histogram.js"></script>
-      <script type="text/javascript" src="js/datatable.js"></script>
+      <script type="text/javascript" src="js/datatable2.js"></script>
       <script type="text/javascript" src="js/comparison.js"></script>
       <script type="text/javascript" src="js/select.js"></script>
     </body>

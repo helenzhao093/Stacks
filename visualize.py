@@ -62,7 +62,7 @@ def visualize(X, y, predicted, probabilities, multilabel=False):
     header = generate_header(nClasses, nfeatures)
 
     df = pandas.DataFrame(data,
-                 columns=generate_header(4, 10))
+                 columns=header)
 
     json_data = df.to_json(orient='records')
 

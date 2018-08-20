@@ -136,3 +136,6 @@ Completed
 2) Add tool tooltips
 3) Filter for examples in datatable
 4) Add datasets for presentation
+5) Fix filtering in datatable
+6) Fix sorting for datatable (DONE)
+6) Remove hover line 

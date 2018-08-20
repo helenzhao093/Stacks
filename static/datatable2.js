@@ -59,6 +59,7 @@ function DataTable(dataModel, appSettings) {
   columnDef.push({targets: [1], orderData: [0,1]})
 
   this.table = $('#datatable').DataTable( {
+    "scrollX": true,
     "data": tableData,
     "columns": columns,
     "columnDefs": columnDef,
@@ -75,13 +76,14 @@ function DataTable(dataModel, appSettings) {
         for (var i = 0; i < selectedInfo.length; i++){
           if (data[actualColumn] == +selectedInfo[i].actualClass && data[predictedColumn] == +selectedInfo[i].predictedClass){
             if (selectedInfo[i].distance){
-              var index = 2 + dataModel.numFeatures + dataModel.numClasses + appSettings.distanceColumnNum
+              var index = 1 + dataModel.numFeatures + dataModel.numClasses + appSettings.distanceColumnNum
               if (inRange(data[index], selectedInfo[i].range)){
                 return true;
               }
             }
             else{
-              var index = +data[predictedColumn] + +2
+              var index = +data[predictedColumn] + +1
+              console.log(index, data[index], selectedInfo[i].range)
               if (inRange(data[index], selectedInfo[i].range)) {
                 return true;
               }

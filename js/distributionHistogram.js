@@ -59,7 +59,7 @@ function DistributionHistogram(dataModel, settings, boxPlots){
 
           binNum = getBinNum(example[dataModel.probColumns[classNum]], settings.probabilityRangeDefault, settings.numBins)
           if (settings.display.TP && actual.includes(classNum) && predicted.includes(classNum)) { //TP
-            if (example[dataModel.probColumns[classNum]] < settings.TPThreshold){
+            if (example[dataModel.probColumns[classNum]] <= settings.TPThreshold){
               histogramData[classNum]['data'][binNum]['tp'][0].count += 1
             }
           }
@@ -74,7 +74,7 @@ function DistributionHistogram(dataModel, settings, boxPlots){
             });
           }
           else {
-            if (settings.display.TN && example[dataModel.probColumns[classNum]] > settings.TNThreshold){
+            if (settings.display.TN && example[dataModel.probColumns[classNum]] >= settings.TNThreshold){
               histogramData[classNum]['data'][binNum]['tn'][0].count += 1
             }
           }

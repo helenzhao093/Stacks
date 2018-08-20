@@ -5,10 +5,12 @@ $(document).ready(function(){
     //d3.csv("datasets/multiclass/euclid_similarity_100_random_forest_4_classes_dataset.csv", type, function(error, data) {
     //d3.csv("datasets/multiclass/cosine_similarity_1000_random_forest_4_classes_dataset.csv", type, function(error, data) {
     //d3.csv("datasets/multiclass/dataset100/ranforest_4classes_multidistance_dataset.csv", type, function(error, data) {
-    d3.csv("datasets/multiclass/dataset200RF/ranforest_4classes_multidistance_dataset.csv", type, function(error, data) {
+    //d3.csv("datasets/multiclass/dataset200RF/ranforest_4classes_multidistance_dataset.csv", type, function(error, data) {
     //d3.csv("datasets/multiclass/dataset200kneigh/k_neighbor_4classes_multidistance_dataset.csv", type, function(error, data) {
-    //d3.csv("datasets/iris/iris_svm.csv", type, function(error, data) {
-      console.log(data)
+    d3.json("static/uploaded_file.csv", function(data) {
+      data.forEach(function(d){
+        type(d)
+      })
       interface = new Interface(data)
     })
   }

@@ -95,7 +95,7 @@ function BoxPlot(dataModel, settings){
   var legendMargin = {top: 10, left: 20}
   var legendBoxHeight = 20
   var legendRowHeight = 25
-  var colors = ['#BE3B59', '#FF945A', '#4771AF', '#938FA9', '#82353F']
+  var colors = ['#4771AF', '#BE3B59', '#FF945A', '#938FA9', '#82353F']
   function constructLegend(info){
 
     /* remove the previous legend */
@@ -125,7 +125,7 @@ function BoxPlot(dataModel, settings){
         .attr("y", 15)
         .attr("font-family", "Verdana")
         .attr("font-size", 15)
-        .text("true class:" + info[i].actualClass + "; predicted class:" + info[i].predictedClass +  "; range:" + info[i].range.lower.toFixed(3) + "-" + info[i].range.upper.toFixed(3))
+        .text("true class:" + info[i].actualClass + "; predicted class:" + info[i].predictedClass +  "; range:" + info[i].range.lowerBound.toFixed(3) + "-" + info[i].range.upperBound.toFixed(3))
     }
   }
 
@@ -147,7 +147,7 @@ function BoxPlot(dataModel, settings){
           textLength = 100
         }
         else if(divClassName == ".feature-boxplot-pane"){
-          title = "Feature " + featureData[0].name.substring(7,8)
+          title = "Feature " + featureData[0].name.substring(7,9)
           textLength = 60
         }
         else{
