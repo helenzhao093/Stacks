@@ -3,18 +3,18 @@
     <head>
         <meta charset="utf-8">
         <title>Stacks</title>
-        <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='materialize.min.css') }}">
-        <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='nouislider.min.css') }}">
-        <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='dataTables.min.css') }}">
-        <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='appStyle.css')}}">
+        <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/materialize.min.css') }}">
+        <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/nouislider.min.css') }}">
+        <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/dataTables.min.css') }}">
+        <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/app.css')}}">
         <script src="https://code.jquery.com/jquery-2.2.4.min.js"></script>
         <script>
           var currentSelect = "probability-tab";
           $(function(){
-            $('#probability-tab').load("probHistogram.html")
-            $('#distance-tab').load("distanceHistogram.html")
-            $('#prob-distribution-tab').load("stackHistogram.html")
-            $('#feature-tab').load("compare.html");
+            $('#probability-tab').load("static/html/probHistogram.html");
+            $('#distance-tab').load("static/html/distanceHistogram.html");
+            $('#prob-distribution-tab').load("static/html/stackHistogram.html");
+            $('#feature-tab').load("static/html/compare.html");
           })
 
           function openContent(evt, tabName){
@@ -200,19 +200,21 @@
           <table id="datatable" style="width:100%" class="dt-right dataTable compact hover"></table>
         </div>
       </div>
-      <script type="text/javascript" src="{{ url_for('static', filename='d3.min.js') }}"></script>
-      <script type="text/javascript" charset="utf8" src="{{ url_for('static', filename='dataTables.min.js') }}"></script>
-      <script type="text/javascript" src="{{ url_for('static', filename='nouislider.min.js') }}"></script>
-      <script type="text/javascript" src="{{ url_for('static', filename='materialize.min.js') }}"></script>
-      <script type="text/javascript" src="{{ url_for('static', filename='loadData.js') }}"></script>
-      <script type="text/javascript" src="{{ url_for('static', filename='histogramHelpers.js') }}"></script>
-      <script type="text/javascript" src="{{ url_for('static', filename='interface.js') }}"></script>
-      <script type="text/javascript" src="{{ url_for('static', filename='model.js') }}"></script>
-      <script type="text/javascript" src="{{ url_for('static', filename='settings.js') }}"></script>
-      <script type="text/javascript" src="{{ url_for('static', filename='distributionHistogram.js') }}"></script>
-      <script type="text/javascript" src="{{ url_for('static', filename='histogram.js') }}"></script>
-      <script type="text/javascript" src="{{ url_for('static', filename='datatable2.js') }}"></script>
-      <script type="text/javascript" src="{{ url_for('static', filename='comparison.js') }}"></script>
-      <script type="text/javascript" src="{{ url_for('static', filename='select.js') }}"></script>
+      <script type="text/javascript" src="{{ url_for('static', filename='js/d3.min.js') }}"></script>
+      <script type="text/javascript" charset="utf8" src="{{ url_for('static', filename='js/dataTables.min.js') }}"></script>
+      <script type="text/javascript" src="{{ url_for('static', filename='js/nouislider.min.js') }}"></script>
+      <script type="text/javascript" src="{{ url_for('static', filename='js/materialize.min.js') }}"></script>
+      <script type="text/javascript" src="{{ url_for('static', filename='js/histogramHelpers.js') }}"></script>
+      <script type="text/javascript" src="{{ url_for('static', filename='js/loadData.js') }}"></script>
+      <script type="text/javascript" src="{{ url_for('static', filename='js/interface.js') }}"></script>
+     
+      <script type="text/javascript" src="{{ url_for('static', filename='js/model.js') }}"></script>
+      <script type="text/javascript" src="{{ url_for('static', filename='js/settings.js') }}"></script>
+      <script type="text/javascript" src="{{ url_for('static', filename='js/distributionHistogram.js') }}"></script>
+      <script type="text/javascript" src="{{ url_for('static', filename='js/histogram.js') }}"></script>
+      <script type="text/javascript" src="{{ url_for('static', filename='js/datatable2.js') }}"></script>
+      <script type="text/javascript" src="{{ url_for('static', filename='js/comparison.js') }}"></script>
+      <script type="text/javascript" src="{{ url_for('static', filename='js/select.js') }}"></script>
+      
     </body>
 </html>

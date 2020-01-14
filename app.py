@@ -3,7 +3,7 @@ from flask import Flask, render_template, request, redirect, url_for
 from flask_cors import CORS
 from werkzeug.utils import secure_filename
 
-UPLOAD_FOLDER = '/Users/HelenZhao/Documents/Stacks/static'
+UPLOAD_FOLDER = 'static/'
 ALLOWED_EXTENSIONS = set(['txt', 'csv'])
 
 app = Flask(__name__)
