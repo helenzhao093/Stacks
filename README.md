@@ -28,26 +28,26 @@ This web application addresses common classification practices and performance a
 - There is a one to one correspondence between FPs and FNs which allows FPs and FNs errors to have represented with equal priorities. 
 - Common class-level precision can be estimated by the solid bars out of the solid + striped bars, and recall can be estimated by solid bars out of solid + outlined bars.
 <br/>
-![Probability Histograms](./images/probabilityHistogram.png)
+![Probability Histograms](/images/probabilityHistogram.png)
 
 ### Distance Histograms 
 - We can use features to interpret why certain samples have similiar or different predictions.
 - A trivial method of measuring the similarity of samples is to compute the distances of the samples from the origin. 
 - The system computes four spatial distances - Minkowski, Cosine, Euclidean, and Manhattan - from the feature values for each sample and plots the distance distribution for the predicted samples. 
 <br/>
-![Distance Histograms](./images/distanceHistogram.png)
+![Distance Histograms](/images/distanceHistogram.png)
 
 ### Datatable 
 - Each row details the true and predicted classes, prediction scores, and feature values for each sample. 
 - Each rowp's color corresponds to the predicted class. 
 - The columns can be sorted to identify samples of interest.
 <br/>
-![Datatable] (./images/datatable.png)
+![Datatable] (/images/datatable.png)
 
 - When a row is clicked, a line intersects the probability distribution histograms axes at the prediction score for that class. 
 - Use case : Confident predictions can be visualized with a like with a high peak at a single class. Confusing samples have a more plateau line since the differences in the predicted scores are smaller. Moreover, samples that are confused between two classes will show two high peaks in the line.
 <br/>
-![Probability Histograms](./images/highlightExamples.png)
+![Probability Histograms](/images/highlightExamples.png)
 
 ### Boxplots
 - Displays feature distribution for the selected subsets of samples via boxplots. 
@@ -55,7 +55,7 @@ This web application addresses common classification practices and performance a
 - The features are sorted based on separation power of the selected subsets. Can be used to identify features with high separation power for two different sets of samples. 
 
 <br/>
-![Boxplot](./images/boxPlot.png)
+![Boxplot](/images/boxPlot.png)
 
 ## Dependencies
 Flask
