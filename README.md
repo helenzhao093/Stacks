@@ -18,7 +18,7 @@ This web application addresses common classification practices and performance a
 - Bars on the right are prediction scores of correctly predicted samples. Bars on the left are prediction scores of incorrectly predicted samples. 
 - Each bar is colored with the color of the predicted class. 
 <br/>
-![Probability Histograms for TP and FN](images/probabilityHistogramTPTN.png)
+![Probability Histograms for TP and FN](./images/probabilityHistogramTPTN.png)
 
 
 ### Probability Histograms
