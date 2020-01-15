@@ -18,7 +18,8 @@ This web application addresses common classification practices and performance a
 - Bars on the right are prediction scores of correctly predicted samples. Bars on the left are prediction scores of incorrectly predicted samples. 
 - Each bar is colored with the color of the predicted class. 
 <br/>
-![Probability Histograms for TP and FN] (./images/probabilityHistogramTPTN.png)
+![Probability Histograms for TP and FN](./images/probabilityHistogramTPTN.png)
+
 
 ### Probability Histograms
 - Histogram of the prediction score for each class for every sample in the dataset. 
@@ -27,14 +28,14 @@ This web application addresses common classification practices and performance a
 - There is a one to one correspondence between FPs and FNs which allows FPs and FNs errors to have represented with equal priorities. 
 - Common class-level precision can be estimated by the solid bars out of the solid + striped bars, and recall can be estimated by solid bars out of solid + outlined bars.
 <br/>
-![Probability Histograms] (./images/probabilityHistogram.png)
+![Probability Histograms](./images/probabilityHistogram.png)
 
 ### Distance Histograms 
 - We can use features to interpret why certain samples have similiar or different predictions.
 - A trivial method of measuring the similarity of samples is to compute the distances of the samples from the origin. 
 - The system computes four spatial distances - Minkowski, Cosine, Euclidean, and Manhattan - from the feature values for each sample and plots the distance distribution for the predicted samples. 
 <br/>
-![Distance Histograms] (./images/distanceHistogram.png)
+![Distance Histograms](./images/distanceHistogram.png)
 
 ### Datatable 
 - Each row details the true and predicted classes, prediction scores, and feature values for each sample. 
@@ -46,7 +47,7 @@ This web application addresses common classification practices and performance a
 - When a row is clicked, a line intersects the probability distribution histograms axes at the prediction score for that class. 
 - Use case : Confident predictions can be visualized with a like with a high peak at a single class. Confusing samples have a more plateau line since the differences in the predicted scores are smaller. Moreover, samples that are confused between two classes will show two high peaks in the line.
 <br/>
-![Probability Histograms] (./images/highlightExamples.png)
+![Probability Histograms](./images/highlightExamples.png)
 
 ### Boxplots
 - Displays feature distribution for the selected subsets of samples via boxplots. 
@@ -54,10 +55,21 @@ This web application addresses common classification practices and performance a
 - The features are sorted based on separation power of the selected subsets. Can be used to identify features with high separation power for two different sets of samples. 
 
 <br/>
-![Boxplot] (./images/boxPlot.png)
-
-## Installation
+![Boxplot](./images/boxPlot.png)
 
 ## Dependencies
+Flask
+
+## Running the web app
+Clone the repository 
+```
+$ git clone https://github.com/helenzhao093/performance-analysis-of-probabilistic-classifiers.git
+```
+Run the flask app locally from port 5000 
+```
+python app.py
+```
+Go to http://127.0.0.1:5000/index to use the application with a pre-loaded dataset
+
 
 
