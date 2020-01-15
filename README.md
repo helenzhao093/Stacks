@@ -11,6 +11,20 @@ This web application addresses common classification practices and performance a
 6. Identify more severe errors such as FP with high confidence scores or FN with low confidence scores. 
 7. Compare feature values for subsets of the dataset
 
+## Dependencies
+Flask
+
+## Running the web app
+Clone the repository 
+```
+$ git clone https://github.com/helenzhao093/performance-analysis-of-probabilistic-classifiers.git
+```
+Run the flask app locally from port 5000 
+```
+python app.py
+```
+Go to http://127.0.0.1:5000/index to use the application with a pre-loaded dataset
+
 ## Components
 
 ### Probability Histograms for TPs and FNs
@@ -55,20 +69,3 @@ This web application addresses common classification practices and performance a
 - The features are sorted based on separation power of the selected subsets. Can be used to identify features with high separation power for two different sets of samples. <br/>
 
 ![Boxplot](./images/boxPlot.png)
-
-## Dependencies
-Flask
-
-## Running the web app
-Clone the repository 
-```
-$ git clone https://github.com/helenzhao093/performance-analysis-of-probabilistic-classifiers.git
-```
-Run the flask app locally from port 5000 
-```
-python app.py
-```
-Go to http://127.0.0.1:5000/index to use the application with a pre-loaded dataset
-
-
-
