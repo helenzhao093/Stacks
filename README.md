@@ -31,15 +31,15 @@ This web application addresses common classification practices and performance a
 ### Distance Histograms 
 - We can use features to interpret why certain samples have similiar or different predictions.
 - A trivial method of measuring the similarity of samples is to compute the distances of the samples from the origin. 
-- The system computes four spatial distances - Minkowski, Cosine, Euclidean, and Manhattan - from the feature values for each sample and plots the distance distribution for the predicted samples. 
-<br/>
+- The system computes four spatial distances - Minkowski, Cosine, Euclidean, and Manhattan - from the feature values for each sample and plots the distance distribution for the predicted samples. <br/>
+
 ![Distance Histograms](./images/distanceHistogram.png)
 
 ### Datatable 
 - Each row details the true and predicted classes, prediction scores, and feature values for each sample. 
 - Each rowp's color corresponds to the predicted class. 
-- The columns can be sorted to identify samples of interest.
-<br/>
+- The columns can be sorted to identify samples of interest.<br/>
+
 ![Datatable](./images/datatable.png)
 
 - When a row is clicked, a line intersects the probability distribution histograms axes at the prediction score for that class. 
