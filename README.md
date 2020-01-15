@@ -16,7 +16,8 @@ This web application addresses common classification practices and performance a
 ### Probability Histograms for TPs and FNs
 - Samples are divided based on their true classes and the prediction score distribution is visualized for each class.
 - Bars on the right are prediction scores of correctly predicted samples. Bars on the left are prediction scores of incorrectly predicted samples. 
-- Each bar is colored with the color of the predicted class.
+- Each bar is colored with the color of the predicted class. <br/>
+
 ![Probability Histograms for TP and FN](./images/probabilityHistogramTPTN.png)
 
 
@@ -25,7 +26,8 @@ This web application addresses common classification practices and performance a
 - The dataset is divided into classification results, TP, FP, TN, and FN which are distinguished by the pattern of the bar. The bar color of the bar corresponses with the predicted class. 
 - The right histogram contains samples predicted of that class. Solid bars are correct predictions and striped are incorrect. - The left side contains samples that were not predicted of belong in this class – FNs are instead outlined with the color of the falsely predicted class. 
 - There is a one to one correspondence between FPs and FNs which allows FPs and FNs errors to have represented with equal priorities. 
-- Common class-level precision can be estimated by the solid bars out of the solid + striped bars, and recall can be estimated by solid bars out of solid + outlined bars.
+- Common class-level precision can be estimated by the solid bars out of the solid + striped bars, and recall can be estimated by solid bars out of solid + outlined bars. <br/>
+
 ![Probability Histograms](./images/probabilityHistogram.png)
 
 ### Distance Histograms 
@@ -43,16 +45,15 @@ This web application addresses common classification practices and performance a
 ![Datatable](./images/datatable.png)
 
 - When a row is clicked, a line intersects the probability distribution histograms axes at the prediction score for that class. 
-- Use case : Confident predictions can be visualized with a like with a high peak at a single class. Confusing samples have a more plateau line since the differences in the predicted scores are smaller. Moreover, samples that are confused between two classes will show two high peaks in the line.
-<br/>
+- Use case : Confident predictions can be visualized with a like with a high peak at a single class. Confusing samples have a more plateau line since the differences in the predicted scores are smaller. Moreover, samples that are confused between two classes will show two high peaks in the line.<br/>
+
 ![Probability Histograms](./images/highlightExamples.png)
 
 ### Boxplots
 - Displays feature distribution for the selected subsets of samples via boxplots. 
 - Use selects bars on the histograms to visualize feature distributions. 
-- The features are sorted based on separation power of the selected subsets. Can be used to identify features with high separation power for two different sets of samples. 
+- The features are sorted based on separation power of the selected subsets. Can be used to identify features with high separation power for two different sets of samples. <br/>
 
-<br/>
 ![Boxplot](./images/boxPlot.png)
 
 ## Dependencies
