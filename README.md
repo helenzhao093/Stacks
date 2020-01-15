@@ -1,4 +1,5 @@
 # Performance Analysis of Probabilistic Classifiers
+![Probability Histograms](./images/probabilityHistogram.png)
 
 Performance analysis is a critical step in the training of machine learning models. Efficient performance analysis helps interpret classifiers, uncover reasons behind incorrect classifications, and assess of the reliability of predictions. Aggregrate metrics such as accuracy and precision obscure information about prediction probabilities and input values.
 
@@ -28,7 +29,6 @@ This web application addresses common classification practices and performance a
 - There is a one to one correspondence between FPs and FNs which allows FPs and FNs errors to have represented with equal priorities. 
 - Common class-level precision can be estimated by the solid bars out of the solid + striped bars, and recall can be estimated by solid bars out of solid + outlined bars.
 <br/>
-![Probability Histograms](./images/probabilityHistogram.png)
 
 ### Distance Histograms 
 - We can use features to interpret why certain samples have similiar or different predictions.
