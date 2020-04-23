@@ -146,17 +146,13 @@ body {
 }
 
 #settings-form {
-  overflow: :hidden
-  width: 2000px
+  /*overflow: :hidden
+  width: 2000px*/
 }
 
 .histograms {
   width: 1366px;
   height:400px
-}
-
-rect.FP{
-  mask: url(#mask-stripe)
 }
 
 .highlight {

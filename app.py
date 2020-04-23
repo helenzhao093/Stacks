@@ -18,6 +18,7 @@ def allowed_file(filename):
 
 @app.route('/receive_data', methods=['POST'])
 def receive_data():
+    print('posted')
     with open(os.path.join(APP_STATIC, 'uploaded_file.csv'),'w') as outfile:
         #print request.json
         outfile.write(request.json)

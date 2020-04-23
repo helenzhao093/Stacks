@@ -9,7 +9,7 @@ $(document).ready(function(){
     //d3.csv("datasets/multiclass/dataset200RF/ranforest_4classes_multidistance_dataset.csv", type, function(error, data) {
     //d3.csv("datasets/multiclass/dataset200kneigh/k_neighbor_4classes_multidistance_dataset.csv", type, function(error, data) {
     //d3.csv("datasets/iris/iris_svm.csv", type, function(error, data) {
-    d3.json("static/data/uploaded_file.csv", function(data){
+    d3.json("static/uploaded_file.csv", function(data){
       data.forEach(function(d){
         type(d)
       })

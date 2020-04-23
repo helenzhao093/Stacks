@@ -147,8 +147,8 @@ function BoxPlot(dataModel, settings){
           textLength = 100
         }
         else if(divClassName == ".feature-boxplot-pane"){
-          title = "Feature " + featureData[0].name.substring(7,9)
-          textLength = 60
+          title = featureData[0].name
+          textLength = 70
         }
         else{
           title = "Distance"

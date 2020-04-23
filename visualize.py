@@ -20,19 +20,20 @@ def vectorize(y, num_classes):
         y[example][actual_class] = 1
     return y
 
-def generate_header(num_classes, num_features):
-    header = []
+def generate_header(num_classes, feature_names):
+    header = ['Id']
     texts = ['prob', 'actual', 'predicted', 'feature']
     distances = ["distance_man", "distance_cosine", "distance_euclidean", "distance_minkowski"]
     for text in texts:
         if text == 'feature':
-            for i in range(num_features):
-                header.append(text + str(i))
+            header = np.concatenate((header, feature_names))
+        # if text == 'feature':
+        #    for i in range(num_features):
+        #        header.append(text + str(i))
         else:
             for i in range(num_classes):
                 header.append(text + str(i))
-    for dist in distances:
-        header.append(dist)
+    header = np.concatenate((header, distances))
     return header
 
 def get_distances(X):
@@ -44,8 +45,10 @@ def get_distances(X):
     all_dist = np.column_stack((np.column_stack((np.column_stack((man_dist, cosine_dist)), euclid_dist)), minkowski_dist))
     return all_dist
 
-def visualize(X, y, predicted, probabilities, multilabel=False):
+def visualize(Ids, X, y, predicted, probabilities, feature_names, multilabel=False):
+    #print(X[0])
     nfeatures = len(X[0])
+    print(nfeatures)
     nClasses = len(probabilities[0])
 
     actual_class = y
@@ -57,9 +60,10 @@ def visualize(X, y, predicted, probabilities, multilabel=False):
 
     all_dist = get_distances(X)
 
-    data = np.column_stack((np.column_stack((np.column_stack((np.column_stack((probabilities, actual_class)), predicted_class)), X)), all_dist))
+    data =  np.column_stack((Ids, np.column_stack(( np.column_stack((np.column_stack((np.column_stack((probabilities, actual_class)), predicted_class)), X)), all_dist))))
 
-    header = generate_header(nClasses, nfeatures)
+    header = generate_header(nClasses, feature_names)
+    print(header)
 
     df = pandas.DataFrame(data,
                  columns=header)

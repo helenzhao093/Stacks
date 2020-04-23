@@ -6,7 +6,11 @@
         <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/materialize.min.css') }}">
         <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/nouislider.min.css') }}">
         <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/dataTables.min.css') }}">
-        <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/app.css')}}">
+        <style>
+          rect.FP {
+            mask: url(#mask-stripe)
+          }
+        </style>
         <script src="https://code.jquery.com/jquery-2.2.4.min.js"></script>
         <script>
           var currentSelect = "probability-tab";
@@ -71,6 +75,19 @@
         </script>
     </head>
     <body>
+      <svg width="400" height="400" style="float:right;">
+        <defs>
+        <pattern id="pattern-stripe"
+          width="4" height="4"
+          patternUnits="userSpaceOnUse"
+          patternTransform="rotate(45)">
+          <rect width="2" height="4" transform="translate(0,0)" fill="white"></rect>
+        </pattern>
+        <mask id="mask-stripe">
+          <rect width="100%" height="100%" fill="url(#pattern-stripe)" />
+        </mask>
+      </defs>
+      </svg>
       <div class="header-pane">
         Stacks
       </div>
@@ -135,7 +152,6 @@
         <button id="filter">Filter</button>
         <button id="undo" style="display: none;">Undo</button>
       </div>
-
       <div id="probability-tab" class="tabcontent" style="display: block;">
         <div class="probability-histogram-pane">
           <svg class="probability-histograms">
@@ -172,20 +188,6 @@
           </svg>
         </div>
 
-
-        <svg width="400" height="400">
-          <defs>
-          <pattern id="pattern-stripe"
-            width="4" height="4"
-            patternUnits="userSpaceOnUse"
-            patternTransform="rotate(45)">
-            <rect width="2" height="4" transform="translate(0,0)" fill="white"></rect>
-          </pattern>
-          <mask id="mask-stripe">
-            <rect width="100%" height="100%" fill="url(#pattern-stripe)" />
-          </mask>
-        </defs>
-        </svg>
       </div>
       <div id="feature-tab" class="tabcontent" style="display:none;">
         <div class="legend"> </div>
@@ -200,6 +202,7 @@
           <table id="datatable" style="width:100%" class="dt-right dataTable compact hover"></table>
         </div>
       </div>
+      <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/app.css')}}">
       <script type="text/javascript" src="{{ url_for('static', filename='js/d3.min.js') }}"></script>
       <script type="text/javascript" charset="utf8" src="{{ url_for('static', filename='js/dataTables.min.js') }}"></script>
       <script type="text/javascript" src="{{ url_for('static', filename='js/nouislider.min.js') }}"></script>

@@ -15,48 +15,51 @@ function modifyData(dataModel){
   return modData
 }
 
-
 function DataTable(dataModel, appSettings) {
   var that = this
   this.colors = appSettings.colorRange
   tableData = modifyData(dataModel)
   var columns = []
-  var actualColumn = 0
-  var predictedColumn = 1
+  var idColumn = 0
+  var actualColumn = 1
+  var predictedColumn = 2
   this.probabilityColumns = []
   this.featureColumns = []
   this.distanceColumns = []
 
+  // initialize columns
+  columns.push({data: "Id", title: "Id"})
   columns.push({data: "actual", title: "actual"})
   columns.push({data: "predicted", title: "predicted"})
 
   for (var i = 0; i < dataModel.numClasses; i++){
     columns.push({data: dataModel.probColumns[i], type: "num", title: dataModel.probColumns[i]})
-    that.probabilityColumns.push(i+2)
+    that.probabilityColumns.push(i+3)
   }
 
   for (var j = 0; j < dataModel.numFeatures; j++){
     columns.push({data: dataModel.featureColumns[j], title: dataModel.featureColumns[j]})
-    that.featureColumns.push(j+2+dataModel.numClasses)
+    that.featureColumns.push(j + 3 + dataModel.numFeatures)
   }
 
-  for (var k = 0; k < dataModel.distanceColumns.length; k++){
+  /*for (var k = 0; k < dataModel.distanceColumns.length; k++){
     columns.push({data: dataModel.distanceColumns[k], title: dataModel.distanceColumns[k]})
-    that.distanceColumns.push(k + 2 + dataModel.numClasses+dataModel.numFeatures)
-  }
+    that.distanceColumns.push(k + 3 + dataModel.numClasses+dataModel.numFeatures)
+  }*/
 
   console.log(this.featureColumns, this.probabilityColumns)
+
   var columnDef = []
-  columnDef.push({className: 'dt-right predicted-column', targets: [1]})
+  columnDef.push({className: 'dt-right predicted-column', targets: [2]})
   columnDef.push({className: 'dt-right', targets: '_all'})
 
-  var initColumn = 2 + dataModel.numClasses+dataModel.numFeatures
+  /*var initColumn = 3 + dataModel.numClasses + dataModel.numFeatures
   for (var i = initColumn; i < initColumn + dataModel.distanceColumns.length; i++){
     columnDef.push({targets:[i], visible: false})
-  }
+  }*/
 
-  columnDef.push({targets: [0], orderData: [0,1]})
   columnDef.push({targets: [1], orderData: [0,1]})
+  columnDef.push({targets: [2], orderData: [0,1]})
 
   this.table = $('#datatable').DataTable( {
     "scrollX": true,
@@ -65,16 +68,16 @@ function DataTable(dataModel, appSettings) {
     "columnDefs": columnDef,
     "pagingType": "numbers",
     "fixedColumns": {
-         leftColumns: 2
+         leftColumns: 3
        },
-    "order": [[0, 'asc'],[1, 'asc']]
+    "order": [[1, 'asc'],[2, 'asc']]
   })
 
   filterSubSet = function(selectedInfo, appSettings){
     $.fn.dataTable.ext.search.push( //if they are not matchings then remove them
       function(settings, data, dataIndex) {
         for (var i = 0; i < selectedInfo.length; i++){
-          if (data[actualColumn] == +selectedInfo[i].actualClass && data[predictedColumn] == +selectedInfo[i].predictedClass){
+          if (+data[actualColumn] == +selectedInfo[i].actualClass && +data[predictedColumn] == +selectedInfo[i].predictedClass){
             if (selectedInfo[i].distance){
               var index = 1 + dataModel.numFeatures + dataModel.numClasses + appSettings.distanceColumnNum
               if (inRange(data[index], selectedInfo[i].range)){
@@ -82,10 +85,20 @@ function DataTable(dataModel, appSettings) {
               }
             }
             else{
-              var index = +data[predictedColumn] + +1
-              console.log(index, data[index], selectedInfo[i].range)
-              if (inRange(data[index], selectedInfo[i].range)) {
-                return true;
+              if (selectedInfo[i].classification == "TP" || selectedInfo[i].classification == "FN") {
+                var index = +data[actualColumn] + actualColumn + 2;
+                // map predicted class to proba index 
+                console.log(index, data[index], selectedInfo[i].range)
+                if (inRange(data[index], selectedInfo[i].range)) {
+                  return true;
+                }
+              } else if (selectedInfo[i].classification == "FP") {
+                var index = +data[predictedColumn] + predictedColumn + 1;
+                // map predicted class to proba index 
+                console.log(index, data[index], selectedInfo[i].range)
+                if (inRange(data[index], selectedInfo[i].range)) {
+                  return true;
+                }
               }
             }
           }
