@@ -30,7 +30,7 @@ $(document).ready(function(){
         d[key] = +Number.parseFloat(d[key]).toFixed(3);
       }
       else{
-        d[key] = +d[key]
+        d[key] = +Number.parseFloat(d[key]).toFixed(5);
       }
     }
     return d;

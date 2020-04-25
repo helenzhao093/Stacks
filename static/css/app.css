@@ -162,7 +162,9 @@ body {
 }
 
 .table-pane {
+  position: absolute;
   margin-left: 10px;
+  margin-top: 400px;
 }
 
 #datatable_length {
